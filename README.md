@@ -1,5 +1,5 @@
 # silence-speedup
-Speed-up your videos (or audios) by speeding-up the silence, using python and FFmpeg.
+Speed-up your videos by speeding-up the silence, using python and FFmpeg.
 
 This software uses libraries from the FFmpeg project under the LGPLv2.1, which I do not own.
 
