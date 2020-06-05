@@ -5,6 +5,7 @@ This software uses libraries from the FFmpeg project under the LGPLv2.1, which I
 
 # Requisites
 External programs: FFmpeg.
+
 Python modules: numpy, subprocess, re, math, shutil, os, time, argparse.
 
 # Python version
