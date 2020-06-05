@@ -12,7 +12,7 @@ import time
 import argparse
 
 # Script arguments
-parser = argparse.ArgumentParser(description = "Speed-up your videos (or audios) by speeding-up the silence, using Python and FFmpeg.")
+parser = argparse.ArgumentParser(description = "Speed-up your videos by speeding-up the silence, using Python and FFmpeg.")
 parser.add_argument('-i', '--input_file',       type = str,                   help = "Video source path to be modified.")
 parser.add_argument('-o', '--output_file',      type = str,   default = "",   help = "Output path (optional).")
 parser.add_argument('-t', '--audio_threshold',  type = int,   default = -30,  help = "This indicates what sample value should be treated as silence. For digital audio, a value of 0 may be fine but for audio recorded from analog, you may wish to increase the value to account for background noise. Unit of measurement: dB, default -50.")
