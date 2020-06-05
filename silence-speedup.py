@@ -1,5 +1,6 @@
 # Only for Python 2.x
 from __future__ import print_function
+
 import sys
 import numpy as np
 import subprocess as sp
@@ -64,13 +65,13 @@ def getTime(tStart, tEnd):
 	h, m = divmod(m, 60)
 	return "{:02d}:{:02d}:{:02d}".format(int(h), int(m), int(s))
 
-def detectSilence(fin, tmpDir, silenceThreshold = -30, silenceDuration = 0.4, margin = 0.01):
+def detectSilence(fin, tmpDir, audioThreshold = -30, silenceDuration = 0.4, margin = 0.01):
 	tStart = time.time()
 	print("Detecting silence fragments...")
 	sys.stdout.flush()
 
 	actualSilenceDuration = silenceDuration + 2 * margin
-	command = "ffmpeg -hide_banner -i {} -af silencedetect=n={}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(fin, silenceThreshold, actualSilenceDuration, tmpDir)
+	command = "ffmpeg -hide_banner -i {} -af silencedetect=n={}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(fin, audioThreshold, actualSilenceDuration, tmpDir)
 	sp.call(command, shell = True)
 
 	rawFile = open("{}/raw.txt".format(tmpDir), "r")
@@ -200,7 +201,7 @@ tmpDir = generateTmpDir(args.input_file)
 
 fin = args.input_file
 fout = args.output_file if len(args.output_file) >= 1 and (not os.path.isfile(args.input_file)) else generateOutputName(fin)
-silenceThreshold = args.silence_threshold
+audioThreshold = args.audio_threshold
 silenceDuration = args.silence_duration
 silenceSpeed = args.silence_speed
 margin = args.margin
@@ -210,7 +211,7 @@ print("\n {} --> {}\n".format(fin, fout))
 
 tStart = time.time()
 
-silenceFrames = detectSilence(fin, tmpDir, silenceThreshold, silenceDuration, margin)
+silenceFrames = detectSilence(fin, tmpDir, audioThreshold, silenceDuration, margin)
 generateFragments(fin, tmpDir, silenceFrames, silenceSpeed)
 recombine(tmpDir, fout)
 
