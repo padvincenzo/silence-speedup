@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description = "Speed-up your videos (or audios)
 parser.add_argument('-i', '--input_file',       type = str,                   help = "Video source path to be modified.")
 parser.add_argument('-o', '--output_file',      type = str,   default = "",   help = "Output path (optional).")
 parser.add_argument('-t', '--audio_threshold',  type = int,   default = -30,  help = "This indicates what sample value should be treated as silence. For digital audio, a value of 0 may be fine but for audio recorded from analog, you may wish to increase the value to account for background noise. Unit of measurement: dB, default -50.")
-parser.add_argument('-d', '--silence_duration', type = float, default = 0.2,  help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
+parser.add_argument('-d', '--silence_duration', type = float, default = 0.4,  help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
 #parser.add_argument('-S', '--sounded_speed',    type = float, default = 1.00, help = "Speed of video fragments with audio, default 1.")
 parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,    help = "Speed of video fragments whith silence, default 8.")
 parser.add_argument('-m', '--margin',           type = float, default = 0.01, help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
@@ -64,7 +64,7 @@ def getTime(tStart, tEnd):
 	h, m = divmod(m, 60)
 	return "{:02d}:{:02d}:{:02d}".format(int(h), int(m), int(s))
 
-def detectSilence(fin, tmpDir, silenceThreshold = -30, silenceDuration = 0.2, margin = 0.01):
+def detectSilence(fin, tmpDir, silenceThreshold = -30, silenceDuration = 0.4, margin = 0.01):
 	tStart = time.time()
 	print("Detecting silence fragments...")
 	sys.stdout.flush()
