@@ -20,6 +20,7 @@ parser.add_argument('-d', '--silence_duration', type = float, default = 0.4,  he
 #parser.add_argument('-S', '--sounded_speed',    type = float, default = 1.00, help = "Speed of video fragments with audio, default 1.")
 parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,    help = "Speed of video fragments whith silence, default 8.")
 parser.add_argument('-m', '--margin',           type = float, default = 0.01, help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
+parser.add_argument('-l', '--limit',            type = float, default = 0.0,  help = "Limit the seconds to be parsed (for a rapid check).")
 parser.add_argument('-k', '--keep_files',       action = 'store_true',        help = "Do not delete temporary files from disk.")
 
 args = parser.parse_args()
@@ -65,13 +66,13 @@ def getTime(tStart, tEnd):
 	h, m = divmod(m, 60)
 	return "{:02d}:{:02d}:{:02d}".format(int(h), int(m), int(s))
 
-def detectSilence(fin, tmpDir, audioThreshold = -30, silenceDuration = 0.4, margin = 0.01):
+def detectSilence(fin, tmpDir, audioThreshold = -30, silenceDuration = 0.4, margin = 0.01, limit = ""):
 	tStart = time.time()
 	print("Detecting silence fragments...")
 	sys.stdout.flush()
 
 	actualSilenceDuration = silenceDuration + 2 * margin
-	command = "ffmpeg -hide_banner -i {} -af silencedetect=n={}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(fin, audioThreshold, actualSilenceDuration, tmpDir)
+	command = "ffmpeg -hide_banner {} -i {} -af silencedetect=n={}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(limit, fin, audioThreshold, actualSilenceDuration, tmpDir)
 	sp.call(command, shell = True)
 
 	rawFile = open("{}/raw.txt".format(tmpDir), "r")
@@ -124,7 +125,7 @@ def generateFilter(speed = 1.0):
 	filterAudio = "[0:a]atempo={:.2f}[a]".format(speed)
 	return "-filter_complex '{};{}' -map '[v]' -map '[a]'".format(filterVideo, filterAudio)
 
-def exportFragment(fin, tmpDir, startTime, endTime, index, filter = ""):
+def exportFragment(fin, tmpDir, startTime, endTime, index, filter):
 	startTimeString = "" if startTime == 0.0 else "-ss {:.3f}".format(startTime)
 	endTimeString = "" if endTime == "end" else "-to {:.3f}".format(endTime)
 	command = "ffmpeg -hide_banner -loglevel quiet {} {} -i {} {} {}/f{:07d}.mp4".format(startTimeString, endTimeString, fin, filter, tmpDir, index)
@@ -133,7 +134,7 @@ def exportFragment(fin, tmpDir, startTime, endTime, index, filter = ""):
 def getPercentage(i, n):
 	return "{:6.2f} %".format(float(i) / n * 100)
 
-def generateFragments(fin, tmpDir, silenceFrames, silenceSpeed):
+def generateFragments(fin, tmpDir, silenceFrames, soundSpeed, silenceSpeed, limit):
 	tStart = time.time()
 	print("Extracting and speeding-up fragments...   0.00 %", end = "")
 	sys.stdout.flush()
@@ -171,7 +172,7 @@ def generateFragments(fin, tmpDir, silenceFrames, silenceSpeed):
 			exportFragment(fin, tmpDir, silenceFrames[i][1], silenceFrames[i + 1][0], c, soundFilter)
 			fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
 		else:
-			exportFragment(fin, tmpDir, silenceFrames[i][1], "end", c, soundFilter)
+			exportFragment(fin, tmpDir, silenceFrames[i][1], limit, c, soundFilter)
 			fragmentsList.write("file 'f{:07d}.mp4'".format(c))
 		c += 1
 		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
@@ -209,14 +210,15 @@ audioThreshold = args.audio_threshold
 silenceDuration = args.silence_duration
 silenceSpeed = args.silence_speed
 margin = args.margin
+limit = args.limit
 keepFiles = args.keep_files
 
 print("\n {} --> {}\n".format(fin, fout))
 
 tStart = time.time()
 
-silenceFrames = detectSilence(fin, tmpDir, audioThreshold, silenceDuration, margin)
-generateFragments(fin, tmpDir, silenceFrames, silenceSpeed)
+silenceFrames = detectSilence(fin, tmpDir, audioThreshold, silenceDuration, margin, "" if limit <= 0.1 else "-to {:.3f}".format(limit))
+generateFragments(fin, tmpDir, silenceFrames, 1.0, silenceSpeed, "" if limit <= 0.1 else limit)
 recombine(tmpDir, fout)
 
 if not keepFiles:
