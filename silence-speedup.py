@@ -130,6 +130,9 @@ def exportFragment(fin, tmpDir, startTime, endTime, index, filter = ""):
 	command = "ffmpeg -hide_banner -loglevel quiet {} {} -i {} {} {}/f{:07d}.mp4".format(startTimeString, endTimeString, fin, filter, tmpDir, index)
 	sp.call(command, shell = True)
 
+def getPercentage(i, n):
+	return "{:6.2f} %".format(float(i) / n * 100)
+
 def generateFragments(fin, tmpDir, silenceFrames, silenceSpeed):
 	tStart = time.time()
 	print("Extracting and speeding-up fragments...   0.00 %", end = "")
@@ -143,23 +146,25 @@ def generateFragments(fin, tmpDir, silenceFrames, silenceSpeed):
 	# This file will contain the list of all fragments extracted
 	fragmentsList = open("{}/fragmentsList.txt".format(tmpDir), "w")
 
-	i = 0
 	c = 0
 	n = len(silenceFrames)
+	totalFragments = 2 * n
 
 	# First segment if the video starts with audio
 	if silenceFrames[0][0] != 0.0:
 		exportFragment(fin, tmpDir, 0, silenceFrames[0][0], c, soundFilter)
 		fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
 		c = 1
-		print("{}{:6.2f} %".format(backPrint, float(c) / n * 100), end = "")
+		totalFragments += 1
+		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
 
-	for frame in silenceFrames:
+	for i in range(0, n):
 		# Silence fragment
 		exportFragment(fin, tmpDir, silenceFrames[i][0], silenceFrames[i][1], c, silenceFilter)
 		fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
 		c += 1
-		print("{}{:6.2f} %".format(backPrint, float(c) / n * 100), end = "")
+		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
+		sys.stdout.flush()
 
 		# Audio fragment
 		if i < n - 1:
@@ -169,9 +174,8 @@ def generateFragments(fin, tmpDir, silenceFrames, silenceSpeed):
 			exportFragment(fin, tmpDir, silenceFrames[i][1], "end", c, soundFilter)
 			fragmentsList.write("file 'f{:07d}.mp4'".format(c))
 		c += 1
-		print("{}{:6.2f} %".format(backPrint, float(c) / n * 100), end = "")
-
-		i += 1
+		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
+		sys.stdout.flush()
 
 	print("{}100.00 %".format(backPrint))
 	sys.stdout.flush()
