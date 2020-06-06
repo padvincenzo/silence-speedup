@@ -21,7 +21,8 @@ parser.add_argument('-d', '--silence_duration', type = float, default = 0.4,   h
 parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,     help = "Speed of video fragments whith silence, default 8.")
 parser.add_argument('-m', '--margin',           type = float, default = 0.01,  help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
 parser.add_argument('-l', '--limit',            type = float, default = 0.0,   help = "Limit the seconds to be parsed (for a rapid check).")
-parser.add_argument('-x', '--no_audio',         action = "store_true",         help = "Speed up silence fragments but remove audio.")
+parser.add_argument('-x', '--no_audio',         action = "store_true",         help = "Remove audio from silence fragments.")
+parser.add_argument('-X', '--silence_cut',      action = "store_true",         help = "Cut silence fragments.")
 parser.add_argument('-k', '--keep_files',       action = "store_true",         help = "Do not delete temporary files from disk.")
 parser.add_argument('-D', '--debug_mode',       action = "store_true",         help = "Display more information.")
 
@@ -166,7 +167,7 @@ def printStat(debugMode, c, totalFragments):
 	else:
 		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
 
-def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silenceSpeed, noAudio, limit):
+def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silenceSpeed, noAudio, silenceCut, limit):
 	tStart = time.time()
 	print("Extracting and speeding-up fragments... ", end = "")
 	if debugMode:
@@ -175,7 +176,8 @@ def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silence
 		print("{}".format(getPercentage(0, 1)), end = "")
 	sys.stdout.flush()
 
-	silenceFilter = generateSpeedFilter(silenceSpeed, noAudio)
+	if not silenceCut:
+		silenceFilter = generateSpeedFilter(silenceSpeed, noAudio)
 	soundFilter = generateSpeedFilter(1.0, False)
 
 	# This file will contain the list of all fragments extracted
@@ -194,12 +196,13 @@ def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silence
 		printStat(debugMode, c, totalFragments)
 
 	for i in range(0, n):
-		# Silence fragment
-		exportFragment(debugMode, fin, tmpDir, silenceFrames[i][0], silenceFrames[i][1], c, silenceFilter)
-		fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
-		c += 1
-		printStat(debugMode, c, totalFragments)
-		sys.stdout.flush()
+		if not silenceCut:
+			# Silence fragment
+			exportFragment(debugMode, fin, tmpDir, silenceFrames[i][0], silenceFrames[i][1], c, silenceFilter)
+			fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
+			c += 1
+			printStat(debugMode, c, totalFragments)
+			sys.stdout.flush()
 
 		# Audio fragment
 		if i < n - 1:
@@ -251,6 +254,7 @@ silenceDuration = args.silence_duration
 silenceSpeed = args.silence_speed
 margin = args.margin
 noAudio = args.no_audio
+silenceCut = args.silence_cut
 limit = args.limit
 keepFiles = args.keep_files
 
@@ -259,7 +263,7 @@ print("\n {} --> {}\n".format(fin, fout))
 tStart = time.time()
 
 silenceFrames = detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, "" if limit <= 0.1 else "-to {:.3f}".format(limit))
-generateFragments(debugMode, fin, tmpDir, silenceFrames, 1.0, silenceSpeed, noAudio, "" if limit <= 0.1 else limit)
+generateFragments(debugMode, fin, tmpDir, silenceFrames, 1.0, silenceSpeed, noAudio, silenceCut, "" if limit <= 0.1 else limit)
 recombine(debugMode, tmpDir, fout)
 
 if not keepFiles:
