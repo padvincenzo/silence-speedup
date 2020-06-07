@@ -13,18 +13,19 @@ import argparse
 
 # Script arguments
 parser = argparse.ArgumentParser(description = "Speed-up your videos by speeding-up the silence, using Python and FFmpeg.")
-parser.add_argument('-i', '--input_file',       type = str,                    help = "Video source path to be modified.")
-parser.add_argument('-o', '--output_file',      type = str,   default = "",    help = "Output path (optional).")
-parser.add_argument('-t', '--audio_threshold',  type = float,   default = -30, help = "This indicates what sample value should be treated as silence. For digital audio, a value of 0 may be fine but for audio recorded from analog, you may wish to increase the value to account for background noise. Unit of measurement: dB, default -50.")
-parser.add_argument('-d', '--silence_duration', type = float, default = 0.4,   help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
-#parser.add_argument('-S', '--sounded_speed',    type = float, default = 1.00,  help = "Speed of video fragments with audio, default 1.")
-parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,     help = "Speed of video fragments whith silence, default 8.")
-parser.add_argument('-m', '--margin',           type = float, default = 0.01,  help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
-parser.add_argument('-l', '--limit',            type = float, default = 0.0,   help = "Limit the seconds to be parsed (for a rapid check).")
-parser.add_argument('-x', '--no_audio',         action = "store_true",         help = "Remove audio from silence fragments.")
-parser.add_argument('-X', '--silence_cut',      action = "store_true",         help = "Cut silence fragments.")
-parser.add_argument('-k', '--keep_files',       action = "store_true",         help = "Do not delete temporary files from disk.")
-parser.add_argument('-D', '--debug_mode',       action = "store_true",         help = "Display more information.")
+parser.add_argument('-i', '--input_file',       type = str,                   help = "Video source path to be modified.")
+parser.add_argument('-o', '--output_file',      type = str,   default = "",   help = "Output path (optional).")
+parser.add_argument('-t', '--audio_threshold',  type = float, default = -30,  help = "This indicates what sample value should be treated as silence. For digital audio, a value of 0 may be fine but for audio recorded from analog, you may wish to increase the value to account for background noise. Unit of measurement: dB, default -50.")
+parser.add_argument('-d', '--silence_duration', type = float, default = 0.7,  help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
+#parser.add_argument('-S', '--sounded_speed',    type = float, default = 1.00, help = "Speed of video fragments with audio, default 1.")
+parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,    help = "Speed of video fragments whith silence, default 8.")
+parser.add_argument('-m', '--margin',           type = float, default = 0.1,  help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
+parser.add_argument('-l', '--limit',            type = float, default = 0.0,  help = "Limit the seconds to be parsed (for a rapid check).")
+parser.add_argument('-a', '--auto_detect',      action = "store_true",        help = "Use volumedetect's FFmpeg filter to detect the audio threshold.")
+parser.add_argument('-x', '--no_audio',         action = "store_true",        help = "Remove audio from silence fragments.")
+parser.add_argument('-X', '--silence_cut',      action = "store_true",        help = "Cut silence fragments.")
+parser.add_argument('-k', '--keep_files',       action = "store_true",        help = "Do not delete temporary files from disk.")
+parser.add_argument('-D', '--debug_mode',       action = "store_true",        help = "Display more information.")
 
 args = parser.parse_args()
 
@@ -78,13 +79,46 @@ def getTime(tStart, tEnd):
 	h, m = divmod(m, 60)
 	return "{:02d}:{:02d}:{:02d}".format(int(h), int(m), int(s))
 
+def detectAudioThreshold(debugMode, fin, tmpDir):
+	tStart = time.time()
+	print("Detecting audio threshold...")
+	sys.stdout.flush()
+
+	command = "ffmpeg -hide_banner -i {} -af volumedetect -f null /dev/null 2>&1 | grep mean_volume | cut -d ':' -f 2 > {}/meanVolume.txt".format(fin, tmpDir)
+	if debugMode:
+		print("Executing: {}".format(command))
+
+	result = sp.call(command, shell = True)
+	if result != 0:
+		sys.exit("Something went wrong in threshold detection.")
+
+	meanVolumeFile = open("{}/meanVolume.txt".format(tmpDir), "r")
+	meanVolume = meanVolumeFile.readline()
+	meanVolumeFile.close()
+
+	if not meanVolume:
+		sys.exit("Error in file {}/meanVolume.txt", tmpDir)
+
+	threshold = re.match(" ((-|\+)?((\d+(\.\d+)?))) dB", meanVolume)
+
+	if threshold is None:
+		sys.exit("Unable to detect audio threshold.")
+
+	value = float(threshold.group(1))
+
+	tEnd = time.time()
+	print("Threshold detected: {:.1f} dB. {:.1f} dB will be used as silence threshold. Time: {}".format(value, value - 5.0, getTime(tStart, tEnd)))
+	sys.stdout.flush()
+
+	return value - 5.0
+
 def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, limit):
 	tStart = time.time()
 	print("Detecting silence fragments...")
 	sys.stdout.flush()
 
 	actualSilenceDuration = silenceDuration + 2 * margin
-	command = "ffmpeg -hide_banner {} -i {} -af silencedetect=n={}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(limit, fin, audioThreshold, actualSilenceDuration, tmpDir)
+	command = "ffmpeg -hide_banner {} -i {} -af silencedetect=n={:.1f}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(limit, fin, audioThreshold, actualSilenceDuration, tmpDir)
 	if debugMode:
 		print("Executing: {}".format(command))
 
@@ -253,6 +287,7 @@ audioThreshold = args.audio_threshold
 silenceDuration = args.silence_duration
 silenceSpeed = args.silence_speed
 margin = args.margin
+autoDetect = args.auto_detect
 noAudio = args.no_audio
 silenceCut = args.silence_cut
 limit = args.limit
@@ -261,6 +296,9 @@ keepFiles = args.keep_files
 print("\n {} --> {}\n".format(fin, fout))
 
 tStart = time.time()
+
+if autoDetect:
+	audioThreshold = detectAudioThreshold(debugMode, fin, tmpDir)
 
 silenceFrames = detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, "" if limit <= 0.1 else "-to {:.3f}".format(limit))
 generateFragments(debugMode, fin, tmpDir, silenceFrames, 1.0, silenceSpeed, noAudio, silenceCut, "" if limit <= 0.1 else limit)
