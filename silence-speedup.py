@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description = "Speed-up your videos by speeding
 parser.add_argument('-i', '--input_file',       type = str,                   help = "Video source path to be modified.")
 parser.add_argument('-o', '--output_file',      type = str,   default = "",   help = "Output path (optional).")
 parser.add_argument('-t', '--audio_threshold',  type = float, default = -30,  help = "This indicates what sample value should be treated as silence. For digital audio, a value of 0 may be fine but for audio recorded from analog, you may wish to increase the value to account for background noise. Unit of measurement: dB, default -50.")
-parser.add_argument('-d', '--silence_duration', type = float, default = 0.7,  help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
+parser.add_argument('-d', '--silence_duration', type = float, default = 0.3,  help = "Minimum value in seconds the silence should last to be considered, default 0.2.")
 #parser.add_argument('-S', '--sounded_speed',    type = float, default = 1.00, help = "Speed of video fragments with audio, default 1.")
 parser.add_argument('-s', '--silence_speed',    type = int,   default = 8,    help = "Speed of video fragments whith silence, default 8.")
 parser.add_argument('-m', '--margin',           type = float, default = 0.1,  help = "Seconds of silence adjacent to the audio fragments to be considered as audio fragments, in order to have a context, default 0.1.")
@@ -107,26 +107,36 @@ def detectAudioThreshold(debugMode, fin, tmpDir):
 	value = float(threshold.group(1))
 
 	tEnd = time.time()
-	print("Threshold detected: {:.1f} dB. {:.1f} dB will be used as silence threshold. Time: {}".format(value, value - 5.0, getTime(tStart, tEnd)))
+	print("Threshold detected: {:.1f} dB. {:.1f} dB will be used as silence threshold. Time elapsed: {}".format(value, value - 5.0, getTime(tStart, tEnd)))
 	sys.stdout.flush()
 
 	return value - 5.0
 
-def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, limit):
+def generateRawFragmentsFile(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, limit):
 	tStart = time.time()
-	print("Detecting silence fragments...")
+	print("[0] Generating raw silence fragments' file...")
 	sys.stdout.flush()
 
+	limitString = "" if limit == 0 else "-to {:.3f}".format(limit)
 	actualSilenceDuration = silenceDuration + 2 * margin
-	command = "ffmpeg -hide_banner {} -i {} -af silencedetect=n={:.1f}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/raw.txt".format(limit, fin, audioThreshold, actualSilenceDuration, tmpDir)
+	command = "ffmpeg -hide_banner {} -i {} -af silencedetect=n={:.1f}dB:d={} -f null /dev/null 2>&1 | grep silencedetect | cut -d ']' -f 2 > {}/rawSilenceFragments.txt".format(limitString, fin, audioThreshold, actualSilenceDuration, tmpDir)
 	if debugMode:
-		print("Executing: {}".format(command))
+		print("\nExecuting: {}\n".format(command))
 
 	result = sp.call(command, shell = True)
 	if result != 0:
-		sys.exit("Something went wrong in silence detection.")
+		sys.exit("    Something went wrong in silence detection.")
 
-	rawFile = open("{}/raw.txt".format(tmpDir), "r")
+	tEnd = time.time()
+	print("    Raw silence fragments' file generated, time elapsed: {}.".format(getTime(tStart, tEnd)))
+	sys.stdout.flush()
+
+def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin):
+	tStart = time.time()
+	print("[1] Detecting refined silence fragments...")
+	sys.stdout.flush()
+
+	rawFile = open("{}/rawSilenceFragments.txt".format(tmpDir), "r")
 	getStartTime = re.compile(" silence_start: ((\d+(\.\d+)?)).*")
 	getEndTime = re.compile(" silence_end: ((\d+(\.\d+)?)).*")
 
@@ -134,6 +144,7 @@ def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margi
 	lineCount = 0
 	i = 0
 	silenceFrames = []
+	seconds = 0.0
 
 	while not eof:
 		lineStart = rawFile.readline()
@@ -147,7 +158,7 @@ def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margi
 		et = getEndTime.match(lineEnd)
 
 		if (st is None) or (et is None):
-			sys.exit("Error in file {}/raw.txt, lines {} and {}".format(tmpDir, lineCount, lineCount + 1))
+			sys.exit("    Error in file {}/rawSilenceFragments.txt, lines {} and {}".format(tmpDir, lineCount, lineCount + 1))
 
 		lineCount += 2
 
@@ -155,18 +166,20 @@ def detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margi
 		endTime = float(et.group(1)) - margin
 
 		if i > 0 and (startTime - silenceFrames[-1][1] <= margin):
+			seconds += endTime - silenceFrames[-1][1]
 			silenceFrames[-1] = (silenceFrames[-1][0], endTime)
 		else:
 			silenceFrames.append((startTime, endTime))
+			seconds += endTime - startTime
 			i += 1
 
 	rawFile.close()
 
 	if i == 0:
-		sys.exit("No silence detected, try with a higher threshold.")
+		sys.exit("    No silence detected, try with a higher threshold.")
 
 	tEnd = time.time()
-	print("{} silence fragments detected, time: {}.".format(i, getTime(tStart, tEnd)))
+	print("    {} silence fragments detected for a total of {}. Time elapsed: {}.".format(i, getTime(0, seconds), getTime(tStart, tEnd)))
 	sys.stdout.flush()
 
 	return silenceFrames
@@ -181,11 +194,11 @@ def generateSpeedFilter(speed, noAudio):
 	return "-filter_complex '{}; {}' -map '[v]' -map '[a]'".format(filterVideo, filterAudio)
 
 def exportFragment(debugMode, fin, tmpDir, startTime, endTime, index, filter):
-	startTimeString = "" if startTime == 0.0 else "-ss {:.3f}".format(startTime)
-	endTimeString = "" if endTime == "end" else "-to {:.3f}".format(endTime)
+	startTimeString = "" if startTime == 0 else "-ss {:.3f}".format(startTime)
+	endTimeString = "" if endTime == 0 else "-to {:.3f}".format(endTime)
 	command = "ffmpeg -hide_banner -loglevel {} {} {} -i {} {} {}/f{:07d}.mp4".format("error -stats" if debugMode else "quiet", startTimeString, endTimeString, fin, filter, tmpDir, index)
 	if debugMode:
-		print("Executing: {}".format(command))
+		print("\nExecuting: {}\n".format(command))
 	result = sp.call(command, shell = True)
 
 	if result != 0:
@@ -197,13 +210,13 @@ def getPercentage(i, n):
 def printStat(debugMode, c, totalFragments):
 	backPrint = "\b" * 8
 	if debugMode:
-		print("Fragment extracted: {}/{}".format(c, totalFragments))
+		print("    Fragment extracted: {}/{}".format(c, totalFragments))
 	else:
 		print("{}{}".format(backPrint, getPercentage(c, totalFragments)), end = "")
 
 def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silenceSpeed, noAudio, silenceCut, limit):
 	tStart = time.time()
-	print("Extracting and speeding-up fragments... ", end = "")
+	print("[2] Extracting and speeding-up fragments... ", end = "")
 	if debugMode:
 		print("")
 	else:
@@ -240,9 +253,11 @@ def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silence
 
 		# Audio fragment
 		if i < n - 1:
+			# Until the last fragment
 			exportFragment(debugMode, fin, tmpDir, silenceFrames[i][1], silenceFrames[i + 1][0], c, soundFilter)
 			fragmentsList.write("file 'f{:07d}.mp4'\n".format(c))
 		else:
+			# Last fragment
 			exportFragment(debugMode, fin, tmpDir, silenceFrames[i][1], limit, c, soundFilter)
 			fragmentsList.write("file 'f{:07d}.mp4'".format(c))
 		c += 1
@@ -253,23 +268,23 @@ def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silence
 	fragmentsList.close()
 
 	tEnd = time.time()
-	print("Video fragments succesfully extracted, time: {}.".format(getTime(tStart, tEnd)))
+	print("    Video fragments succesfully extracted, time elapsed: {}.".format(getTime(tStart, tEnd)))
 	sys.stdout.flush()
 
 def recombine(debugMode, tmpDir, fout):
 	tStart = time.time()
-	print("Reassembling video fragments...")
+	print("[3] Reassembling video fragments...")
 	sys.stdout.flush()
 
 	command = "ffmpeg -hide_banner -loglevel {} -f concat -safe 0 -i {}/fragmentsList.txt -c copy {}".format("error -stats" if debugMode else "quiet", tmpDir, fout)
 	if debugMode:
-		print("Executing: {}".format(command))
+		print("\nExecuting: {}\n".format(command))
 	result = sp.call(command, shell = True)
 	if result != 0:
-		sys.exit("An error occurred while recombinig the video.")
+		sys.exit("    An error occurred while recombinig the video.")
 
 	tEnd = time.time()
-	print("Video succesfully recombined, time: {}.".format(getTime(tStart, tEnd)))
+	print("    Video succesfully recombined. Time elapsed: {}.".format(getTime(tStart, tEnd)))
 
 
 if args.input_file == None:
@@ -282,7 +297,7 @@ fin = args.input_file.replace(" ", "\\ ")
 debugMode = args.debug_mode
 tmpDir = generateTmpDir(debugMode, fin)
 
-fout = args.output_file if len(args.output_file) >= 1 and (not os.path.isfile(args.input_file)) else generateOutputName(fin)
+fout = args.output_file if len(args.output_file) >= 1 else generateOutputName(fin)
 audioThreshold = args.audio_threshold
 silenceDuration = args.silence_duration
 silenceSpeed = args.silence_speed
@@ -290,8 +305,8 @@ margin = args.margin
 autoDetect = args.auto_detect
 noAudio = args.no_audio
 silenceCut = args.silence_cut
-limit = args.limit
-keepFiles = args.keep_files
+limit = 0 if args.limit <= 0.1 else args.limit
+keepFiles = True if debugMode else args.keep_files
 
 print("\n {} --> {}\n".format(fin, fout))
 
@@ -300,12 +315,17 @@ tStart = time.time()
 if autoDetect:
 	audioThreshold = detectAudioThreshold(debugMode, fin, tmpDir)
 
-silenceFrames = detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, "" if limit <= 0.1 else "-to {:.3f}".format(limit))
-generateFragments(debugMode, fin, tmpDir, silenceFrames, 1.0, silenceSpeed, noAudio, silenceCut, "" if limit <= 0.1 else limit)
+#1
+generateRawFragmentsFile(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin, limit)
+#2
+silenceFrames = detectSilence(debugMode, fin, tmpDir, audioThreshold, silenceDuration, margin)
+#3
+generateFragments(debugMode, fin, tmpDir, silenceFrames, 1.0, silenceSpeed, noAudio, silenceCut, limit)
+#4
 recombine(debugMode, tmpDir, fout)
 
 if not keepFiles:
 	deletePath(tmpDir)
 
 tEnd = time.time()
-print("Your video is ready! Total time: {}.".format(getTime(tStart, tEnd)))
+print("\nYour video {} is ready! Total time elapsed: {}.".format(fout, getTime(tStart, tEnd)))
