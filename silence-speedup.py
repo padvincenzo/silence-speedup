@@ -25,12 +25,12 @@ parser.add_argument('-a', '--auto_detect',      action = "store_true",        he
 parser.add_argument('-x', '--no_audio',         action = "store_true",        help = "Remove audio from silence fragments.")
 parser.add_argument('-X', '--silence_cut',      action = "store_true",        help = "Cut silence fragments.")
 parser.add_argument('-k', '--keep_files',       action = "store_true",        help = "Do not delete temporary files from disk.")
-parser.add_argument('-D', '--debug_mode',       action = "store_true",        help = "Display more information.")
+parser.add_argument('-D', '--debug_mode',       action = "store_true",        help = "Display more information. If set, temporary files won't be deleted.")
 
 args = parser.parse_args()
 
 
-def deletePath(path): # Dangerous! Watch out!
+def deletePath(path):
 	print("Removing folder {}...".format(path))
 	try:
 		rmtree(path, ignore_errors = False)
@@ -86,7 +86,7 @@ def detectAudioThreshold(debugMode, fin, tmpDir):
 
 	command = "ffmpeg -hide_banner -i {} -af volumedetect -f null /dev/null 2>&1 | grep mean_volume | cut -d ':' -f 2 > {}/meanVolume.txt".format(fin, tmpDir)
 	if debugMode:
-		print("Executing: {}".format(command))
+		print("\nExecuting: {}\n".format(command))
 
 	result = sp.call(command, shell = True)
 	if result != 0:
@@ -232,7 +232,7 @@ def generateFragments(debugMode, fin, tmpDir, silenceFrames, soundSpeed, silence
 
 	c = 0
 	n = len(silenceFrames)
-	totalFragments = 2 * n
+	totalFragments = n if silenceCut else 2 * n
 
 	# First segment if the video starts with audio
 	if silenceFrames[0][0] != 0.0:
@@ -293,7 +293,7 @@ if args.input_file == None:
 if not os.path.isfile(args.input_file):
 	sys.exit("Video source do not exists")
 
-fin = args.input_file.replace(" ", "\\ ")
+fin = args.input_file.replace(" ", "\\ ").replace("(", "\\(").replace(")", "\\)")
 debugMode = args.debug_mode
 tmpDir = generateTmpDir(debugMode, fin)
 
