@@ -84,7 +84,9 @@ def detectAudioThreshold(debugMode, fin, tmpDir):
 	print("Detecting audio threshold...")
 	sys.stdout.flush()
 
-	command = "ffmpeg -hide_banner -i {} -af volumedetect -f null /dev/null 2>&1 | grep mean_volume | cut -d ':' -f 2 > {}/meanVolume.txt".format(fin, tmpDir)
+	fout = "{}/meanVolume.txt".format(tmpDir)
+
+	command = "ffmpeg -hide_banner -i {} -af volumedetect -f null /dev/null 2>&1 | grep mean_volume | cut -d ':' -f 2 > {}".format(fin, fout)
 	if debugMode:
 		print("\nExecuting: {}\n".format(command))
 
@@ -92,12 +94,12 @@ def detectAudioThreshold(debugMode, fin, tmpDir):
 	if result != 0:
 		sys.exit("Something went wrong in threshold detection.")
 
-	meanVolumeFile = open("{}/meanVolume.txt".format(tmpDir), "r")
+	meanVolumeFile = open(fout, "r")
 	meanVolume = meanVolumeFile.readline()
 	meanVolumeFile.close()
 
 	if not meanVolume:
-		sys.exit("Error in file {}/meanVolume.txt", tmpDir)
+		sys.exit("Error in {}".format(fout))
 
 	threshold = re.match(" ((-|\+)?((\d+(\.\d+)?))) dB", meanVolume)
 
