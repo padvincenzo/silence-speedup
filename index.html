@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<title>Silence speedup</title>
+
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+		<link rel="stylesheet" type="text/css" href="./style.css" />
+		<script src="./code.js"></script>
+	</head>
+
+	<body>
+
+    <div id="GUI">
+      <div id="entryList">
+      </div>
+
+      <div id="menu">
+        <button id="addFiles" title="Aggiungi uno o più video"></button>
+        <button id="addFolder" title="Aggiungi una cartella"></button>
+				<button id="settings"title="Impostazioni generali"></button>
+				<button id="info" title="Info e crediti"></button>
+
+        <div id="videoSettings">
+
+          <div class="setting">
+            <div>
+              <label for="threshold">Rumorosità ambiente: <span id="thresholdValue">Media</span></label>
+							<input type="range" min="0" max="3" value="2" class="slider" id="threshold" name="threshold">
+            </div>
+          </div>
+
+          <div class="setting">
+            <div>
+              <label for="silenceMinimumDuration">Durata minima dei silenzi</label>
+              <input type="text" id="silenceMinimumDuration" name="silenceMinimumDuration" value="0.3">
+            </div>
+            <div>
+              <label for="silenceMargin">Secondi di margine</label>
+              <input type="text" id="silenceMargin" name="silenceMargin" value="0.1">
+            </div>
+						<div>
+              <input type="checkbox" id="muteAudio" name="muteAudio">
+              <label for="muteAudio">Rimuovi l'audio in silenzio</label>
+            </div>
+          </div>
+
+          <div class="setting">
+            <div>
+              <label for="silenceSpeed">Velocità dei silenzi: <span id="silenceSpeedValue">8x</span></label>
+							<input type="range" min="0" max="10" value="8" class="slider" id="silenceSpeed" name="silenceSpeed">
+					  </div>
+						<div>
+							<label for="soundSpeed">Velocità del video: <span id="soundSpeedValue">1x</span></label>
+							<input type="range" min="0" max="9" value="2" class="slider" id="soundSpeed" name="soundSpeed">
+            </div>
+          </div>
+
+          <div class="setting">
+            <div>
+              <label for="videoExtension">Formato video</label>
+              <select id="videoExtension" name="videoExtension">
+                <option value="keep">Mantieni</option>
+                <option value="mp4">MP4</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button id="start" title="Avvia il programma"></button>
+				<button id="stop" title="Interrompi il programma" disabled></button>
+				<button id="minimize" title="Minimizza la finestra" disabled></button>
+				<button id="devTools" title="Mostra/nascondi gli strumenti di sviluppo"></button>
+      </div>
+    </div>
+
+		<div id="ffmpegProgressBar"></div>
+		<div id="ffmpegProgress">
+			<div>Tempo</div>
+			<div id="ffmpegProgressTime"></div>
+			<div>Frame</div>
+			<div id="ffmpegProgressFrame"></div>
+			<div>FPS</div>
+			<div id="ffmpegProgressFPS"></div>
+			<div>Velocità</div>
+			<div id="ffmpegProgressSpeed"></div>
+		</div>
+
+    <textarea readonly id="shell"></textarea>
+
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "silence-speedup",
+  "version": "1.0.0",
+  "description": "Speed up your video speeding up silences",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "Vincenzo Padula",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.3"
+  }
+}
