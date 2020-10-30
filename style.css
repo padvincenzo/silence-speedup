@@ -38,6 +38,7 @@ html, body {
   width: 200px;
   text-align: center;
 	padding: 5px;
+	flex: none;
 }
 
 .entry {

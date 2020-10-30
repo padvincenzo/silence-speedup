@@ -924,7 +924,17 @@ class Settings {
     });
 
     Settings.silenceMinimumDuration = document.getElementById("silenceMinimumDuration");
+    Settings.silenceMinimumDurationValue = document.getElementById("silenceMinimumDurationValue");
+    Settings.silenceMinimumDuration.addEventListener("input", (event) => {
+      Settings.silenceMinimumDurationValue.innerHTML = parseFloat(Settings.silenceMinimumDuration.value).toFixed(2);
+    });
+
     Settings.silenceMargin = document.getElementById("silenceMargin");
+    Settings.silenceMarginValue = document.getElementById("silenceMarginValue");
+    Settings.silenceMargin.addEventListener("input", (event) => {
+      Settings.silenceMarginValue.innerHTML = parseFloat(Settings.silenceMargin.value).toFixed(2);
+    });
+
     Settings.muteAudio = document.getElementById("muteAudio");
 
     Settings.silenceSpeed = document.getElementById("silenceSpeed");
