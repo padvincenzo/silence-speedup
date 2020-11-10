@@ -3,8 +3,11 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
+## Releases
 
-## Requisiti / Requisites
+(Silence-speedup-linux-x64-v0.1)[https://mega.nz/file/CsdiQR5K#8T_C4BeeUQJuxQvH3Bd-yLeuEGwjZmAYK_KJfetQdMs]
+
+### Requisiti / Requisites
 Richiede che FFmpeg sia installato sul PC. Per ora funziona solo su Linux.
 
 Requires that FFmpeg is installed on your PC. Currently works on Linux only.
