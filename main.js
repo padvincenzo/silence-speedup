@@ -13,11 +13,12 @@ const os = require("os");
 let win;
 let credits;
 let progress;
+let icon = path.join(__dirname, "icon.png");
 
 function createWindow () {
 	// Create the browser window.
 	win = new BrowserWindow({
-		icon: "./icon.png",
+		icon: icon,
 		width: 800,
 		height: 750,
 		minWidth: 600,
@@ -56,7 +57,7 @@ function createWindow () {
 
 	progress = new BrowserWindow({
 		parent: win,
-		icon: "./icon.png",
+		icon: icon,
 		width: 700,
 		height: 40,
 		backgroundColor: "#eeeeee",

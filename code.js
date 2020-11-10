@@ -162,30 +162,30 @@ class Entry {
     ipc.send("changeStatus", status);
   }
 
+  prepare() {
+    this.status = "In coda";
+    this.#removeBtn.style.display = "none";
+    this.#ref.style.backgroundColor = "initial";
+    this.#ref.style.color = "var(--c-dark)";
+  }
+
+  highlight() {
+    this.#ref.style.backgroundColor = "var(--c-1)";
+	  this.#ref.style.color = "var(--c-light)";
+    log("Inizio a lavorare su " + this.#name + ".");
+    ipc.send("changeName", this.#name);
+  }
+
   gotError(err) {
     this.#progress.innerHTML = err;
     this.#ref.style.backgroundColor = "var(--c-5)";
   }
 
-  set highlight(highlight) {
-    if(highlight) {
-      this.#ref.style.backgroundColor = "var(--c-1)";
-  	  this.#ref.style.color = "var(--c-light)";
-      log("Inizio a lavorare su " + this.#name + ".");
-      ipc.send("changeName", this.#name);
-    } else {
-      this.#ref.style.backgroundColor = "var(--c-3)";
-  	  this.#ref.style.color = "var(--c-light)";
-      log(this.#outputName + " è pronto.");
-      this.status = "Video pronto!";
-    }
-  }
-
-  getReady() {
-    this.status = "In coda";
-    this.#removeBtn.style.display = "none";
-    this.#ref.style.backgroundColor = "initial";
-    this.#ref.style.color = "var(--c-dark)";
+  finished() {
+    this.#ref.style.backgroundColor = "var(--c-3)";
+    this.#ref.style.color = "var(--c-light)";
+    log(this.#outputName + " è pronto.");
+    this.status = "Video pronto!";
   }
 
   static getNameFromUrl(url) {
@@ -376,7 +376,7 @@ class ProcessVideo {
     }
 
     for(var i = 0; i < len; i++)
-      entries[i].getReady();
+      entries[i].prepare();
 
     ipc.send("changeTotal", len);
 
@@ -425,7 +425,7 @@ class ProcessVideo {
     if(ProcessVideo.stop)
       return;
 
-    entries[i].highlight = true;
+    entries[i].highlight();
 
     let url = entries[i].url;
     ProcessVideo.volumeDetectOptions[2] = url;
@@ -454,7 +454,7 @@ class ProcessVideo {
     // log(ProcessVideo.volumeDetectOptions);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.volumeDetectOptions);
 
-    ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
     ProcessVideo.spawn.stderr.on("data", (err) => {
       let str = err.toString();
@@ -499,7 +499,7 @@ class ProcessVideo {
     var startIndex = 0;
     var endIndex = 0;
 
-    ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
     ProcessVideo.spawn.stderr.on("data", (err) => {
       var str = err.toString();
@@ -610,7 +610,7 @@ class ProcessVideo {
       // log(ProcessVideo.exportOptions.silence.options);
       ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.silence.options);
 
-      ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+      ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
       ProcessVideo.spawn.stderr.on("data", (err) => {
         let str = err.toString();
@@ -666,7 +666,7 @@ class ProcessVideo {
       // log(ProcessVideo.exportOptions.sound.options);
       ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.sound.options);
 
-      ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+      ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
       ProcessVideo.spawn.stderr.on("data", (err) => {
         let str = err.toString();
@@ -693,7 +693,7 @@ class ProcessVideo {
     // log(ProcessVideo.exportOptions.copy.options);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.copy.options);
 
-    ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
     ProcessVideo.spawn.stderr.on("data", (err) => {
       let str = err.toString();
@@ -731,7 +731,7 @@ class ProcessVideo {
     // log(ProcessVideo.mergeOptions);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.mergeOptions);
 
-    ProcessVideo.spawn.stdout.on("data", ProcessVideo.printData);
+    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
     ProcessVideo.spawn.stderr.on("data", (err) => {
       var str = err.toString();
@@ -741,7 +741,7 @@ class ProcessVideo {
 
     ProcessVideo.spawn.on("exit", (code) => {
       if(code == 0) {
-        entries[i].highlight = false;
+        entries[i].finished();
         ProcessVideo.init(entries, i + 1, len);
       } else ProcessVideo.reportError("Non sono riuscito a unire i frammenti. Passo al prossimo video.", code, entries, i, len);
     });
@@ -1031,8 +1031,10 @@ class FFmpeg {
     FFmpeg.speed = document.getElementById("ffmpegProgressSpeed");
 
     let test = spawnSync(FFmpeg.command, ["-h"]);
-    if(test.error != undefined)
-      log("Errore: " + test.error);
+    if(test.error != undefined) {
+      log("Assicurati di avere ffmpeg installato, quindi riavvia il programma.");
+      Settings.lock();
+    }
   }
 
   static getSecondsFromTime(time) {
@@ -1091,7 +1093,7 @@ class FFmpeg {
 
     var test = spawn(FFmpeg.command, options);
 
-    test.stdout.on("data", ProcessVideo.printData);
+    test.stdout.on("data", (data) => ProcessVideo.printData);
 
     test.stderr.on("data", (err) => {
       let str = err.toString();
