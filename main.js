@@ -30,12 +30,13 @@ function createWindow () {
 		}
 	});
 
-	//win.menuBarVisible = false;
+	win.menuBarVisible = false;
 	win.loadFile("index.html");
 
 	credits = new BrowserWindow({
 		parent: win,
 		modal: true,
+		icon: icon,
 		width: 400,
 		height: 500,
 		backgroundColor: "#eeeeee",

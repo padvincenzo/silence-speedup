@@ -212,7 +212,6 @@ class ProcessVideo {
   static stream = null;
   static stop = false;
 
-  static autoDetectThreshold = false;
   static threshold = 0.02;
   static silenceMinimumDuration = 0.3;
   static silenceMargin = 0.1;
@@ -222,16 +221,9 @@ class ProcessVideo {
   static soundSpeed = 1;
   static videoExtension = "mp4";
 
-  static volumeDetectOptions = [
-    "-hide_banner",
-    "-i", null,                             // Input file
-    "-af", "volumedetect",
-    "-f", "null",
-    "-"
-  ];
-
   static silenceDetectOptions = [
     "-hide_banner",
+    "-vn",
     "-ss", "0.00",
     "-i", null,                             // Input file
     "-af", null,                            // silencedetect filter
@@ -291,12 +283,10 @@ class ProcessVideo {
     "-y"
   ];
 
-  static avgRegExp = new RegExp(/mean_volume: (-?\d+(.\d+)?) dB/);
   static silenceRegExp = new RegExp(/silence_(start|end): (-?\d+(.\d+)?)/, "gm");
 
   static setOptions() {
-    ProcessVideo.autoDetectThreshold = (Settings.threshold.value == 0);
-    ProcessVideo.threshold = (ProcessVideo.autoDetectThreshold ? null : Settings.thresholds[Settings.threshold.value].value);
+    ProcessVideo.threshold = Settings.thresholds[Settings.threshold.value].value;
     ProcessVideo.silenceMinimumDuration = parseFloat(Settings.silenceMinimumDuration.value);
     ProcessVideo.silenceMargin = parseFloat(Settings.silenceMargin.value);
     ProcessVideo.silenceSpeed = Settings.speed[Settings.silenceSpeed.value].text;
@@ -305,9 +295,8 @@ class ProcessVideo {
     ProcessVideo.soundSpeed = Settings.speed[Settings.soundSpeed.value].text;
     ProcessVideo.videoExtension = Settings.videoExtension.value;
 
+    ProcessVideo.silenceDetectOptions[7] = "silencedetect=n=" + ProcessVideo.threshold + ":d=" + (ProcessVideo.silenceMinimumDuration + 2 * ProcessVideo.silenceMargin);
     ProcessVideo.mergeOptions[9] = fragmentListPath;
-
-    ProcessVideo.updateTreshold();
   }
 
   static setFilters() {
@@ -352,10 +341,6 @@ class ProcessVideo {
       ProcessVideo.exportOptions.sound.options[15] = "[a]";
       ProcessVideo.exportOptions.sound.index = 16;
     }
-  }
-
-  static updateTreshold() {
-    ProcessVideo.silenceDetectOptions[6] = "silencedetect=n=" + ProcessVideo.threshold + ":d=" + (ProcessVideo.silenceMinimumDuration + 2 * ProcessVideo.silenceMargin);
   }
 
   static printData(data) {
@@ -428,61 +413,13 @@ class ProcessVideo {
     entries[i].highlight();
 
     let url = entries[i].url;
-    ProcessVideo.volumeDetectOptions[2] = url;
-    ProcessVideo.silenceDetectOptions[4] = url;
+    ProcessVideo.silenceDetectOptions[5] = url;
     ProcessVideo.exportOptions.sound.options[9] = url;
     ProcessVideo.exportOptions.silence.options[9] = url;
     ProcessVideo.exportOptions.copy.options[9] = url;
     ProcessVideo.mergeOptions[16] = path.join(exportPath, entries[i].outputName);
 
-    ProcessVideo.volumeDetect(entries, i, len);
-  }
-
-  static volumeDetect(entries, i, len) {
-    if(ProcessVideo.stop)
-      return;
-
-    if(! ProcessVideo.autoDetectThreshold) {
-      ProcessVideo.silenceDetect(entries, i, len);
-      return;
-    }
-
-    ProcessVideo.threshold = null;
-
-    entries[i].status = "Valutando la soglia...";
-
-    // log(ProcessVideo.volumeDetectOptions);
-    ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.volumeDetectOptions);
-
-    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
-
-    ProcessVideo.spawn.stderr.on("data", (err) => {
-      let str = err.toString();
-
-      if(! FFmpeg.update(str, entries[i].seconds)) {
-        var avg = ProcessVideo.avgRegExp.exec(str);
-        if(avg != null)
-          ProcessVideo.threshold = parseFloat(avg[1]) - 5.0;
-        else
-          FFmpeg.mayLog(str);
-      }
-    });
-
-    ProcessVideo.spawn.on("exit", (code) => {
-      if(code == 0) {
-
-        if(ProcessVideo.threshold != null) {
-          log("Soglia trovata: " + ProcessVideo.threshold + " dB");
-          ProcessVideo.updateTreshold();
-          ProcessVideo.silenceDetect(entries, i, len);
-        } else {
-          log("Non sono riuscito a trovare la soglia. Passo al prossimo video.");
-          entries[i].gotError("Soglia non trovata");
-          ProcessVideo.init(entries, i + 1, len);
-        }
-
-      } else ProcessVideo.reportError("Non sono riuscito a trovare la soglia. Passo al prossimo video.", code, entries, i, len);
-    });
+    ProcessVideo.silenceDetect(entries, i, len);
   }
 
   static silenceDetect(entries, i, len) {
@@ -490,14 +427,23 @@ class ProcessVideo {
       return;
 
     entries[i].status = "Cercando i frammenti...";
+    log("Cercando i frammenti...");
 
     // log(ProcessVideo.silenceDetectOptions);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.silenceDetectOptions);
 
-    var silenceFragments = [];
-  	var seconds = 0.0;
-    var startIndex = 0;
-    var endIndex = 0;
+    let silenceFragments = {
+      "start": {
+        "ts": [],
+        "index": 0,
+        "offset": ProcessVideo.silenceMargin
+      },
+      "end": {
+        "ts": [],
+        "index": 0,
+        "offset": - ProcessVideo.silenceMargin
+      }
+    };
 
     ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
@@ -507,50 +453,34 @@ class ProcessVideo {
       var res = null;
 
       while((res = ProcessVideo.silenceRegExp.exec(str)) != null) {
+        silenceFragments[res[1]].ts.push(parseFloat(res[2]));
+        let index = silenceFragments[res[1]].index;
+        silenceFragments[res[1]].index += 1;
+        if(index > 0)
+          silenceFragments[res[1]].ts[index] += silenceFragments[res[1]].offset;
         hasCaptured = true;
-        switch (res[1]) {
-          case "start": {
-            let startTime = parseFloat(res[2]) + (startIndex == 0 ? 0 : ProcessVideo.silenceMargin);
-            if(startIndex >= endIndex)
-              silenceFragments.push([startTime, null]);
-            else {
-              silenceFragments[startIndex][0] = startTime;
-              seconds += silenceFragments[startIndex][1] - startTime;
-            }
-            startIndex += 1;
-            break;
-          }
-          case "end": {
-            let endTime = parseFloat(res[2]) - ProcessVideo.silenceMargin;
-            if(endIndex >= startIndex)
-              silenceFragments.push([null, endTime]);
-            else {
-              silenceFragments[endIndex][1] = endTime;
-              seconds += endTime - silenceFragments[endIndex][0];
-            }
-            endIndex += 1;
-            break;
-          }
-          default: {
-            log("Mmh... frammento sconosciuto.");
-          }
-        }
       }
 
       if(! hasCaptured) {
         if(! FFmpeg.update(str, entries[i].seconds))
-          FFmpeg.mayLog(str);
+          console.log(str);
       }
     });
 
     ProcessVideo.spawn.on("exit", (code) => {
       if(code == 0) {
-        if(startIndex == endIndex) {
-          log("Ho riconosciuto il " + (seconds / entries[i].seconds * 100).toFixed(2) + "% del video come silenzio.");
-          ProcessVideo.exportFragments(entries, i, len, silenceFragments);
-        } else {
-          ProcessVideo.reportError("Errore nei dati: gli indici non coincidono.", code, entries, i, len);
-        }
+        if(silenceFragments.start.index == silenceFragments.end.index) {
+          if(silenceFragments.start.index == 0) {
+            log("Nessun silenzio rilevato, procedo con il prossimo video.");
+            ProcessVideo.init(entries, i + 1, len);
+          } else {
+            let seconds = 0.0;
+            for(let j = 0; j < silenceFragments.start.index; j++)
+              seconds += silenceFragments.end.ts[j] - silenceFragments.start.ts[j];
+            log("Ho riconosciuto il " + (seconds / entries[i].seconds * 100).toFixed(2) + "% del video come silenzio.");
+            ProcessVideo.exportFragments(entries, i, len, silenceFragments);
+          }
+        } else ProcessVideo.reportError("Errore nei dati: gli indici non coincidono.", code, entries, i, len);
       } else ProcessVideo.reportError("Non sono riuscito a trovare i frammenti di silenzio. Passo al prossimo video.", code, entries, i, len);
     });
   }
@@ -559,21 +489,14 @@ class ProcessVideo {
     if(ProcessVideo.stop)
       return;
 
-    log("Esporto i frammenti...")
-
+    log("Esporto i frammenti...");
     entries[i].status = "Esportando i frammenti...";
 
     ProcessVideo.videoExtension = Settings.videoExtension.value == "keep" ? entries[i].extension : Settings.videoExtension.value;
-    if(fs.existsSync(fragmentListPath))
-      fs.unlinkSync(fragmentListPath);
-    ProcessVideo.stream = fs.createWriteStream(fragmentListPath, {flags:'a'});
+    ProcessVideo.stream = fs.createWriteStream(fragmentListPath, {flags:'w'});
 
-    let n = silenceFragments.length;
+    let n = silenceFragments.start.index;
     ProcessVideo.exportSoundFragment(entries, i, len, silenceFragments, -1, n, 0);
-  }
-
-  static isSkippable(startTime, endTime) {
-    return (parseFloat(endTime) - parseFloat(startTime)) < 0.05;
   }
 
   static getFragmentName(c) {
@@ -593,10 +516,10 @@ class ProcessVideo {
       return;
     }
 
-    let startTime = silenceFragments[j][0].toFixed(2);
-    let endTime = silenceFragments[j][1].toFixed(2);
+    let startTime = silenceFragments.start.ts[j].toFixed(2);
+    let endTime = silenceFragments.end.ts[j].toFixed(2);
 
-    if(ProcessVideo.dropAudio || ProcessVideo.isSkippable(startTime, endTime)) {
+    if(ProcessVideo.dropAudio) {
 
       ProcessVideo.exportSoundFragment(entries, i, len, silenceFragments, j, n, c);
 
@@ -607,7 +530,6 @@ class ProcessVideo {
       let output = ProcessVideo.getFragmentName(c);
       ProcessVideo.exportOptions.silence.options[ProcessVideo.exportOptions.silence.index] = output;
 
-      // log(ProcessVideo.exportOptions.silence.options);
       ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.silence.options);
 
       ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
@@ -615,7 +537,7 @@ class ProcessVideo {
       ProcessVideo.spawn.stderr.on("data", (err) => {
         let str = err.toString();
         if(! FFmpeg.update(str, entries[i].seconds, startTime))
-          FFmpeg.mayLog(str);
+          console.log(str);
       });
 
       ProcessVideo.spawn.on("exit", (code) => {
@@ -640,47 +562,39 @@ class ProcessVideo {
     let endTime;
 
     if(j == -1) {
-      if(silenceFragments[0][0] > 0) {
-        startTime = "0.000";
-        endTime = silenceFragments[0][0];
+      if(silenceFragments.start.ts[0] > 0) {
+        startTime = "0.00";
+        endTime = silenceFragments.start.ts[0].toFixed(2);
       } else {
         ProcessVideo.exportSilenceFragment(entries, i, len, silenceFragments, 0, n, c);
         return;
       }
     } else {
-      startTime = silenceFragments[j][1].toFixed(2);
-      endTime = (j == n - 1) ? entries[i].seconds.toFixed(2) : silenceFragments[j + 1][0].toFixed(2);
+      startTime = silenceFragments.end.ts[j].toFixed(2);
+      endTime = (j == n - 1) ? entries[i].seconds.toFixed(2) : silenceFragments.start.ts[j + 1].toFixed(2);
     }
 
-    if(ProcessVideo.isSkippable(startTime, endTime)) {
+    ProcessVideo.exportOptions.sound.options[5] = startTime;
+    ProcessVideo.exportOptions.sound.options[7] = endTime;
+    let output = ProcessVideo.getFragmentName(c);
+    ProcessVideo.exportOptions.sound.options[ProcessVideo.exportOptions.sound.index] = output;
 
-      ProcessVideo.exportSilenceFragment(entries, i, len, silenceFragments, j + 1, n, c);
+    ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.sound.options);
 
-    } else {
+    ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
 
-      ProcessVideo.exportOptions.sound.options[5] = startTime;
-      ProcessVideo.exportOptions.sound.options[7] = endTime;
-      let output = ProcessVideo.getFragmentName(c);
-      ProcessVideo.exportOptions.sound.options[ProcessVideo.exportOptions.sound.index] = output;
+    ProcessVideo.spawn.stderr.on("data", (err) => {
+      let str = err.toString();
+      if(! FFmpeg.update(str, entries[i].seconds, startTime))
+        console.log(str);
+    });
 
-      // log(ProcessVideo.exportOptions.sound.options);
-      ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.sound.options);
-
-      ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
-
-      ProcessVideo.spawn.stderr.on("data", (err) => {
-        let str = err.toString();
-        if(! FFmpeg.update(str, entries[i].seconds, startTime))
-          FFmpeg.mayLog(str);
-      });
-
-      ProcessVideo.spawn.on("exit", (code) => {
-        if(code == 0)
-          ProcessVideo.exportSilenceFragment(entries, i, len, silenceFragments, j + 1, n, c + 1);
-        else
-          ProcessVideo.exportCopiedFragment(startTime, endTime, output, "silence", entries, i, len, silenceFragments, j + 1, n, c + 1);
-      });
-    }
+    ProcessVideo.spawn.on("exit", (code) => {
+      if(code == 0)
+        ProcessVideo.exportSilenceFragment(entries, i, len, silenceFragments, j + 1, n, c + 1);
+      else
+        ProcessVideo.exportCopiedFragment(startTime, endTime, output, "silence", entries, i, len, silenceFragments, j + 1, n, c + 1);
+    });
   }
 
   static exportCopiedFragment(ss, to, out, next, entries, i, len, silenceFragments, j, n, c) {
@@ -690,7 +604,6 @@ class ProcessVideo {
     ProcessVideo.exportOptions.copy.options[7] = to;
     ProcessVideo.exportOptions.copy.options[11] = out;
 
-    // log(ProcessVideo.exportOptions.copy.options);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.exportOptions.copy.options);
 
     ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
@@ -698,7 +611,7 @@ class ProcessVideo {
     ProcessVideo.spawn.stderr.on("data", (err) => {
       let str = err.toString();
       if(! FFmpeg.update(str, entries[i].seconds, ss))
-        FFmpeg.mayLog(str);
+        console.log(str);
     });
 
     ProcessVideo.spawn.on("exit", (code) => {
@@ -726,9 +639,9 @@ class ProcessVideo {
   static mergeFragments(entries, i, len, c) {
     ProcessVideo.stream.end();
 
+    log("Unendo i frammenti...");
     entries[i].status = "Unendo i frammenti...";
 
-    // log(ProcessVideo.mergeOptions);
     ProcessVideo.spawn = spawn(FFmpeg.command, ProcessVideo.mergeOptions);
 
     ProcessVideo.spawn.stdout.on("data", (data) => ProcessVideo.printData);
@@ -736,7 +649,7 @@ class ProcessVideo {
     ProcessVideo.spawn.stderr.on("data", (err) => {
       var str = err.toString();
       if(! FFmpeg.update(str, entries[i].seconds))
-        FFmpeg.mayLog(str);
+        console.log(str);
     });
 
     ProcessVideo.spawn.on("exit", (code) => {
@@ -746,6 +659,7 @@ class ProcessVideo {
       } else ProcessVideo.reportError("Non sono riuscito a unire i frammenti. Passo al prossimo video.", code, entries, i, len);
     });
   }
+
 }
 
 class Settings {
@@ -827,9 +741,6 @@ class Settings {
   ];
 
   static thresholds = [
-    {                                       // 0
-      "text":"Non so"
-    },
     {                                       // 1
       "text":"Bassa",
       "value": "0.002"
@@ -966,7 +877,7 @@ class Settings {
     Settings.muteAudio.disabled = true;
     Settings.silenceSpeed.disabled = true;
     Settings.soundSpeed.disabled = true;
-    Settings.videoExtension.disabled = true;
+    // Settings.videoExtension.disabled = true;
 
     EntryList.canImport = false;
   }
@@ -984,7 +895,7 @@ class Settings {
     Settings.muteAudio.disabled = (Settings.silenceSpeed.value == 10);
     Settings.silenceSpeed.disabled = false;
     Settings.soundSpeed.disabled = false;
-    Settings.videoExtension.disabled = false;
+    // Settings.videoExtension.disabled = false;
 
     EntryList.canImport = true;
   }
@@ -1016,19 +927,34 @@ class FFmpeg {
   static time;
   static speed;
 
-  static progressRegExp = new RegExp(/frame=\s*(\d+)\s*fps=\s*(\d+(\.\d+)?)\s*.*time=\s*(\d+:\d+:\d+\.\d+)\s*.*speed=\s*(\d+(\.\d+)?x)/);
-  // static ignoreRegExp = new RegExp(/^(Input|Output|Stream|Metadata|\[|\d|\s)/);
+  static progressRegExp = new RegExp(/time=\s*(\d+:\d+:\d+\.\d+)\s*.*speed=\s*(\d+(\.\d+)?x)/);
   static durationRegExp = new RegExp(/(^|\s)(\d+:\d+:\d+\.\d+)/);
   static timeRegExp = new RegExp(/(\d+):(\d+):(\d+)\.(\d+)/);
-  // static fileExists = new RegExp(/File '(.*)' already exists. Overwrite \?/);
 
   static load() {
     FFmpeg.progressBar = document.getElementById("ffmpegProgressBar");
     FFmpeg.progress = document.getElementById("ffmpegProgress");
-    FFmpeg.frame = document.getElementById("ffmpegProgressFrame");
-    FFmpeg.fps = document.getElementById("ffmpegProgressFPS");
     FFmpeg.time = document.getElementById("ffmpegProgressTime");
     FFmpeg.speed = document.getElementById("ffmpegProgressSpeed");
+
+    switch (os.type()) {
+      case "linux": {
+        FFmpeg.command = "ffmpeg";
+        break;
+      }
+      case "Windows_NT": {
+        FFmpeg.command = path.join(__dirname, "ffmpeg_win", "bin", "ffmpeg.exe");
+        break;
+      }
+      case "Darwin": {
+        FFmpeg.command = path.join(__dirname, "ffmpeg_macos", "ffmpeg");
+        break;
+      }
+      default: {
+        log("Sistema operativo non riconosciuto.");
+        FFmpeg.command = null;
+      }
+    }
 
     let test = spawnSync(FFmpeg.command, ["-h"]);
     if(test.error != undefined) {
@@ -1048,14 +974,12 @@ class FFmpeg {
     let hours = (Math.floor(seconds / 3600)).toString().padStart(2, "0");
     seconds %= 3600;
     let minutes = (Math.floor(seconds / 60)).toString().padStart(2, "0");
-    seconds = (seconds % 60).toFixed(2);
+    seconds = (seconds % 60).toFixed(2).padStart(5, "0");
     return hours + ":" + minutes + ":" + seconds;
   }
 
   static update(str, duration = null, offsetCurrentTime = "0") {
     if(str == null) {
-      FFmpeg.frame.innerHTML = "";
-      FFmpeg.fps.innerHTML = "";
       FFmpeg.time.innerHTML = "";
       FFmpeg.speed.innerHTML = "";
       return false;
@@ -1066,21 +990,14 @@ class FFmpeg {
     if(progress == null)
       return false;
 
-    FFmpeg.frame.innerHTML = progress[1];
-    FFmpeg.fps.innerHTML = progress[2];
-    let time = (offsetCurrentTime == "0") ? progress[4] : FFmpeg.getTimeFromSeconds(parseFloat(offsetCurrentTime) + FFmpeg.getSecondsFromTime(progress[4]));
+    let time = (offsetCurrentTime == "0") ? progress[1] : FFmpeg.getTimeFromSeconds(parseFloat(offsetCurrentTime) + FFmpeg.getSecondsFromTime(progress[1]));
     FFmpeg.time.innerHTML = time;
-    FFmpeg.speed.innerHTML = progress[5];
+    FFmpeg.speed.innerHTML = progress[2];
 
-    var percentage = ((FFmpeg.getSecondsFromTime(progress[4]) + parseFloat(offsetCurrentTime)) / duration * 100);
+    var percentage = ((FFmpeg.getSecondsFromTime(progress[1]) + parseFloat(offsetCurrentTime)) / duration * 100);
     FFmpeg.progressBar.style.width = percentage + "%";
     ipc.send("changeProgressBar", percentage);
     return true;
-  }
-
-  static mayLog(str) {
-    // if(! FFmpeg.ignoreRegExp.test(str))
-      console.log(str);
   }
 
   static getVideoDuration(entry) {
@@ -1123,7 +1040,7 @@ window.onload = () => {
   if (!fs.existsSync(tmpPath))
     fs.mkdirSync(tmpPath);
 
-  log("Silence speedup v0.1");
+  log("Silence speedup v0.2");
 }
 
 ipc.on("selectedFiles", (event, fileNames) => {

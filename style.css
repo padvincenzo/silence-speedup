@@ -172,15 +172,16 @@ button:disabled:hover {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--c-5);
+  background: var(--c-4);
   cursor: pointer;
 }
 
 .slider:disabled,
 .slider:disabled:hover,
 .slider:disabled::-webkit-slider-thumb {
-  opacity: 0.8;
-	cursor: default;
+  cursor: default;
+	background: gray;
+	opacity: 1;
 }
 
 #ffmpegProgressBar {

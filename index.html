@@ -18,7 +18,7 @@
       <div id="menu">
         <button id="addFiles" title="Aggiungi uno o più video"></button>
         <button id="addFolder" title="Aggiungi una cartella"></button>
-				<button id="settings"title="Impostazioni generali"></button>
+				<button id="settings"title="Impostazioni generali" disabled></button>
 				<button id="info" title="Info e crediti"></button>
 
         <div id="videoSettings">
@@ -26,7 +26,7 @@
           <div class="setting">
             <div>
               <label for="threshold">Rumorosità ambiente: <span id="thresholdValue">Media</span></label>
-							<input type="range" min="0" max="3" value="2" class="slider" id="threshold" name="threshold">
+							<input type="range" min="0" max="2" value="1" class="slider" id="threshold" name="threshold">
             </div>
           </div>
 
@@ -59,7 +59,7 @@
           <div class="setting">
             <div>
               <label for="videoExtension">Formato video</label>
-              <select id="videoExtension" name="videoExtension">
+              <select id="videoExtension" name="videoExtension" disabled>
                 <option value="keep">Mantieni</option>
                 <option value="mp4">MP4</option>
               </select>
@@ -78,10 +78,6 @@
 		<div id="ffmpegProgress">
 			<div>Tempo</div>
 			<div id="ffmpegProgressTime"></div>
-			<div>Frame</div>
-			<div id="ffmpegProgressFrame"></div>
-			<div>FPS</div>
-			<div id="ffmpegProgressFPS"></div>
 			<div>Velocità</div>
 			<div id="ffmpegProgressSpeed"></div>
 		</div>
