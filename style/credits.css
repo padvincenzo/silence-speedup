@@ -1,0 +1,20 @@
+body {
+  padding: 0 10px;
+}
+
+h1 {
+  text-align: center;
+}
+
+ul {
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+li {
+  margin: 2px 0;
+}
+
+span {
+  font-size: 15px;
+}

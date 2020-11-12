@@ -1,0 +1,66 @@
+button#maximize {
+  border: none;
+  background-size: 30px 30px !important;
+  background-position: 5px 5px !important;
+  background: url(../icons/maximize.svg) no-repeat;
+}
+
+#progressBar {
+  background-color: #027bce;
+  color: #222;
+  width: 0%;
+  height: 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: width 0.3s;
+  transition-timing-function: ease-out;
+}
+
+#data {
+  background-color: rgba(170, 170, 170, 0.5);
+  color: #222;
+  font-size: 12pt;
+  text-align: center;
+  height: 40px;
+  width: -webkit-fill-available;
+  padding: 0 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+
+#data div {
+  line-height: 40px;
+}
+
+#completed {
+  width: 20px;
+  flex: none;
+  text-align: right;
+}
+
+#total {
+  width: 20px;
+  flex: none;
+  text-align: left;
+}
+
+#currentVideo {
+  width: 100%;
+  margin-left: 10px;
+  text-align: left;
+}
+
+#currentStatus {
+  width: 200px;
+  flex: none;
+  text-align: left;
+}
+
+*:focus {
+  outline: none;
+}
