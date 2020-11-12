@@ -3,7 +3,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
-![Homescreen](screenshots/Screen%2300%20Homescreen.png?raw=true "Homescreen" =250x)
+![Homescreen](screenshots/Screen%2300%20Homescreen.png?raw=true =205x200)
 
 ## Screenshots
 
