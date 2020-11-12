@@ -3,7 +3,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
-![Homescreen](https://github.com/padvincenzo/silence-speedup/blob/master/screenshots/Screen%2300%20Homescreen.png "Homescreen")
+![Homescreen](https://github.com/padvincenzo/silence-speedup/blob/master/screenshots/Screen%2300%20Homescreen.png "Homescreen"){width=410 height=400}
 
 ## Requisiti / Requirements
 Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
