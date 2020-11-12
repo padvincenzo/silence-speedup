@@ -3,7 +3,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
-## Releases
+## Builds
 
 [Silence-speedup-v0.2-linux-x64.zip](https://mega.nz/file/Plc2ARYR#2BWSVF49GVbs2rpIYbzS8GtcLmwwf-F9dNSqDrvHZFw)
 
