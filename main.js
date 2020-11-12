@@ -14,6 +14,7 @@ let win;
 let credits;
 let progress;
 let icon = path.join(__dirname, "icon.png");
+let bgColor = "#eeeeee";
 
 function createWindow () {
 	// Create the browser window.
@@ -23,10 +24,9 @@ function createWindow () {
 		height: 750,
 		minWidth: 600,
 		minHeight: 750,
-		backgroundColor: "#eeeeee",
+		backgroundColor: bgColor,
 		webPreferences: {
-			nodeIntegration: true,
-			enableRemoteModule: true
+			nodeIntegration: true
 		}
 	});
 
@@ -39,8 +39,13 @@ function createWindow () {
 		icon: icon,
 		width: 400,
 		height: 500,
-		backgroundColor: "#eeeeee",
-		show: false
+		minWidth: 400,
+		minHeight: 400,
+		backgroundColor: bgColor,
+		show: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
 	});
 
 	credits.menuBarVisible = false;
@@ -61,7 +66,7 @@ function createWindow () {
 		icon: icon,
 		width: 700,
 		height: 40,
-		backgroundColor: "#eeeeee",
+		backgroundColor: bgColor,
 		show: false,
 		frame: false,
 		alwaysOnTop: true,
@@ -119,6 +124,10 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipc.on("toggleDevTools", (event) => {
+	win.toggleDevTools();
+});
 
 ipc.on("selectFiles", (event) => {
   fileNames = dialog.showOpenDialogSync(win, {
