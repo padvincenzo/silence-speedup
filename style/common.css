@@ -1,0 +1,43 @@
+:root {
+	--c-1: #00487c;
+	--c-2: #4bb3fd;
+	--c-3: #3e6680;
+	--c-4: #0496ff;
+	--c-5: #027bce;
+	--c-dark: #222;
+	--c-light: #eee;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+	height: -webkit-fill-available;
+  color: var(--c-dark);
+}
+
+button {
+  width: 46px;
+  height: 46px;
+  border-radius: 5px;
+	border: 1px solid;
+	cursor: pointer;
+  background-size: 30px 30px !important;
+	background-position: 8px 8px !important;
+	-webkit-transition: 0.2s;
+  -webkit-app-region: no-drag;
+  flex: none;
+}
+
+button:hover {
+  background-color: var(--c-3) !important;
+	-webkit-transition: 0.2s;
+}
+
+button:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+button:disabled:hover {
+	background-color: inherit !important;
+}
