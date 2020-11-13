@@ -5,6 +5,30 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 <img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
 
+## Come funziona / How it works
+
+For each video, this program:
+
+1.  Run ffmpeg with silencedetect filter, in order to get the list of silences' start/end timestamps.
+
+2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
+
+3.  Concatenate all the fragments generated before.
+
+Per ogni video, questo programma:
+
+1. Eseguirà ffmpeg con il filtro silencedetect, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
+
+2. Usando quell'elenco, dividerà il video originale dentro una cartella tmp, applicando un filtro di velocità, se presente.
+
+3. Concatena tutti i frammenti generati precedentemente.
+
+### Note
+
+Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
+
+At the end of execution, the program does not automatically clean the tmp folder.
+
 ## Requisiti / Requirements
 Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
 
