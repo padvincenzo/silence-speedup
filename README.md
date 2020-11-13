@@ -1,6 +1,4 @@
 # Silence Speedup
-Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
-
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 <img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
@@ -15,7 +13,6 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [Screenshots](#screenshots)
 
 ## How it works
-
 For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
@@ -25,15 +22,12 @@ For each video, this program will:
 3.  Concatenate all the fragments generated before.
 
 ### Note
-
 At the end of execution, the program does not automatically clean the tmp folder.
 
 ## Requirements
-
 In ``win32`` and ``darwin`` versions ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
 
 ## Credits
-
 This software uses libraries from the FFmpeg project, which I do not own, under the LGPLv2.1.
 
 ## Screenshots
