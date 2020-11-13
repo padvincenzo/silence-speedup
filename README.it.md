@@ -3,8 +3,6 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 <img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
 
-[[ screenshots/Screen%2300%20Homescreen.png | height = 400px ]]
-
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
 ## Indice dei contenuti
