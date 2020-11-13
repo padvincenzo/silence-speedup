@@ -3,8 +3,6 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 <img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
 
-![Screenshot](screenshots/Screen%2300%20Homescreen.png)
-
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
 ## Table of Contents
