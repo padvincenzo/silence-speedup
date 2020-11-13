@@ -5,7 +5,16 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 <img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
 
-## Come funziona / How it works
+*Read this in other languages: [English](README.md), [Italian](README.it.md).*
+
+## Table of Contents
+  - [How it works](#how-it-works)
+    - [Note](#note)
+  - [Requirements](#requirements)
+  - [Credits](#credits)
+  - [Screenshots](#screenshots)
+
+## How it works
 
 For each video, this program will:
 
@@ -15,42 +24,30 @@ For each video, this program will:
 
 3.  Concatenate all the fragments generated before.
 
-Per ogni video, questo programma:
-
-1. Eseguirà ffmpeg con il filtro ``silencedetect``, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
-
-2. Usando quell'elenco, dividerà il video originale dentro una cartella tmp, applicando un filtro di velocità, se presente.
-
-3. Concatena tutti i frammenti generati precedentemente.
-
 ### Note
-
-Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
 
 At the end of execution, the program does not automatically clean the tmp folder.
 
-## Requisiti / Requirements
-Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
+## Requirements
 
 In ``win32`` and ``darwin`` versions ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
 
-## Crediti / Credits
-Questo software usa delle librerie del progetto FFmpeg, che io non possiedo, sotto la licenza LGPLv2.1.
+## Credits
 
 This software uses libraries from the FFmpeg project, which I do not own, under the LGPLv2.1.
 
 ## Screenshots
 
-1.  Inseriti alcuni video
+1.  Some videos added
 <img src="screenshots/Screen%2301%20Video%20added.png" alt="Video added" width="410"/>
 
-2.  Zona elenco dei video
+2.  Video list zone
 <img src="screenshots/Screen%2302%20Video%20list.png" alt="Video list" width="410"/>
 
-3.  Aggiungere altri video (singolarmente, per cartella o trascinandoli nella zona elenco video)
+3.  Add videos (one by one, by folder or drag&drop in video list zone)
 <img src="screenshots/Screen%2303%20Add%20videos.png" alt="Add videos" width="410"/>
 
-4.  Zona configurazione
+4.  Options zone
 <img src="screenshots/Screen%2304%20Video%20options.png" alt="Video options" width="410"/>
 
 5.  Start
@@ -62,18 +59,18 @@ This software uses libraries from the FFmpeg project, which I do not own, under 
 7.  Progress bar
 <img src="screenshots/Screen%2307%20Progress%20bar.png" alt="Progress bar" width="410"/>
 
-8.  Visualizza una interfaccia minimale
+8.  Show minimal interface
 <img src="screenshots/Screen%2308%20Show%20minimal%20interface.png" alt="Show minimal interface" width="410"/>
 
-9.  Interfaccia minimale
+9.  Minimal interface
 <img src="screenshots/Screen%2309%20Minimal%20interface.png" alt="Minimal interface" width="410"/>
 
-10. Video completati
+10. Completed videos
 <img src="screenshots/Screen%2310%20Completed%20videos.png" alt="Completed videos" width="410"/>
 
-11. Video in corso
+11. Current video
 <img src="screenshots/Screen%2311%20Current%20video.png" alt="Current video" width="410"/>
 
-12. Visualizza interfaccia di default
+12. Show default interface
 <img src="screenshots/Screen%2312%20Show%20default%20interface.png" alt="Show default interface" width="410"/>
 
