@@ -1,7 +1,7 @@
 # Silence Speedup
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
-![Homescreen](screenshots/Homescreen.png)
+![Homescreen](screenshots/Homescreen.png | width=400)
 
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
