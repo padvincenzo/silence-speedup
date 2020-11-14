@@ -29,7 +29,7 @@ npm init -y
 npm i --save-dev electron
 ```
 
-3.  Copy&Paste all files inside your application;
+3.  Copy&Paste all files inside your application folder;
 
 4.  [Download/Install FFmpeg](https://ffmpeg.org/download.html);
 
