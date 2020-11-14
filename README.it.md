@@ -1,7 +1,7 @@
 # Silence Speedup
 Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
-<img src="screenshots/Screen%2300%20Homescreen.png" alt="Homescreen" width="410"/>
+![Schermata principale](screenshots/Homescreen.png)
 
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
