@@ -35,7 +35,7 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 5.  Open ``code/index.js``, go to ``class FFmpeg`` and replace the value of ``command`` (``null``) with the path of the executable of ffmpeg (or its command);
 
-    ``static command = null;`` --> ``static command = "path/to/ffmpeg";``
+    ``static command = null;`` ➜ ``static command = "path/to/ffmpeg";``
 
 6.  Now you can run the app.
 
