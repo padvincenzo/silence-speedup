@@ -40,7 +40,7 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 6.  Now you can run the app.
 
     ```
-    npm start
+    npm test
     ```
 
 ### Requirements
