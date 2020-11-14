@@ -6,14 +6,45 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
 ## Table of Contents
+  - [Installation](#installation)
+    - [Requirements](#requirements)
   - [How it works](#how-it-works)
     - [Front-end](#front-end)
       - [Default interface](#default-interface)
       - [Minimal interface](#minimal-interface)
     - [Back-end](#back-end)
-    - [Note](#note)
-  - [Requirements](#requirements)
+      - [Note](#note)
   - [Credits](#credits)
+
+## Installation
+This program is built with [Electron JS](https://www.electronjs.org/), and it should work out-of-the-box. If you want to build this program by yourself from the source code, then you need to:
+
+1.  [Install ``Electron JS``](https://www.electronjs.org/docs/tutorial/installation);
+
+2.  [Create a new Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
+
+```
+mkdir my-electron-app && cd my-electron-app
+npm init -y
+npm i --save-dev electron
+```
+
+3.  Copy&Paste all files inside your application;
+
+4.  [Download/Install FFmpeg](https://ffmpeg.org/download.html);
+
+5.  Open ``code/index.js``, go to ``class FFmpeg`` and replace the value of ``command`` (``null``) with the path of the executable of ffmpeg (or its command);
+
+``static command = null;`` --> ``static command = "path/to/ffmpeg";``
+
+6.  Now you can run the app.
+
+```
+npm start
+```
+
+### Requirements
+In ``win32`` and ``darwin`` builds, ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
 
 ## How it works
 
@@ -56,11 +87,8 @@ For each video, this program will:
   -map v -map a <Output file> -y
 ```
 
-### Note
+#### Note
 At the end of execution, the program does not automatically clean the tmp folder.
-
-## Requirements
-In ``win32`` and ``darwin`` versions ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
 
 ## Credits
 This software uses libraries from the FFmpeg project, which I do not own, under the LGPLv2.1.
