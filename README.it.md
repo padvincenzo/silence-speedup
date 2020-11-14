@@ -23,11 +23,11 @@ Questo programma è stato impacchettato con [``electron-packager``](https://elec
 
 2.  [Creare una nuova applicazione Electron vuota](https://www.electronjs.org/docs/tutorial/quick-start);
 
-```
-mkdir my-electron-app && cd my-electron-app
-npm init -y
-npm i --save-dev electron
-```
+    ```
+    mkdir my-electron-app && cd my-electron-app
+    npm init -y
+    npm i --save-dev electron
+    ```
 
 3.  Copiare e incollare tutti i file nella cartella della tua applicazione;
 
@@ -35,13 +35,13 @@ npm i --save-dev electron
 
 5.  Aprire ``code/index.js``, cercare ``class FFmpeg`` e rimpiazzare il valore di ``command`` (``null``) con il percorso dell'eseguibile di ffmpeg (o il suo comando);
 
-``static command = null;`` --> ``static command = "path/to/ffmpeg";``
+    ``static command = null;`` ➜ ``static command = "path/to/ffmpeg";``
 
 6.  Ora puoi eseguire l'applicazione.
 
-```
-npm start
-```
+    ```
+    npm start
+    ```
 
 ### Requisiti
 Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
@@ -61,31 +61,31 @@ Per ogni video, questo programma:
 
 1. Eseguirà ffmpeg con il filtro ``silencedetect``, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
 
-```
-<ffmpeg bin> -hide_banner -vn \
-  -ss 0.00 -i <Input file> \
-  -af silencedetect=n=<threshold>:d=<duration> \
-  -f null -
-```
+    ```
+    <ffmpeg bin> -hide_banner -vn \
+      -ss 0.00 -i <Input file> \
+      -af silencedetect=n=<threshold>:d=<duration> \
+      -f null -
+    ```
 
 2. Usando quell'elenco, dividerà il video originale dentro una cartella tmp, applicando un filtro di velocità, se presente.
 
-```
-<ffmpeg bin> -hide_banner -loglevel warning -stats \
-  -ss <Start time> -to <End time> -i <Input file> \
-  -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
-  -map [v] -map [a] <Output fragment>
-```
+    ```
+    <ffmpeg bin> -hide_banner -loglevel warning -stats \
+      -ss <Start time> -to <End time> -i <Input file> \
+      -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
+      -map [v] -map [a] <Output fragment>
+    ```
 
 3. Concatena tutti i frammenti generati precedentemente.
 
-```
-<ffmpeg bin> -hide_banner -loglevel warning -stats \
-  -f concat -safe 0 \
-  -i <Fragment list file> \
-  -c copy \
-  -map v -map a <Output file> -y
-```
+    ```
+    <ffmpeg bin> -hide_banner -loglevel warning -stats \
+      -f concat -safe 0 \
+      -i <Fragment list file> \
+      -c copy \
+      -map v -map a <Output file> -y
+    ```
 
 #### Note
 Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
