@@ -23,11 +23,11 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
 
-```
-mkdir my-electron-app && cd my-electron-app
-npm init -y
-npm i --save-dev electron
-```
+    ```
+    mkdir my-electron-app && cd my-electron-app
+    npm init -y
+    npm i --save-dev electron
+    ```
 
 3.  Copy&Paste all files inside your application folder;
 
@@ -35,13 +35,13 @@ npm i --save-dev electron
 
 5.  Open ``code/index.js``, go to ``class FFmpeg`` and replace the value of ``command`` (``null``) with the path of the executable of ffmpeg (or its command);
 
-``static command = null;`` --> ``static command = "path/to/ffmpeg";``
+    ``static command = null;`` --> ``static command = "path/to/ffmpeg";``
 
 6.  Now you can run the app.
 
-```
-npm start
-```
+    ```
+    npm start
+    ```
 
 ### Requirements
 In ``win32`` and ``darwin`` builds, ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
