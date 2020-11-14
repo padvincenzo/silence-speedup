@@ -906,7 +906,7 @@ class Settings {
 }
 
 class FFmpeg {
-  static command = "ffmpeg";
+  static command = null;
 
   static progressBar;
   static progress;
@@ -925,22 +925,24 @@ class FFmpeg {
     FFmpeg.time = document.getElementById("ffmpegProgressTime");
     FFmpeg.speed = document.getElementById("ffmpegProgressSpeed");
 
-    switch (os.type()) {
-      case "Linux": {
-        FFmpeg.command = "ffmpeg";
-        break;
-      }
-      case "Windows_NT": {
-        FFmpeg.command = path.join(__dirname, "ffmpeg_win", "bin", "ffmpeg.exe");
-        break;
-      }
-      case "Darwin": {
-        FFmpeg.command = path.join(__dirname, "ffmpeg_macos", "ffmpeg");
-        break;
-      }
-      default: {
-        log("Sistema operativo non riconosciuto.");
-        FFmpeg.command = null;
+    if(FFmpeg.command == null) {
+      switch (os.type()) {
+        case "Linux": {
+          FFmpeg.command = "ffmpeg";
+          break;
+        }
+        case "Windows_NT": {
+          FFmpeg.command = path.join(__dirname, "ffmpeg_win", "bin", "ffmpeg.exe");
+          break;
+        }
+        case "Darwin": {
+          FFmpeg.command = path.join(__dirname, "ffmpeg_macos", "ffmpeg");
+          break;
+        }
+        default: {
+          log("Sistema operativo non riconosciuto.");
+          FFmpeg.command = null;
+        }
       }
     }
 
