@@ -11,7 +11,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
   - [Come funziona](#come-funziona)
     - [Grafica](#grafica)
       - [Interfaccia di default](#interfaccia-di-default)
-      - [Interfaccia minimale](#interfaccia-minimale)
+      - [Interfaccia avanzamento](#interfaccia-avanzamento)
     - [Funzionamento interno](#funzionamento-interno)
       - [Note](#note)
   - [Crediti](#crediti)
@@ -53,8 +53,8 @@ Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel
 #### Interfaccia di default
 ![Interfaccia di default](screenshots/Default%20interface.png)
 
-#### Interfaccia minimale
-![Interfaccia minimale](screenshots/Minimal%20interface.png)
+#### Interfaccia avanzamento
+![Interfaccia avanzamento](screenshots/Progress%20interface.png)
 
 ### Funzionamento interno
 Per ogni video, questo programma:
