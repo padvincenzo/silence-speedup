@@ -6,14 +6,45 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
 ## Indice dei contenuti
+  - [Installazione](#installazione)
+    - [Requisiti](#requisiti)
   - [Come funziona](#come-funziona)
     - [Grafica](#grafica)
       - [Interfaccia di default](#interfaccia-di-default)
       - [Interfaccia minimale](#interfaccia-minimale)
     - [Funzionamento interno](#funzionamento-interno)
-    - [Note](#note)
-  - [Requisiti](#requisiti)
+      - [Note](#note)
   - [Crediti](#crediti)
+
+## Installazione
+Questo programma è stato impacchettato con [``electron-packager``](https://electron.github.io/electron-packager/master/), e dovrebbe funzionare così com'è. Se vuoi invece eseguire il programma dal codice sorgente, devi:
+
+1.  [Installare ``Electron JS``](https://www.electronjs.org/docs/tutorial/installation);
+
+2.  [Creare una nuova applicazione Electron vuota](https://www.electronjs.org/docs/tutorial/quick-start);
+
+```
+mkdir my-electron-app && cd my-electron-app
+npm init -y
+npm i --save-dev electron
+```
+
+3.  Copiare e incollare tutti i file nella cartella della tua applicazione;
+
+4.  [Scaricare/Installare FFmpeg](https://ffmpeg.org/download.html);
+
+5.  Aprire ``code/index.js``, cercare ``class FFmpeg`` e rimpiazzare il valore di ``command`` (``null``) con il percorso dell'eseguibile di ffmpeg (o il suo comando);
+
+``static command = null;`` --> ``static command = "path/to/ffmpeg";``
+
+6.  Ora puoi eseguire l'applicazione.
+
+```
+npm start
+```
+
+### Requisiti
+Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
 
 ## Come funziona
 
@@ -56,11 +87,8 @@ Per ogni video, questo programma:
   -map v -map a <Output file> -y
 ```
 
-### Note
+#### Note
 Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
-
-## Requisiti
-Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
 
 ## Crediti
 Questo software usa delle librerie del progetto FFmpeg, che io non possiedo, sotto la licenza LGPLv2.1.
