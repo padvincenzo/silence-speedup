@@ -17,9 +17,9 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [Credits](#credits)
 
 ## Installation
-This program is built with [Electron JS](https://www.electronjs.org/), and it should work out-of-the-box. If you want to build this program by yourself from the source code, then you need to:
+This program is packaged with [``electron-packager``](https://electron.github.io/electron-packager/master/), and it should work out-of-the-box. If you want to run this program by yourself from the source code, then you need to:
 
-1.  [Install ``Electron JS``](https://www.electronjs.org/docs/tutorial/installation);
+1.  [Install Electron JS](https://www.electronjs.org/docs/tutorial/installation);
 
 2.  [Create a new Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
 
