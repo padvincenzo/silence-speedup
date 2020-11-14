@@ -11,7 +11,7 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [How it works](#how-it-works)
     - [Front-end](#front-end)
       - [Default interface](#default-interface)
-      - [Minimal interface](#minimal-interface)
+      - [Progress interface](#progress-interface)
     - [Back-end](#back-end)
       - [Note](#note)
   - [Credits](#credits)
@@ -53,8 +53,8 @@ In ``win32`` and ``darwin`` builds, ``ffmpeg`` executable is included in the pac
 #### Default interface
 ![Default interface](screenshots/Default%20interface.png)
 
-#### Minimal interface
-![Minimal interface](screenshots/Minimal%20interface.png)
+#### Progress interface
+![Progress interface](screenshots/Progress%20interface.png)
 
 ### Back-end
 For each video, this program will:
