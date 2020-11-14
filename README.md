@@ -21,7 +21,7 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 1.  [Download/Install NodeJS](https://nodejs.org/en/) if not yet installed;
 
-2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
+2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start?lang=en-US);
 
     ```
     mkdir silence-speedup && cd silence-speedup
