@@ -14,7 +14,7 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 ## How it works
 
-![Exploded](screenshot/Exploded.png)
+![Exploded](screenshots/Exploded.png)
 
 For each video, this program will:
 
