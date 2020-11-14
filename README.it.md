@@ -21,7 +21,7 @@ Questo programma è stato impacchettato con [``electron-packager``](https://elec
 
 1.  [Scaricare/Installare NodeJS](https://nodejs.org/it/) se non è già installato;
 
-2.  [Creare una nuova applicazione Electron vuota](https://www.electronjs.org/docs/tutorial/quick-start);
+2.  [Creare una nuova applicazione Electron vuota](https://www.electronjs.org/docs/tutorial/quick-start?lang=it-IT);
 
     ```
     mkdir silence-speedup && cd silence-speedup
