@@ -14,7 +14,6 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
     - [Note](#note)
   - [Requisiti](#requisiti)
   - [Crediti](#crediti)
-  - [Screenshots](#screenshots)
 
 ## Come funziona
 
