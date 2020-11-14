@@ -13,6 +13,9 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [Screenshots](#screenshots)
 
 ## How it works
+
+![Exploded](screenshot/Exploded.png)
+
 For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
