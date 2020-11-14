@@ -40,7 +40,7 @@ Questo programma è stato impacchettato con [``electron-packager``](https://elec
 6.  Ora puoi eseguire l'applicazione.
 
     ```
-    npm start
+    npm test
     ```
 
 ### Requisiti
