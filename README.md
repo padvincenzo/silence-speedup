@@ -21,7 +21,7 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 1.  [Install Electron JS](https://www.electronjs.org/docs/tutorial/installation);
 
-2.  [Create a new Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
+2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start);
 
 ```
 mkdir my-electron-app && cd my-electron-app
