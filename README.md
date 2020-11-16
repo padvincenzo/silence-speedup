@@ -70,7 +70,7 @@ For each video, this program will:
 
 2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
 
-    ```moonscript
+    ```typescript
     <ffmpeg bin> -hide_banner -loglevel warning -stats \
       -ss <Start time> -to <End time> -i <Input file> \
       -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
@@ -79,7 +79,7 @@ For each video, this program will:
 
 3.  Concatenate all the fragments generated before.
 
-    ```moonscript
+    ```typescript
     <ffmpeg bin> -hide_banner -loglevel warning -stats \
       -f concat -safe 0 \
       -i <Fragment list file> \
