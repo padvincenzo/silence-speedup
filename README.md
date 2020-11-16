@@ -23,7 +23,7 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start?lang=en-US);
 
-    ```shell
+    ```coffeescript
     $ mkdir silence-speedup && cd silence-speedup
     $ npm init -y
     $ npm i --save-dev electron
