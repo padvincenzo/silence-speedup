@@ -23,10 +23,10 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start?lang=en-US);
 
-    ```{r, engine='bash', count_lines}
-    mkdir silence-speedup && cd silence-speedup
-    npm init -y
-    npm i --save-dev electron
+    ```shell
+    $ mkdir silence-speedup && cd silence-speedup
+    $ npm init -y
+    $ npm i --save-dev electron
     ```
 
 3.  Copy&Paste all files inside your application folder;
@@ -39,8 +39,8 @@ This program is packaged with [``electron-packager``](https://electron.github.io
 
 6.  Now you can run the app.
 
-    ```console
-    npm test
+    ```shell
+    $ npm test
     ```
 
 ### Requirements
@@ -61,30 +61,30 @@ For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
 
-    ```console
-    <ffmpeg bin> -hide_banner -vn \
-      -ss 0.00 -i <Input file> \
-      -af silencedetect=n=<threshold>:d=<duration> \
-      -f null -
+    ```shell
+    $ <ffmpeg bin> -hide_banner -vn \
+        -ss 0.00 -i <Input file> \
+        -af silencedetect=n=<threshold>:d=<duration> \
+        -f null -
     ```
 
 2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
 
-    ```console
-    <ffmpeg bin> -hide_banner -loglevel warning -stats \
-      -ss <Start time> -to <End time> -i <Input file> \
-      -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
-      -map [v] -map [a] <Output fragment>
+    ```shell
+    $ <ffmpeg bin> -hide_banner -loglevel warning -stats \
+        -ss <Start time> -to <End time> -i <Input file> \
+        -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
+        -map [v] -map [a] <Output fragment>
     ```
 
 3.  Concatenate all the fragments generated before.
 
-    ```console
-    <ffmpeg bin> -hide_banner -loglevel warning -stats \
-      -f concat -safe 0 \
-      -i <Fragment list file> \
-      -c copy \
-      -map v -map a <Output file> -y
+    ```shell
+    $ <ffmpeg bin> -hide_banner -loglevel warning -stats \
+        -f concat -safe 0 \
+        -i <Fragment list file> \
+        -c copy \
+        -map v -map a <Output file> -y
     ```
 
 #### Note
