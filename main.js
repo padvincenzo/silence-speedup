@@ -33,6 +33,7 @@ let win = null
 let credits = null
 let progress = null
 let license = null
+let config = null
 
 // Menu
 let template = [
@@ -243,11 +244,37 @@ function createWindows () {
 		license.hide()
 	})
 
+	config = new BrowserWindow({
+		parent: win,
+		modal: true,
+		title: "Silence SpeedUp - Configuration",
+		icon: icon,
+		width: 600,
+		height: 320,
+		resizable: false,
+		backgroundColor: bgColor,
+		show: false,
+		webPreferences: {
+			nodeIntegration: true
+		}
+	})
+
+	config.menuBarVisible = false
+	config.loadFile("config.html")
+	config.excludedFromShownWindowsMenu = true
+
+	config.on("close", (event) => {
+		event.preventDefault()
+		config.hide()
+		win.send("configReload")
+	})
+
 	// Emitted when the window is closed.
 	win.on("closed", () => {
 		// Dereference the window object, usually you would store windows
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
+		config = null
 		license = null
 		credits = null
 		progress = null
@@ -364,6 +391,32 @@ ipcMain.on("showRedistributingDetails", (event, value) => {
 	// Go to paragraph 16
 	license.webContents.executeJavaScript("window.scrollTo(0, 8980);");
 	license.show()
+})
+
+ipcMain.on("showConfig", (event) => {
+	config.webContents.executeJavaScript("load();");
+	config.show()
+})
+
+ipcMain.on("ffmpegChoose", (event) => {
+	file = dialog.showOpenDialogSync(config, {
+    title: "Select ffmpeg executable",
+    filters: [
+      {name:"Executable", extensions:["*"]}
+    ],
+    properties:['openFile']
+  })
+
+  config.send("ffmpegChoosen", file)
+})
+
+ipcMain.on("exportChoose", (event) => {
+	folder = dialog.showOpenDialogSync(config, {
+    title: "Select where to export videos",
+    properties:['openDirectory', 'createDirectory']
+  })
+
+  config.send("exportChoosen", folder)
 })
 
 ipcMain.on("quit", (event) => {

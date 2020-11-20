@@ -1,0 +1,61 @@
+<!--
+Silence SpeedUp
+Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+This is an electron-based app.
+
+Copyright (C) 2020  Vincenzo Padula
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<title>Silence SpeedUp - Configuration</title>
+
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+		<link rel="stylesheet" type="text/css" href="./style/common.css" />
+		<link rel="stylesheet" type="text/css" href="./style/config.css" />
+		<script src="./code/config.js"></script>
+	</head>
+
+	<body>
+    <br>
+
+    <div>
+			<label for="ffmpeg">FFmpeg path (or command)</label>
+      <div class="input">
+        <input type="text" name="ffmpeg" id="ffmpeg" value="">
+        <button id="ffmpegChoose" title="Browse">...</button>
+      </div>
+		</div>
+
+    <div>
+			<label for="export">Export path</label>
+      <div class="input">
+        <input type="text" name="export" id="export" value="">
+        <button id="exportChoose" title="Browse">...</button>
+      </div>
+		</div>
+
+    <br>
+
+    <div id="buttons">
+      <button id="save">Save</button>
+      <button id="reset">Reset</button>
+    </div>
+
+  </body>
+</html>
