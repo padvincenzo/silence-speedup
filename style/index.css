@@ -1,8 +1,48 @@
+/*
+Silence SpeedUp
+Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+This is an electron-based app.
+
+Copyright (C) 2020  Vincenzo Padula
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#dropZone {
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #EEE;
+    box-shadow: none;
+    -webkit-transition: var(--transition);
+    text-align: center;
+    line-height: 100vh;
+    font-size: 8vw;
+}
+
 #GUI {
   width: -webkit-fill-available;
   height: -webkit-fill-available;
+  background-color: #EEE;
 	margin-bottom: 230px;
 	display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  -webkit-transition: var(--transition);
 }
 
 #entryList {
@@ -10,11 +50,7 @@
 	height: -webkit-fill-available;
   margin: 0 10px 1px 0;
 	overflow-y: scroll;
-	-webkit-app-region: drag;
-}
 
-#entryList.drop {
-	background-color: var(--c-3);
 }
 
 #menu {
@@ -31,7 +67,6 @@
 	color: var(--c-dark);
 	display: flex;
 	width: -webkit-fill-available;
-	-webkit-app-region: no-drag;
 }
 
 .entryName {
@@ -60,6 +95,14 @@
 	cursor: pointer;
 }
 
+.buttons {
+  display: flex;
+}
+
+.buttons div {
+  width: -webkit-fill-available;
+}
+
 button#addFiles {
 	background: url(../icons/add_video.svg) no-repeat;
 }
@@ -85,12 +128,15 @@ button#stop {
 	display: none;
 }
 
-button#devTools {
-	background: url(../icons/devTools.svg) no-repeat;
+button#start, button#stop {
+  width: 130px;
+  padding-left: 46px;
+  text-align: left;
 }
 
 button#minimize {
 	background: url(../icons/minimize.svg) no-repeat;
+  display: none;
 }
 
 #videoSettings {
@@ -98,15 +144,40 @@ button#minimize {
 }
 
 .setting {
-	border: 1px solid var(--c-4);
+	border: 1px solid var(--c-1);
 	border-radius: 5px;
 	padding: 6px;
-	margin: 3px 0;
+	margin: 12px 0 8px 0;
 	text-align: left;
+}
+
+.setting::before {
+  position: relative;
+  top: -14px;
+  background-color: #EEE;
+  padding: 2px 5px;
+  color: #888;
+  font-variant: small-caps;
+}
+
+#silenceDetectSettings::before {
+  content: "Silence detect settings"
+}
+
+#filterSettings::before {
+  content: "Filter settings"
+}
+
+#exportSettings::before {
+  content: "Export settings"
 }
 
 .setting div {
 	margin: 3px 0;
+}
+
+.setting div:first-child {
+  margin-top: -8px;
 }
 
 .slider {
@@ -117,7 +188,7 @@ button#minimize {
   background: var(--c-4);
   outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
+  -webkit-transition: var(--transition);
 	margin-bottom: 15px;
 }
 
@@ -143,6 +214,10 @@ button#minimize {
 	opacity: 1;
 }
 
+select {
+  border: 1px solid transparent;
+}
+
 #ffmpegProgressBar {
 	background-color: var(--c-5);
   color: #222;
@@ -151,7 +226,7 @@ button#minimize {
 	position: fixed;
 	bottom: 208px;
 	left: 0;
-	-webkit-transition: 0.3s;
+	-webkit-transition: var(--transition);
 	-webkit-transition-timing-function: ease-out;
 }
 
