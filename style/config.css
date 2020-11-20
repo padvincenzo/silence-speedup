@@ -1,0 +1,39 @@
+html, body {
+  overflow: hidden;
+}
+
+body {
+  padding: 0 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+#buttons {
+  text-align: center;
+}
+
+#buttons button {
+  width: 100px;
+}
+
+.input {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.input button {
+  flex: none;
+  height: 30px;
+  width: 30px;
+}
+
+input {
+  line-height: 20px;
+  border: none;
+  margin-right: 10px;
+  padding: 0 5px 0 10px;
+  width: -webkit-fill-available;
+}
