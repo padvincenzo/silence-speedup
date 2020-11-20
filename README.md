@@ -9,54 +9,25 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [Installation](#installation)
     - [Requirements](#requirements)
   - [How it works](#how-it-works)
-    - [Front-end](#front-end)
-      - [Default interface](#default-interface)
-      - [Progress interface](#progress-interface)
-    - [Back-end](#back-end)
-      - [Note](#note)
+    - [Note](#note)
   - [Credits](#credits)
 
 ## Installation
-This program is packaged with [``electron-packager``](https://electron.github.io/electron-packager/master/), and it should work out-of-the-box. If you want to run this program by yourself from the source code, then you need to:
-
-1.  [Download/Install NodeJS](https://nodejs.org/en/) if not yet installed;
-
-2.  [Create a new empty Electron application](https://www.electronjs.org/docs/tutorial/quick-start?lang=en-US);
+This program is packaged with [``electron-packager``](https://electron.github.io/electron-packager/master/), and it should run out-of-the-box. If you want to run this program by yourself from the source code, then:
 
     ```
-    mkdir silence-speedup && cd silence-speedup
-    npm init -y
-    npm i --save-dev electron
-    ```
-
-3.  Copy&Paste all files inside your application folder;
-
-4.  [Download/Install FFmpeg](https://ffmpeg.org/download.html);
-
-5.  Open ``code/index.js``, go to ``class FFmpeg`` and replace the value of ``command`` (``null``) with the path of the executable of ffmpeg (or its command);
-
-    ``static command = null;`` ➜ ``static command = "path/to/ffmpeg";``
-
-6.  Now you can run the app.
-
-    ```
-    npm test
+    $ git clone https://github.com/padvincenzo/silence-speedup
+    $ cd silence-speedup
+    $ npm install
+    $ npm start
     ```
 
 ### Requirements
-In ``win32`` and ``darwin`` builds, ``ffmpeg`` executable is included in the package; on ``linux`` you need to install it manually.
+This program require [ffmpeg](https://ffmpeg.org/download.html) to process your videos. If you have it already installed, then open the program and just change the configuration by clicking on the configuration button.
+
+If you wish to run this program from the source files then you also need to install [NodeJS](https://nodejs.org/en/).
 
 ## How it works
-
-### Front-end
-
-#### Default interface
-![Default interface](screenshots/Default%20interface.png)
-
-#### Progress interface
-![Progress interface](screenshots/Progress%20interface.png)
-
-### Back-end
 For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
@@ -87,7 +58,7 @@ For each video, this program will:
       -map v -map a <Output file> -y
     ```
 
-#### Note
+### Note
 At the end of execution, the program does not automatically clean the tmp folder.
 
 ## Credits
