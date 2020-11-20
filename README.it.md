@@ -22,12 +22,10 @@ $ npm install
 $ npm start
 ```
 
+### Requisiti
 Questo programma richiede [ffmpeg](https://ffmpeg.org/download.html) per processare i tuoi video. Se è già installato, devi solo aprire il programma e modificare la configurazione dal pulsante di configurazione.
 
 Se desideri invece eseguire questo programma dal codice sorgente allora hai bisogno di installare [NodeJS](https://nodejs.org/en/).
-
-### Requisiti
-Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
 
 ## Come funziona
 Per ogni video, questo programma:
