@@ -15,7 +15,7 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 ## Installation
 This program is packaged with [``electron-packager``](https://electron.github.io/electron-packager/master/), and it should run out-of-the-box. If you want to run this program by yourself from the source code, then:
 
-    ```
+    ```bash
     $ git clone https://github.com/padvincenzo/silence-speedup
     $ cd silence-speedup
     $ npm install
@@ -32,7 +32,7 @@ For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
 
-    ```
+    ```bash
     <ffmpeg bin> -hide_banner -vn \
       -ss 0.00 -i <Input file> \
       -af silencedetect=n=<threshold>:d=<duration> \
@@ -41,7 +41,7 @@ For each video, this program will:
 
 2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
 
-    ```
+    ```bash
     <ffmpeg bin> -hide_banner -loglevel warning -stats \
       -ss <Start time> -to <End time> -i <Input file> \
       -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
@@ -50,7 +50,7 @@ For each video, this program will:
 
 3.  Concatenate all the fragments generated before.
 
-    ```
+    ```bash
     <ffmpeg bin> -hide_banner -loglevel warning -stats \
       -f concat -safe 0 \
       -i <Fragment list file> \
