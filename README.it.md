@@ -15,12 +15,12 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 ## Installazione
 Questo programma è stato impacchettato con [``electron-packager``](https://electron.github.io/electron-packager/master/), e dovrebbe funzionare così com'è. Se vuoi invece eseguire il programma dal codice sorgente:
 
-    ```
-    $ git clone https://github.com/padvincenzo/silence-speedup
-    $ cd silence-speedup
-    $ npm install
-    $ npm start
-    ```
+```
+$ git clone https://github.com/padvincenzo/silence-speedup
+$ cd silence-speedup
+$ npm install
+$ npm start
+```
 
 Questo programma richiede [ffmpeg](https://ffmpeg.org/download.html) per processare i tuoi video. Se è già installato, devi solo aprire il programma e modificare la configurazione dal pulsante di configurazione.
 
