@@ -32,7 +32,7 @@ class Settings {
   static entryList
   static addFiles
   static addFolder
-  static settings
+  static configuration
   static info
 
   static start
@@ -136,9 +136,9 @@ class Settings {
       ipcRenderer.send("selectFolder")
     })
 
-    Settings.settings = document.getElementById("settings")
-    Settings.settings.addEventListener("click", (event) => {
-      // to do
+    Settings.configuration = document.getElementById("configuration")
+    Settings.configuration.addEventListener("click", (event) => {
+      ipcRenderer.send("showConfig")
     })
 
     Settings.info = document.getElementById("info")
@@ -275,6 +275,7 @@ class Settings {
     Settings.start.style.display = "inline-block"
     Settings.stop.style.display = "none"
     Settings.minimize.style.display = "none"
+    Settings.configuration.disabled = false
 
     ipcRenderer.send("menuEnabler", true)
 
@@ -285,6 +286,7 @@ class Settings {
     Settings.start.style.display = "none"
     Settings.stop.style.display = "inline-block"
     Settings.minimize.style.display = "inline-block"
+    Settings.configuration.disabled = true
 
     ipcRenderer.send("menuEnabler", false)
 
@@ -314,15 +316,17 @@ class Config {
 
   static load() {
     if (!fs.existsSync(Config.configPath)) {
-      Config.save(Config.defaultExportPath, Config.defaultFFmpegPath)
-    } else {
-      let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
-      let config = JSON.parse(json)
-      Config.exportPath = config.exportPath || Config.defaultExportPath
-      Config.ffmpegPath = config.ffmpegPath
+      fs.writeFileSync(Config.configPath,
+        JSON.stringify({exportPath:Config.defaultExportPath, ffmpegPath:Config.defaultFFmpegPath}),
+        {encoding: 'utf-8'})
     }
 
-    Config.tmpPath = path.join(Config.exportPath, "tmp")
+    let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
+    let config = JSON.parse(json)
+    Config.exportPath = config.exportPath || Config.defaultExportPath
+    Config.ffmpegPath = config.ffmpegPath || Config.defaultFFmpegPath
+
+    Config.tmpPath = path.join(Config.exportPath, "speededup_tmp")
     Config.fragmentListPath = path.join(Config.exportPath, "list.txt")
 
     if (!fs.existsSync(Config.exportPath))
@@ -332,12 +336,10 @@ class Config {
       fs.mkdirSync(Config.tmpPath)
 
     log("Export path: " + Config.exportPath)
+    FFmpeg.test()
   }
 
   static save(exportPath, ffmpegPath) {
-    fs.writeFileSync(Config.configPath,
-      JSON.stringify({exportPath: exportPath, ffmpegPath:ffmpegPath}),
-      {encoding: 'utf-8'})
     Config.exportPath = exportPath
     Config.ffmpegPath = ffmpegPath
   }
@@ -363,13 +365,11 @@ class FFmpeg {
     FFmpeg.progress = document.getElementById("ffmpegProgress")
     FFmpeg.time = document.getElementById("ffmpegProgressTime")
     FFmpeg.speed = document.getElementById("ffmpegProgressSpeed")
-
-    FFmpeg.command = Config.ffmpegPath
-
-    FFmpeg.test()
   }
 
   static test() {
+    FFmpeg.command = Config.ffmpegPath
+
     let test = spawnSync(FFmpeg.command, ["-version"])
     if(test.error != undefined) {
       log("FFmpeg not configured.")
@@ -381,6 +381,7 @@ class FFmpeg {
         Settings.lock()
       } else {
         log(lines[0])
+        Settings.unlock()
       }
     }
   }
@@ -495,7 +496,10 @@ class EntryList {
   }
 
   static get values() {
-    return Object.values(EntryList.list)
+    var entries = Object.values(EntryList.list)
+    for(let i = 0, len = entries.length; i < len; i++)
+      entries[i].prepare()
+    return entries
   }
 }
 
@@ -612,6 +616,7 @@ class Entry {
   gotError(err) {
     this.#progress.innerHTML = err
     this.#ref.style.backgroundColor = "var(--c-5)"
+    this.#removeBtn.style.display = "inline-block"
   }
 
   finished() {
@@ -619,6 +624,7 @@ class Entry {
     this.#ref.style.color = "var(--c-light)"
     this.status = "Completed"
     log(this.#outputName + " completed.")
+    this.#removeBtn.style.display = "inline-block"
   }
 
   static getNameFromUrl(url) {
@@ -792,9 +798,6 @@ class SpeedUp {
       return
     }
 
-    for(var i = 0; i < len; i++)
-      entries[i].prepare()
-
     ipcRenderer.send("changeTotal", len)
 
     SpeedUp.init(entries, 0, len)
@@ -838,8 +841,10 @@ class SpeedUp {
       return
     }
 
-    if(SpeedUp.interrupted)
+    if(SpeedUp.interrupted) {
+      entries[i].gotError("Interrupted")
       return
+    }
 
     entries[i].highlight()
 
@@ -854,8 +859,10 @@ class SpeedUp {
   }
 
   static silenceDetect(entries, i, len) {
-    if(SpeedUp.interrupted)
+    if(SpeedUp.interrupted) {
+      entries[i].gotError("Interrupted")
       return
+    }
 
     entries[i].status = "Detecting silences..."
     log("Detecting silences...")
@@ -913,15 +920,19 @@ class SpeedUp {
           }
         } else SpeedUp.reportError("Data error: indexes do not match.", code, entries, i, len)
       } else {
-        if(! SpeedUp.interrupted)
+        if(SpeedUp.interrupted)
+          entries[i].gotError("Interrupted")
+        else
           SpeedUp.reportError("Sorry, no fragments found. Moving on to the next.", code, entries, i, len)
       }
     })
   }
 
   static exportFragments(entries, i, len, silenceFragments) {
-    if(SpeedUp.interrupted)
+    if(SpeedUp.interrupted) {
+      entries[i].gotError("Interrupted")
       return
+    }
 
     entries[i].status = "Exporting..."
     log("Exporting...")
@@ -942,8 +953,10 @@ class SpeedUp {
   }
 
   static exportSilenceFragment(entries, i, len, silenceFragments, j, n, c) {
-    if(SpeedUp.interrupted)
+    if(SpeedUp.interrupted) {
+      entries[i].gotError("Interrupted")
       return
+    }
 
     if(j == n) {
       SpeedUp.mergeFragments(entries, i, len, c)
@@ -978,7 +991,9 @@ class SpeedUp {
         if(code == 0)
           SpeedUp.exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c + 1)
         else {
-          if(! SpeedUp.interrupted)
+          if(SpeedUp.interrupted)
+            entries[i].gotError("Interrupted")
+          else
             SpeedUp.exportCopiedFragment(startTime, endTime, output, "playback", entries, i, len, silenceFragments, j, n, c + 1)
         }
       })
@@ -986,8 +1001,10 @@ class SpeedUp {
   }
 
   static exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c) {
-    if(SpeedUp.interrupted)
+    if(SpeedUp.interrupted) {
+      entries[i].gotError("Interrupted")
       return
+    }
 
     if(j > n) {
       SpeedUp.mergeFragments(entries, i, len, c)
@@ -1029,7 +1046,9 @@ class SpeedUp {
       if(code == 0)
         SpeedUp.exportSilenceFragment(entries, i, len, silenceFragments, j + 1, n, c + 1)
       else {
-        if(! SpeedUp.interrupted)
+        if(SpeedUp.interrupted)
+          entries[i].gotError("Interrupted")
+        else
           SpeedUp.exportCopiedFragment(startTime, endTime, output, "silence", entries, i, len, silenceFragments, j + 1, n, c + 1)
       }
     })
@@ -1069,7 +1088,9 @@ class SpeedUp {
           }
         }
       } else {
-        if(! SpeedUp.interrupted)
+        if(SpeedUp.interrupted)
+          entries[i].gotError("Interrupted")
+        else
           SpeedUp.reportError("Non sono riuscito a copiare il frammento. Passo al prossimo video.", code, entries, i, len)
       }
     })
@@ -1096,7 +1117,9 @@ class SpeedUp {
         entries[i].finished()
         SpeedUp.init(entries, i + 1, len)
       } else {
-        if(! SpeedUp.interrupted)
+        if(SpeedUp.interrupted)
+          entries[i].gotError("Interrupted")
+        else
           SpeedUp.reportError("Non sono riuscito a unire i frammenti. Passo al prossimo video.", code, entries, i, len)
       }
     })
@@ -1118,11 +1141,6 @@ ipcRenderer.on("selectedFiles", (event, fileNames) => {
   log("Files added: " + c)
 })
 
-ipcRenderer.on("selectFilesRequested", (event) => {
-  if(EntryList.canImport)
-    ipcRenderer.send("selectFiles")
-})
-
 ipcRenderer.on("selectedFolder", (event, folder) => {
   if(folder == undefined)
     return
@@ -1131,11 +1149,6 @@ ipcRenderer.on("selectedFolder", (event, folder) => {
   urls = list.map(name => path.join(folder[0], name))
 
   log("Files added: " + EntryList.import(urls))
-})
-
-ipcRenderer.on("selectFolderRequested", (event) => {
-  if(EntryList.canImport)
-    ipcRenderer.send("selectFolder")
 })
 
 ipcRenderer.on("start", (event) => {
@@ -1149,4 +1162,8 @@ ipcRenderer.on("stop", (event) => {
 ipcRenderer.on("stopAndExit", (event) => {
   SpeedUp.interrupt()
   ipcRenderer.send("quit")
+})
+
+ipcRenderer.on("configReload", (event) => {
+  Config.load()
 })
