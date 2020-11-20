@@ -9,54 +9,27 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
   - [Installazione](#installazione)
     - [Requisiti](#requisiti)
   - [Come funziona](#come-funziona)
-    - [Grafica](#grafica)
-      - [Interfaccia di default](#interfaccia-di-default)
-      - [Interfaccia avanzamento](#interfaccia-avanzamento)
-    - [Funzionamento interno](#funzionamento-interno)
-      - [Note](#note)
+    - [Note](#note)
   - [Crediti](#crediti)
 
 ## Installazione
-Questo programma è stato impacchettato con [``electron-packager``](https://electron.github.io/electron-packager/master/), e dovrebbe funzionare così com'è. Se vuoi invece eseguire il programma dal codice sorgente, devi:
-
-1.  [Scaricare/Installare NodeJS](https://nodejs.org/it/) se non è già installato;
-
-2.  [Creare una nuova applicazione Electron vuota](https://www.electronjs.org/docs/tutorial/quick-start?lang=it-IT);
+Questo programma è stato impacchettato con [``electron-packager``](https://electron.github.io/electron-packager/master/), e dovrebbe funzionare così com'è. Se vuoi invece eseguire il programma dal codice sorgente:
 
     ```
-    mkdir silence-speedup && cd silence-speedup
-    npm init -y
-    npm i --save-dev electron
+    $ git clone https://github.com/padvincenzo/silence-speedup
+    $ cd silence-speedup
+    $ npm install
+    $ npm start
     ```
 
-3.  Copiare e incollare tutti i file nella cartella della tua applicazione;
+Questo programma richiede [ffmpeg](https://ffmpeg.org/download.html) per processare i tuoi video. Se è già installato, devi solo aprire il programma e modificare la configurazione dal pulsante di configurazione.
 
-4.  [Scaricare/Installare FFmpeg](https://ffmpeg.org/download.html);
-
-5.  Aprire ``code/index.js``, cercare ``class FFmpeg`` e rimpiazzare il valore di ``command`` (``null``) con il percorso dell'eseguibile di ffmpeg (o il suo comando);
-
-    ``static command = null;`` ➜ ``static command = "path/to/ffmpeg";``
-
-6.  Ora puoi eseguire l'applicazione.
-
-    ```
-    npm test
-    ```
+Se desideri invece eseguire questo programma dal codice sorgente allora hai bisogno di installare [NodeJS](https://nodejs.org/en/).
 
 ### Requisiti
 Per le versioni ``win32`` e ``darwin`` l'eseguibile di ``ffmpeg`` è incluso nel pacchetto; su ``linux`` è necessario che sia installato manualmente.
 
 ## Come funziona
-
-### Grafica
-
-#### Interfaccia di default
-![Interfaccia di default](screenshots/Default%20interface.png)
-
-#### Interfaccia avanzamento
-![Interfaccia avanzamento](screenshots/Progress%20interface.png)
-
-### Funzionamento interno
 Per ogni video, questo programma:
 
 1. Eseguirà ffmpeg con il filtro ``silencedetect``, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
@@ -87,7 +60,7 @@ Per ogni video, questo programma:
       -map v -map a <Output file> -y
     ```
 
-#### Note
+### Note
 Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
 
 ## Crediti
