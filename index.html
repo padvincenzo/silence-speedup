@@ -1,90 +1,123 @@
+<!--
+Silence SpeedUp
+Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+This is an electron-based app.
+
+Copyright (C) 2020  Vincenzo Padula
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
 <!DOCTYPE html>
 <html lang="it">
 	<head>
-		<title>Silence speedup</title>
+		<title>Silence SpeedUp</title>
 
 		<meta charset="UTF-8">
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
 		<link rel="stylesheet" type="text/css" href="./style/common.css" />
 		<link rel="stylesheet" type="text/css" href="./style/index.css" />
-		<script src="./code/common.js"></script>
 		<script src="./code/index.js"></script>
 	</head>
 
 	<body>
+
+		<div id="dropZone">Drop videos here</div>
 
     <div id="GUI">
       <div id="entryList">
       </div>
 
       <div id="menu">
-        <button id="addFiles" title="Aggiungi uno o più video"></button>
-        <button id="addFolder" title="Aggiungi una cartella"></button>
-				<button id="settings"title="Impostazioni generali" disabled></button>
-				<button id="info" title="Info e crediti"></button>
+
+				<div class="buttons">
+	        <button id="addFiles" title="Add video(s)"></button>
+					<div></div>
+					<button id="addFolder" title="Add folder"></button>
+					<div></div>
+					<button id="settings"title="Settings" disabled></button>
+					<div></div>
+					<button id="info" title="Info"></button>
+				</div>
 
         <div id="videoSettings">
 
-          <div class="setting">
+          <div class="setting" id="silenceDetectSettings">
             <div>
-              <label for="threshold">Rumorosità ambiente: <span id="thresholdValue">Media</span></label>
+              <label for="threshold">Background noise: <span id="thresholdValue">Mid</span></label>
 							<input type="range" min="0" max="2" value="1" class="slider" id="threshold" name="threshold">
             </div>
-          </div>
-
-          <div class="setting">
 						<div>
-              <label for="silenceMinimumDuration">Durata minima dei silenzi: <span id="silenceMinimumDurationValue">0.30</span></label>
+              <label for="silenceMinimumDuration">Silence min duration: <span id="silenceMinimumDurationValue">0.30s</span></label>
 							<input type="range" min="0" max="10" step="0.05" value="0.3" class="slider" id="silenceMinimumDuration" name="silenceMinimumDuration">
             </div>
             <div>
-              <label for="silenceMargin">Secondi di margine: <span id="silenceMarginValue">0.10</span></label>
+              <label for="silenceMargin">Silence margin: <span id="silenceMarginValue">0.10s</span></label>
 							<input type="range" min="0" max="10" step="0.05" value="0.1" class="slider" id="silenceMargin" name="silenceMargin">
-            </div>
-						<div>
-              <input type="checkbox" id="muteAudio" name="muteAudio">
-              <label for="muteAudio">Rimuovi l'audio in silenzio</label>
             </div>
           </div>
 
-          <div class="setting">
+          <div class="setting" id="filterSettings">
             <div>
-              <label for="silenceSpeed">Velocità dei silenzi: <span id="silenceSpeedValue">8x</span></label>
+              <label for="silenceSpeed">Silence speed: <span id="silenceSpeedValue">8x</span></label>
 							<input type="range" min="0" max="10" value="8" class="slider" id="silenceSpeed" name="silenceSpeed">
 					  </div>
 						<div>
-							<label for="soundSpeed">Velocità del video: <span id="soundSpeedValue">1x</span></label>
-							<input type="range" min="0" max="9" value="2" class="slider" id="soundSpeed" name="soundSpeed">
+							<label for="playbackSpeed">Playback speed: <span id="playbackSpeedValue">1x</span></label>
+							<input type="range" min="0" max="9" value="2" class="slider" id="playbackSpeed" name="playbackSpeed">
+            </div>
+						<div>
+              <input type="checkbox" id="muteAudio" name="muteAudio">
+              <label for="muteAudio">Mute silences</label>
             </div>
           </div>
 
-          <div class="setting">
+          <div class="setting" id="exportSettings">
             <div>
-              <label for="videoExtension">Formato video</label>
+              <label for="videoExtension">Output video format: </label>
               <select id="videoExtension" name="videoExtension" disabled>
-                <option value="keep">Mantieni</option>
-                <option value="mp4">MP4</option>
+                <option value="keep" selected>keep</option>
+                <option value="avi">AVI</option>
+								<option value="flv">FLV</option>
+								<option value="mkv">MKV</option>
+								<option value="mov">MOV</option>
+								<option value="mp4">MP4</option>
+								<option value="webm">WebM</option>
+								<option value="wmv">WMV</option>
               </select>
             </div>
           </div>
         </div>
 
-        <button id="start" title="Avvia il programma"></button>
-				<button id="stop" title="Interrompi il programma" disabled></button>
-				<button id="minimize" title="Mostra interfaccia avanzamento" disabled></button>
-				<button id="devTools" title="Mostra/nascondi gli strumenti di sviluppo"></button>
+				<div class="buttons">
+					<button id="start" title="Start">Start</button>
+					<button id="stop" title="Stop" disabled>Stop</button>
+					<div></div>
+					<button id="minimize" title="View progress mode" disabled></button>
+				</div>
       </div>
+
+			<div id="ffmpegProgressBar"></div>
+			<div id="ffmpegProgress">
+				<div>Time</div>
+				<div id="ffmpegProgressTime">--:--:--.--</div>
+				<div>Speed</div>
+				<div id="ffmpegProgressSpeed">-</div>
+			</div>
+
+	    <textarea readonly id="shell"></textarea>
     </div>
-
-		<div id="ffmpegProgressBar"></div>
-		<div id="ffmpegProgress">
-			<div>Tempo</div>
-			<div id="ffmpegProgressTime"></div>
-			<div>Velocità</div>
-			<div id="ffmpegProgressSpeed"></div>
-		</div>
-
-    <textarea readonly id="shell"></textarea>
 
   </body>
 </html>

@@ -1,24 +1,162 @@
-const electron = require("electron");
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const dialog = electron.dialog;
-const ipc = electron.ipcMain;
-const shell = electron.shell;
-const path = require("path");
-const fs = require("fs");
-const os = require("os");
+/*
+Silence SpeedUp
+Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+This is an electron-based app.
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win;
-let credits;
-let progress;
-let icon = path.join(__dirname, "icon.png");
-let bgColor = "#eeeeee";
+Copyright (C) 2020  Vincenzo Padula
 
-function createWindow () {
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+const {BrowserWindow, Menu, app, shell, dialog, ipcMain} = require('electron')
+const path = require("path")
+const fs = require("fs")
+const os = require("os")
+
+const version = app.getVersion()
+const icon = path.join(__dirname, "icon.png")
+const bgColor = "#EEE"
+
+// BrowserWindow(s)
+let win = null
+let credits = null
+let progress = null
+let license = null
+
+// Menu
+let template = [
+	{
+		label: '&Media',
+		submenu: [
+			{
+				id: "1",
+    		label: 'Open video(s)',
+    		accelerator: 'CmdOrCtrl+O',
+    		click: (item, focusedWindow) => {
+					openFile()
+				}
+  		},
+			{
+				id: "2",
+    		label: 'Open folder',
+    		accelerator: 'Shift+CmdOrCtrl+O',
+				click: (item, focusedWindow) => {
+					openFolder()
+				}
+  		},
+			{
+    		type: 'separator'
+  		},
+			{
+				id: "3",
+    		label: 'Start',
+				click: () => {
+					win.send("start")
+				}
+  		},
+			{
+				id: "4",
+    		label: 'Stop',
+				enabled: false,
+    		click: () => {
+					win.send("stop")
+				}
+  		},
+			{
+    		type: 'separator'
+  		},
+			{
+		    label: 'Toggle Dev Tools',
+		    accelerator: (() => {
+		      if (process.platform === 'darwin') {
+		        return 'Alt+Command+I'
+		      } else {
+		        return 'Ctrl+Shift+I'
+		      }
+		    })(),
+		    click: (item, focusedWindow) => {
+		      win.toggleDevTools()
+		    }
+		  },
+			{
+    		type: 'separator'
+  		},
+			{
+    		label: 'Quit',
+    		accelerator: 'CmdOrCtrl+Q',
+				click: (item, focusedWindow) => {
+					win.send("stopAndExit")
+				}
+  		}
+		]
+	},
+	{
+	  label: '&Help',
+	  role: 'help',
+	  submenu: [
+			{
+		    label: `Version ${version}`,
+		    enabled: false
+		  },
+			{
+		    type: 'separator'
+		  },
+			{
+				label: 'About',
+		    click: () => {
+		     	credits.show()
+		    }
+			},
+			{
+		    label: 'View License',
+		    click: () => {
+					// Go to first line
+					license.webContents.executeJavaScript("window.scrollTo(0, 0);");
+					license.show()
+		    }
+		  },
+			{
+		    type: 'separator'
+		  },
+			{
+		    label: 'Source code',
+		    click: () => {
+		      shell.openExternal('https://github.com/padvincenzo/silence-speedup')
+		    }
+		  },
+			{
+		    label: 'FFmpeg',
+		    click: () => {
+		      shell.openExternal('https://ffmpeg.org/')
+		    }
+		  },
+			{
+		    label: 'Electron',
+		    click: () => {
+		      shell.openExternal('https://www.electronjs.org/')
+		    }
+		  }
+		]
+	}
+]
+
+const menu = Menu.buildFromTemplate(template)
+
+function createWindows () {
 	// Create the browser window.
 	win = new BrowserWindow({
+		title: "Silence SpeedUp",
 		icon: icon,
 		width: 800,
 		height: 750,
@@ -28,44 +166,45 @@ function createWindow () {
 		webPreferences: {
 			nodeIntegration: true
 		}
-	});
+	})
 
-	win.menuBarVisible = false;
-	win.loadFile("index.html");
+	win.loadFile("index.html")
 
 	credits = new BrowserWindow({
 		parent: win,
-		modal: true,
+		title: "Silence SpeedUp - Credits",
 		icon: icon,
 		width: 400,
 		height: 500,
-		minWidth: 400,
-		minHeight: 400,
+		resizable: false,
 		backgroundColor: bgColor,
 		show: false,
 		webPreferences: {
 			nodeIntegration: true
 		}
-	});
+	})
 
-	credits.menuBarVisible = false;
-	credits.loadFile("credits.html");
+	credits.menuBarVisible = false
+	credits.loadFile("credits.html")
+	credits.excludedFromShownWindowsMenu = true
 
 	credits.on("close", (event) => {
-		event.preventDefault();
-		credits.hide();
-	});
+		event.preventDefault()
+		credits.hide()
+	})
 
 	credits.webContents.on("new-window", (event, url) => {
-		event.preventDefault();
-		shell.openExternal(url);
-	});
+		event.preventDefault()
+		shell.openExternal(url)
+	})
 
 	progress = new BrowserWindow({
 		parent: win,
+		title: "",
 		icon: icon,
 		width: 700,
 		height: 40,
+		resizable: false,
 		backgroundColor: bgColor,
 		show: false,
 		frame: false,
@@ -73,117 +212,161 @@ function createWindow () {
 		webPreferences: {
 			nodeIntegration: true
 		}
-	});
+	})
 
-	progress.menuBarVisible = false;
-	progress.setResizable(false);
-	progress.loadFile("progress.html");
+	progress.menuBarVisible = false
+	progress.loadFile("progress.html")
 
 	progress.on("close", (event) => {
-		event.preventDefault();
-		progress.hide();
-		win.show();
-	});
+		event.preventDefault()
+		progress.hide()
+		win.show()
+	})
 
-	// progress.on("resize", (event) => {
-	// 	console.log(progress.getSize());
-	// });
+	license = new BrowserWindow({
+		parent: win,
+		title: "Silence SpeedUp - License",
+		icon: icon,
+		width: 650,
+		height: 750,
+		resizable: false,
+		backgroundColor: bgColor,
+		show: false
+	})
+
+	license.menuBarVisible = false
+	license.loadFile(path.join(__dirname, "LICENSE"))
+	license.excludedFromShownWindowsMenu = true
+
+	license.on("close", (event) => {
+		event.preventDefault()
+		license.hide()
+	})
 
 	// Emitted when the window is closed.
 	win.on("closed", () => {
 		// Dereference the window object, usually you would store windows
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
-		credits = null;
-		progress = null;
-		win = null;
-	});
+		license = null
+		credits = null
+		progress = null
+		win = null
+	})
+}
+
+function openFile() {
+	fileNames = dialog.showOpenDialogSync(win, {
+    title: "Select one or more videos",
+    filters: [
+      {name:"Video", extensions:["avi", "flv", "mkv", "mov", "mp4", "webm", "wmv"]}
+    ],
+    properties:['openFile', 'multiSelections']
+  })
+
+  win.send("selectedFiles", fileNames)
+}
+
+function openFolder() {
+	folder = dialog.showOpenDialogSync(win, {
+    title: "Select a folder",
+    properties:['openDirectory']
+  })
+
+  win.send("selectedFolder", folder)
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  Menu.setApplicationMenu(menu)
+	createWindows()
+})
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
-	// On macOS it is common for applications and their menu bar
-	// to stay active until the user quits explicitly with Cmd + Q
-	if (process.platform !== "darwin") {
-		app.quit();
-	}
-});
+	app.quit()
+})
 
 app.on("activate", () => {
 	// On macOS it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
 	if (win === null) {
-		createWindow();
+		createWindow()
 	}
-});
+})
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipc.on("toggleDevTools", (event) => {
-	win.toggleDevTools();
-});
+ipcMain.on("selectFiles", (event) => {
+  openFile()
+})
 
-ipc.on("selectFiles", (event) => {
-  fileNames = dialog.showOpenDialogSync(win, {
-    title: "Seleziona uno o più video",
-    filters: [
-      {name:"Video", extensions:["avi", "mkv", "mp4"]}
-    ],
-    properties:['openFile', 'multiSelections']
-  });
+ipcMain.on("selectFolder", (event) => {
+  openFolder()
+})
 
-  win.send("selectedFiles", fileNames);
-});
+ipcMain.on("menuEnabler", (event, enabled) => {
+	menu.getMenuItemById("1").enabled = enabled
+	menu.getMenuItemById("2").enabled = enabled
+	menu.getMenuItemById("3").enabled = enabled
+	menu.getMenuItemById("4").enabled = !enabled
+})
 
-ipc.on("selectFolder", (event) => {
-  folder = dialog.showOpenDialogSync(win, {
-    title: "Seleziona una cartella",
-    properties:['openDirectory']
-  });
+ipcMain.on("setProgressBar", (event, value) => {
+	win.setProgressBar(value)
+})
 
-  win.send("selectedFolder", folder);
-});
+ipcMain.on("showCredits", (event) => {
+	credits.show()
+})
 
-ipc.on("setProgressBar", (event, value) => {
-	win.setProgressBar(value);
-});
+ipcMain.on("viewMainWindow", (event) => {
+	progress.hide()
+	win.show()
+	win.focus()
+})
 
-ipc.on("showCredits", (event) => {
-	credits.show();
-});
+ipcMain.on("viewProgressWindow", (event) => {
+	win.hide()
+	progress.showInactive()
+})
 
-ipc.on("viewMainWindow", (event) => {
-	progress.hide();
-	win.show();
-});
+ipcMain.on("changeTotal", (event, value) => {
+	progress.send("changeTotal", value)
+})
 
-ipc.on("viewProgressWindow", (event) => {
-	win.hide();
-	progress.show();
-});
+ipcMain.on("changeCompleted", (event, value) => {
+	progress.send("changeCompleted", value)
+})
 
-ipc.on("changeTotal", (event, value) => {
-	progress.send("changeTotal", value);
-});
+ipcMain.on("changeName", (event, value) => {
+	progress.send("changeName", value)
+})
 
-ipc.on("changeCompleted", (event, value) => {
-	progress.send("changeCompleted", value);
-});
+ipcMain.on("changeStatus", (event, value) => {
+	progress.send("changeStatus", value)
+})
 
-ipc.on("changeName", (event, value) => {
-	progress.send("changeName", value);
-});
+ipcMain.on("changeProgressBar", (event, value) => {
+	progress.send("changeProgressBar", value)
+})
 
-ipc.on("changeStatus", (event, value) => {
-	progress.send("changeStatus", value);
-});
+ipcMain.on("showWarrantyDetails", (event, value) => {
+	// Go to paragraph 15
+	license.webContents.executeJavaScript("window.scrollTo(0, 8820);");
+	license.show()
+})
 
-ipc.on("changeProgressBar", (event, value) => {
-	progress.send("changeProgressBar", value);
-});
+ipcMain.on("showRedistributingDetails", (event, value) => {
+	// Go to paragraph 16
+	license.webContents.executeJavaScript("window.scrollTo(0, 8980);");
+	license.show()
+})
+
+ipcMain.on("quit", (event) => {
+	win.close()
+	app.quit()
+})
