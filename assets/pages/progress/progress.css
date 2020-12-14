@@ -23,7 +23,7 @@ button#maximize {
   border: none;
   background-size: 30px 30px !important;
   background-position: 5px 5px !important;
-  background: url(../icons/maximize.svg) no-repeat;
+  background: url(../../icons/maximize.svg) no-repeat;
 }
 
 #progressBar {
