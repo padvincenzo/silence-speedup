@@ -60,4 +60,4 @@ For each video, this program will:
 At the end of execution, the program does not automatically clean the tmp folder.
 
 ## Credits
-This software uses libraries from the FFmpeg project, which I do not own, under the LGPLv2.1.
+This software uses binaries of the FFmpeg project, which I do not own, under the GPLv3.
