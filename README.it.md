@@ -1,7 +1,7 @@
 # Silence Speedup
 Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
-![Schermata principale](screenshots/Homescreen.png)
+![Schermata principale](assets/screenshots/homescreen.png)
 
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
@@ -23,9 +23,7 @@ $ npm start
 ```
 
 ### Requisiti
-Questo programma richiede [ffmpeg](https://ffmpeg.org/download.html) per processare i tuoi video. Se è già installato, devi solo aprire il programma e modificare la configurazione dal pulsante di configurazione.
-
-Se desideri invece eseguire questo programma dal codice sorgente allora hai bisogno di installare [NodeJS](https://nodejs.org/en/).
+Se desideri eseguire questo programma dal codice sorgente hai bisogno di installare [NodeJS](https://nodejs.org/en/).
 
 ## Come funziona
 Per ogni video, questo programma:
@@ -62,4 +60,4 @@ Per ogni video, questo programma:
 Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
 
 ## Crediti
-Questo software usa delle librerie del progetto FFmpeg, che io non possiedo, sotto la licenza LGPLv2.1.
+Questo software usa eseguibili del progetto FFmpeg, che io non possiedo, sotto la licenza GPLv3.
