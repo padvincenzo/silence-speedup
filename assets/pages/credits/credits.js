@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 const {ipcRenderer} = require("electron")
 const os = require("os")
 const fs = require("fs")
+const path = require("path")
 
 window.onload = () => {
   document.getElementById("showWarrantyDetails").addEventListener("click", (event) => {
@@ -32,15 +33,18 @@ window.onload = () => {
     ipcRenderer.send("showRedistributingDetails")
   })
 
+  let div = document.getElementById("ffmpeg-info")
+
   if(os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
-    fs.readFile("ffmpeg/readme.txt", {encoding: 'utf-8'}, (err, data) => {
+    readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.txt")
+    fs.readFile(readmePath, {encoding: 'utf-8'}, (err, data) => {
       if (err)
-        document.getElementById("ffmpeg-info").innerHTML = "Error reading ffmpeg/readme.txt"
+        div.innerHTML = "Error reading readme.txt"
       else
-        document.getElementById("ffmpeg-info").innerHTML = data
+        div.innerHTML = data
     })
 
   } else {
-    document.getElementById("ffmpeg-info").innerHTML = "FFmpeg not configured."
+    div.innerHTML = "FFmpeg not configured for this platform."
   }
 }
