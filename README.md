@@ -42,7 +42,7 @@ With these settings you can change the speed of spoken/silence parts of the vide
 #### Export
 (Still not implemented) Choose the format (extension) of your video. Default is set to keep the same extension. In this way, I noticed that some formats (e.g. `avi`) loose video quality during the process.
 
-Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup`. If you want to change it, press the settings button or go to `File -> Settings'.
+Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings'.
 
 ## Installation
 This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/) and FFmpeg binaries are inside the release.
