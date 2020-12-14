@@ -15,8 +15,8 @@ If it's so, you need to make small changes to the file (source code path)/assets
 </p>
 
 <ol>
-<li>Go to the method static load();</li>
-<li>Comment code block(s) that refers to ffmpeg static binaries;</li>
-<li>Set FFmpeg.command to the path of your ffmpeg executable, or the command that call it;</li>
-<li>Open the app and enjoy.</li>
+<li>Go to the method static load()</li>
+<li>Comment code block(s) that refers to ffmpeg static binaries</li>
+<li>Set FFmpeg.command to the path of your ffmpeg executable, or the command that call it.</li>
 </ol>
+
