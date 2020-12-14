@@ -5,6 +5,9 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
+## Download
+[Scarica l'ultima versione](https://github.com/padvincenzo/silence-speedup/releases/tag/v1.1.1) (FFmpeg incluso)
+
 ## Indice dei contenuti
   - [Per iniziare](#per-iniziare)
     - [Configurazioni](#configurazione)
