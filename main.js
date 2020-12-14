@@ -56,6 +56,16 @@ let template = [
 				type: 'separator'
 			},
 			{
+				label: 'Settings',
+				click: () => {
+					config.webContents.executeJavaScript("load();");
+					config.show()
+				}
+			},
+			{
+				type: 'separator'
+			},
+			{
 				id: "3",
 				label: 'Quit',
 				accelerator: 'CmdOrCtrl+Q',
