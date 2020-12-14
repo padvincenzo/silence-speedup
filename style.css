@@ -108,27 +108,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 button#addFiles {
-	background: url(../icons/add_video.svg) no-repeat;
+	background: url(assets/icons/add_video.svg) no-repeat;
 }
 
 button#addFolder {
-	background: url(../icons/add_folder.svg) no-repeat;
+	background: url(assets/icons/add_folder.svg) no-repeat;
 }
 
 button#configuration {
-	background: url(../icons/settings.svg) no-repeat;
+	background: url(assets/icons/settings.svg) no-repeat;
 }
 
 button#info {
-	background: url(../icons/info.svg) no-repeat;
+	background: url(assets/icons/info.svg) no-repeat;
 }
 
 button#start {
-	background: url(../icons/start.svg) no-repeat;
+	background: url(assets/icons/start.svg) no-repeat;
 }
 
 button#stop {
-	background: url(../icons/stop.svg) no-repeat;
+	background: url(assets/icons/stop.svg) no-repeat;
 	display: none;
 }
 
@@ -139,7 +139,7 @@ button#start, button#stop {
 }
 
 button#minimize {
-	background: url(../icons/minimize.svg) no-repeat;
+	background: url(assets/icons/minimize.svg) no-repeat;
   display: none;
 }
 

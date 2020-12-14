@@ -38,116 +38,108 @@ let config = null
 // Menu
 let template = [
 	{
-		label: '&Media',
+		label: '&File',
 		submenu: [
 			{
 				id: "1",
-    		label: 'Open video(s)',
-    		accelerator: 'CmdOrCtrl+O',
-    		click: (item, focusedWindow) => {
-					openFile()
-				}
-  		},
+				label: 'Open video(s)',
+				accelerator: 'CmdOrCtrl+O',
+				click: (item, focusedWindow) => { openFile() }
+			},
 			{
 				id: "2",
-    		label: 'Open folder',
-    		accelerator: 'Shift+CmdOrCtrl+O',
-				click: (item, focusedWindow) => {
-					openFolder()
-				}
-  		},
+				label: 'Open folder',
+				accelerator: 'Shift+CmdOrCtrl+O',
+				click: (item, focusedWindow) => { openFolder() }
+			},
 			{
-    		type: 'separator'
-  		},
+				type: 'separator'
+			},
 			{
 				id: "3",
-    		label: 'Start',
-				click: () => {
-					win.send("start")
-				}
-  		},
-			{
-				id: "4",
-    		label: 'Stop',
-				enabled: false,
-    		click: () => {
-					win.send("stop")
-				}
-  		},
-			{
-    		type: 'separator'
-  		},
-			{
-		    label: 'Toggle Dev Tools',
-		    accelerator: (() => {
-		      if (process.platform === 'darwin') {
-		        return 'Alt+Command+I'
-		      } else {
-		        return 'Ctrl+Shift+I'
-		      }
-		    })(),
-		    click: (item, focusedWindow) => {
-		      win.toggleDevTools()
-		    }
-		  },
-			{
-    		type: 'separator'
-  		},
-			{
-    		label: 'Quit',
-    		accelerator: 'CmdOrCtrl+Q',
-				click: (item, focusedWindow) => {
-					win.send("stopAndExit")
-				}
-  		}
+				label: 'Quit',
+				accelerator: 'CmdOrCtrl+Q',
+				click: (item, focusedWindow) => { win.send("stopAndExit") }
+			}
 		]
 	},
 	{
-	  label: '&Help',
-	  role: 'help',
-	  submenu: [
+		label: '&Media',
+		submenu: [
 			{
-		    label: `Version ${version}`,
-		    enabled: false
-		  },
-			{
-		    type: 'separator'
-		  },
-			{
-				label: 'About',
-		    click: () => {
-		     	credits.show()
-		    }
+				id: "4",
+				label: 'Start',
+				click: () => { win.send("start") }
 			},
 			{
-		    label: 'View License',
-		    click: () => {
+				id: "5",
+				label: 'Stop',
+				enabled: false,
+				click: () => { win.send("stop") }
+			}
+		]
+	},
+	{
+		label: '&Help',
+		role: 'help',
+		submenu: [
+			{
+				label: `Version ${version}`,
+				enabled: false
+			},
+			{
+				type: 'separator'
+			},
+			{
+				label: 'About',
+				click: async () => { credits.show() }
+			},
+			{
+				label: 'View License',
+				click: () => {
 					// Go to first line
 					license.webContents.executeJavaScript("window.scrollTo(0, 0);");
 					license.show()
-		    }
-		  },
+				}
+			},
 			{
-		    type: 'separator'
-		  },
+				type: 'separator'
+			},
 			{
-		    label: 'Source code',
-		    click: () => {
-		      shell.openExternal('https://github.com/padvincenzo/silence-speedup')
-		    }
-		  },
+				label: 'Issues',
+				submenu:
+				[
+					{
+						label: 'Toggle Dev Tools',
+						accelerator: (() => {
+							return (process.platform === 'darwin') ? 'Alt+Command+I' : 'Ctrl+Shift+I'
+						})(),
+						click: (item, focusedWindow) => { win.toggleDevTools() }
+					},
+					{
+						label: 'Report issue',
+						click: async () => { shell.openExternal('https://github.com/padvincenzo/silence-speedup/issues') }
+					}
+				]
+			},
 			{
-		    label: 'FFmpeg',
-		    click: () => {
-		      shell.openExternal('https://ffmpeg.org/')
-		    }
-		  },
-			{
-		    label: 'Electron',
-		    click: () => {
-		      shell.openExternal('https://www.electronjs.org/')
-		    }
-		  }
+				label: 'References',
+				submenu:
+				[
+					{
+						label: 'Source code',
+						click: async () => { shell.openExternal('https://github.com/padvincenzo/silence-speedup') }
+					},
+					{
+						label: 'FFmpeg',
+						click: async () => { shell.openExternal('https://ffmpeg.org/') }
+					},
+					{
+						label: 'Electron',
+						click: async () => { shell.openExternal('https://www.electronjs.org/') }
+					}
+				]
+			}
 		]
 	}
 ]
@@ -155,17 +147,21 @@ let template = [
 const menu = Menu.buildFromTemplate(template)
 
 function createWindows () {
+	// Set application menu
+	Menu.setApplicationMenu(menu)
+
 	// Create the browser window.
 	win = new BrowserWindow({
 		title: "Silence SpeedUp",
 		icon: icon,
-		width: 800,
-		height: 750,
+		width: 750,
+		height: 800,
 		minWidth: 600,
 		minHeight: 750,
 		backgroundColor: bgColor,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	})
 
@@ -181,12 +177,14 @@ function createWindows () {
 		backgroundColor: bgColor,
 		show: false,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	})
 
 	credits.menuBarVisible = false
-	credits.loadFile("credits.html")
+	credits.loadFile("assets/pages/credits/credits.html")
+	// credits.openDevTools()
 	credits.excludedFromShownWindowsMenu = true
 
 	credits.on("close", (event) => {
@@ -211,12 +209,13 @@ function createWindows () {
 		frame: false,
 		alwaysOnTop: true,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	})
 
 	progress.menuBarVisible = false
-	progress.loadFile("progress.html")
+	progress.loadFile("assets/pages/progress/progress.html")
 
 	progress.on("close", (event) => {
 		event.preventDefault()
@@ -232,11 +231,14 @@ function createWindows () {
 		height: 750,
 		resizable: false,
 		backgroundColor: bgColor,
-		show: false
+		show: false,
+		webPreferences: {
+			contextIsolation: false
+		}
 	})
 
 	license.menuBarVisible = false
-	license.loadFile(path.join(__dirname, "LICENSE"))
+	license.loadFile("LICENSE")
 	license.excludedFromShownWindowsMenu = true
 
 	license.on("close", (event) => {
@@ -255,12 +257,14 @@ function createWindows () {
 		backgroundColor: bgColor,
 		show: false,
 		webPreferences: {
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	})
 
 	config.menuBarVisible = false
-	config.loadFile("config.html")
+	config.loadFile("assets/pages/config/config.html")
+	// config.openDevTools()
 	config.excludedFromShownWindowsMenu = true
 
 	config.on("close", (event) => {
@@ -306,10 +310,7 @@ function openFolder() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", () => {
-  Menu.setApplicationMenu(menu)
-	createWindows()
-})
+app.on("ready", createWindows)
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
@@ -320,7 +321,7 @@ app.on("activate", () => {
 	// On macOS it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
 	if (win === null) {
-		createWindow()
+		createWindows()
 	}
 })
 
@@ -396,18 +397,6 @@ ipcMain.on("showRedistributingDetails", (event, value) => {
 ipcMain.on("showConfig", (event) => {
 	config.webContents.executeJavaScript("load();");
 	config.show()
-})
-
-ipcMain.on("ffmpegChoose", (event) => {
-	file = dialog.showOpenDialogSync(config, {
-    title: "Select ffmpeg executable",
-    filters: [
-      {name:"Executable", extensions:["*"]}
-    ],
-    properties:['openFile']
-  })
-
-  config.send("ffmpegChoosen", file)
 })
 
 ipcMain.on("exportChoose", (event) => {

@@ -1,16 +1,41 @@
 {
   "name": "silence-speedup",
   "productName": "Silence SpeedUp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Speed-up your videos speeding-up (or removing) silences, using FFmpeg. This is an electron-based app.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "author": "Vincenzo Padula",
+  "author": {
+    "name": "Vincenzo Padula",
+    "email": "padvincenzo@gmail.com",
+    "url": "https://vincenzopadula.altervista.org/"
+  },
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/padvincenzo/silence-speedup"
+  },
+  "bugs": "https://github.com/padvincenzo/silence-speedup/issues",
+  "homepage": "https://github.com/padvincenzo/silence-speedup#readme",
+  "keywords": [
+    "silence-speedup",
+    "video-editing",
+    "silence",
+    "ffmpeg",
+    "videos",
+    "electron",
+    "electron-app",
+    "silence-skip",
+    "skip-silence",
+    "speedup",
+    "videos-speeding",
+    "silences"
+  ],
   "devDependencies": {
-    "electron": "^10.1.3",
-    "electron-packager": "^15.1.0"
-  }
+    "electron": "^11.1.0",
+    "electron-packager": "^15.2.0"
+  },
+  "dependencies": {}
 }
