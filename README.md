@@ -6,14 +6,48 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
 ## Table of Contents
+  - [Getting started](#getting-started)
+    - [Program settings](#program-settings)
+      - [Silence detect](#silence-detect)
+      - [Filter](#filter)
+      - [Export](#export)
   - [Installation](#installation)
     - [Requirements](#requirements)
   - [How it works](#how-it-works)
     - [Note](#note)
   - [Credits](#credits)
 
+## Getting started
+This program, built with Electron, makes use of FFmpeg in order to speed up (or skip) parts of the video that are with no sound.
+
+It is really helpful for video lessons, where the professor takes long time for writing something on the board, makes lots of pauses, or just speaks slowly. With this program you can skip this boring parts and gain time.
+
+Of course this program is not perfect, and you might have to practice a bit with it.
+
+### Program settings
+Not all videos are with the same audio volume, and you may want to choose which silences should be treaten as that. So, here we have the configurable parts.
+
+#### Silence detect
+These settings change the way FFmpeg detect silences. You can set:
+
+* The background noise of the video (`Low` for a silent room with a microphone, `Mid` for the average noisy room, `High` for a noisy room). Note: if your are new, try a video with defaults settings and see the result.
+
+* How many seconds the smallest silence lasts (this value prevent brief pauses to be treaten as silences).
+
+* How many seconds of silences should not be treaten as silences (explaination: without a minimum time of margin, spoken words might merge and the result would be an incomprehensible speech).
+
+#### Filter
+With these settings you can change the speed of spoken/silence parts of the video, and also set silence parts to be video-only.
+
+#### Export
+(Still not implemented) Choose the format (extension) of your video. Default is set to keep the same extension. In this way, I noticed that some formats (e.g. `avi`) loose video quality during the process.
+
+Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup`. If you want to change it, press the settings button or go to `File -> Settings'.
+
 ## Installation
-This program is packaged with [``electron-packager``](https://electron.github.io/electron-packager/master/), and it should run out-of-the-box. If you want to run this program by yourself from the source code, then:
+This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/) and FFmpeg binaries are inside the release.
+
+But, if you want to compile and run this program by yourself from the source code, then:
 
 ```
 $ git clone https://github.com/padvincenzo/silence-speedup
