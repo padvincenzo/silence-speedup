@@ -36,25 +36,44 @@ class FFmpeg {
 
   static load() {
     let platform = os.platform()
-    // Settings.unlock()
+    let ffpath = null
+
+    // Using static binaries
     switch (platform) {
       case "darwin": {
-        FFmpeg.command = "ffmpeg/ffmpeg"
+        // https://evermeet.cx/ffmpeg/
+        ffpath = path.join(__dirname, "..", "ffmpeg", "ffmpeg")
         break
       }
       case "win32": {
-        FFmpeg.command = "ffmpeg/bin/ffmpeg.exe"
+        // https://www.gyan.dev/ffmpeg/builds/
+        ffpath = path.join(__dirname, "..", "ffmpeg", "bin", "ffmpeg.exe")
         break
       }
       case "linux": {
-        FFmpeg.command = "ffmpeg/ffmpeg"
+        // https://www.johnvansickle.com/ffmpeg/
+        ffpath = path.join(__dirname, "..", "ffmpeg", "ffmpeg")
         break
       }
-      default: {
-        Settings.unlock()
-        log("FFmpeg not configured.")
-      }
     }
+
+    if(ffpath == null || ! fs.existsSync(ffpath)) {
+      Settings.lock()
+      log("FFmpeg binaries not found.")
+    } else {
+      FFmpeg.command = ffpath
+    }
+    // If you have FFmpeg installed on your computer and
+    // you want to use it instead, then just comment
+    // this block above and set the static variable
+    // FFmpeg.command to the path of your ffmpeg executable.
+    //
+    // Note: you can as well use a command that call ffmpeg,
+    // e.g. on linux type:
+    //
+    //            FFmpeg.command = "ffmpeg"
+    //
+    // and should be fine.
 
     FFmpeg.progressBar = document.getElementById("ffmpegProgressBar")
     FFmpeg.progress = document.getElementById("ffmpegProgress")

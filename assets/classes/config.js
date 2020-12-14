@@ -35,8 +35,6 @@ class Config {
         {encoding: 'utf-8'})
     }
 
-    console.log(Config.configPath)
-
     let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
     let config = JSON.parse(json)
     Config.exportPath = config.exportPath || Config.defaultExportPath
