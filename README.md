@@ -5,6 +5,9 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
+## Download
+[Download the latest release](https://github.com/padvincenzo/silence-speedup/releases/tag/v1.1.1) (FFmpeg included)
+
 ## Table of Contents
   - [Getting started](#getting-started)
     - [Program settings](#program-settings)
