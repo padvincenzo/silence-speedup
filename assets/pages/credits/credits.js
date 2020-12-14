@@ -20,13 +20,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 const {ipcRenderer} = require("electron")
+const os = require("os")
+const fs = require("fs")
 
 window.onload = () => {
-   document.getElementById("showWarrantyDetails").addEventListener("click", (event) => {
-     ipcRenderer.send("showWarrantyDetails")
-   })
+  document.getElementById("showWarrantyDetails").addEventListener("click", (event) => {
+    ipcRenderer.send("showWarrantyDetails")
+  })
 
-   document.getElementById("showRedistributingDetails").addEventListener("click", (event) => {
-     ipcRenderer.send("showRedistributingDetails")
-   })
+  document.getElementById("showRedistributingDetails").addEventListener("click", (event) => {
+    ipcRenderer.send("showRedistributingDetails")
+  })
+
+  if(os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
+    fs.readFile("ffmpeg/readme.txt", {encoding: 'utf-8'}, (err, data) => {
+      if (err)
+        document.getElementById("ffmpeg-info").innerHTML = "Error reading ffmpeg/readme.txt"
+      else
+        document.getElementById("ffmpeg-info").innerHTML = data
+    })
+
+  } else {
+    document.getElementById("ffmpeg-info").innerHTML = "FFmpeg not configured."
+  }
 }
