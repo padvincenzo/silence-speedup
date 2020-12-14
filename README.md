@@ -1,7 +1,7 @@
 # Silence Speedup
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
-![Homescreen](screenshots/Homescreen.png)
+![Homescreen](assets/screenshots/homescreen.png)
 
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
@@ -23,8 +23,6 @@ $ npm start
 ```
 
 ### Requirements
-This program require [ffmpeg](https://ffmpeg.org/download.html) to process your videos. If you have it already installed, then open the program and just change the configuration by clicking on the configuration button.
-
 If you wish to run this program from the source files then you also need to install [NodeJS](https://nodejs.org/en/).
 
 ## How it works
