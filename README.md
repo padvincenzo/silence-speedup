@@ -23,9 +23,12 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 ## Getting started
 This program, built with Electron, makes use of FFmpeg in order to speed up (or skip) parts of the video that are with no sound.
 
-It is really helpful for video lessons, where the professor takes long time for writing something on the board, makes lots of pauses, or just speaks slowly. With this program you can skip this boring parts and gain time.
+It is really helpful for video lessons, where the professor takes long time for writing something on the board, makes lots of pauses, or just speaks slowly. With this program you can skip this boring parts and save time.
 
 Of course this program is not perfect, and you might have to practice a bit with it.
+
+### How to use
+Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
 
 ### Program settings
 Not all videos are with the same audio volume, and you may want to choose which silences should be treaten as that. So, here we have the configurable parts.
