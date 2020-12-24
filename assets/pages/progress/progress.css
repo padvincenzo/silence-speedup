@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-button#maximize {
+button#defaultMode {
   border: none;
   background-size: 30px 30px !important;
   background-position: 5px 5px !important;
@@ -28,7 +28,6 @@ button#maximize {
 
 #progressBar {
   background-color: #027bce;
-  color: #222;
   width: 0%;
   height: 40px;
   position: fixed;
@@ -39,7 +38,7 @@ button#maximize {
 }
 
 #data {
-  background-color: rgba(170, 170, 170, 0.5);
+  background-color: #8888;
   color: #222;
   font-size: 12pt;
   text-align: center;
@@ -84,4 +83,16 @@ button#maximize {
 
 *:focus {
   outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  button#defaultMode {
+    background: url(../../icons/maximize_dark.svg) no-repeat;
+  }
+
+  #data {
+    background-color: #2228;
+    color: #DDD;
+  }
+
 }

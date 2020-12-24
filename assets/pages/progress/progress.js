@@ -34,27 +34,27 @@ window.onload = () => {
   currentStatus = document.getElementById("currentStatus")
   progressBar = document.getElementById("progressBar")
 
-  document.getElementById("maximize").addEventListener("click", (event) => {
-    ipcRenderer.send("viewMainWindow")
+  document.getElementById("defaultMode").addEventListener("click", (event) => {
+    ipcRenderer.send("switchToDefaultMode")
   })
 }
 
-ipcRenderer.on("changeTotal", (event, value) => {
+ipcRenderer.on("total", (event, value) => {
   total.innerHTML = "/" + value
 })
 
-ipcRenderer.on("changeCompleted", (event, value) => {
+ipcRenderer.on("completed", (event, value) => {
   completed.innerHTML = value
 })
 
-ipcRenderer.on("changeName", (event, value) => {
+ipcRenderer.on("name", (event, value) => {
   currentVideo.innerHTML = value
 })
 
-ipcRenderer.on("changeStatus", (event, value) => {
+ipcRenderer.on("status", (event, value) => {
   currentStatus.innerHTML = value
 })
 
-ipcRenderer.on("changeProgressBar", (event, value) => {
+ipcRenderer.on("progressBar", (event, value) => {
   progressBar.style.width = value + "%"
 })
