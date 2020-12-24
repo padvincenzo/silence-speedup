@@ -24,46 +24,67 @@ const fs = require("fs")
 const path = require("path")
 const os = require("os")
 
-const configPath = "config.json"
+const configPath = path.join(__dirname, "..", "..", "..", "config.json")
 const defaultExportPath = path.join(os.homedir(), "speededup")
+const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"))
 
-let exportPath = null
-
-function load() {
-  let json = fs.readFileSync(configPath, {encoding: 'utf-8'})
-  let config = JSON.parse(json)
-  exportPath = config.exportPath || defaultExportPath
-
-  document.getElementById("export").value = exportPath
-}
-
-function save() {
-  exportPath = document.getElementById("export").value
-
-  fs.writeFileSync(configPath,
-    JSON.stringify({exportPath:exportPath}),
-    {encoding: 'utf-8'})
-}
+let data
 
 window.onload = () => {
+  let json = fs.readFileSync(configPath, {encoding: 'utf-8'})
+  data = JSON.parse(json)
+  setData()
 
-   document.getElementById("exportChoose").addEventListener("click", (event) => {
-     ipcRenderer.send("exportChoose")
-   })
+  document.getElementById("exportChoose").addEventListener("click", (event) => {
+    let folder = ipcRenderer.sendSync("exportChoose")
+    if(folder == undefined)
+      return
 
-   document.getElementById("reset").addEventListener("click", (event) => {
-     document.getElementById("export").value = defaultExportPath
-     save()
-   })
+    document.getElementById("export").value = folder[0].toString()
+  })
 
-   document.getElementById("save").addEventListener("click", (event) => {
-     save()
-   })
+  document.getElementById("ffmpegChoose").addEventListener("click", (event) => {
+    let file = ipcRenderer.sendSync("ffmpegChoose")
+    if(file == undefined)
+      return
+
+    document.getElementById("ffmpeg").value = file[0].toString()
+  })
+
+  document.getElementById("reset").addEventListener("click", (event) => {
+    setData()
+  })
+
+  document.getElementById("save").addEventListener("click", (event) => {
+    getData()
+    saveData()
+  })
 }
 
-ipcRenderer.on("exportChoosen", (event, folder) => {
-  if(folder == undefined)
-    return
+function setData() {
+  document.getElementById("export").value = ((data.exportPath == "" && fs.existsSync(defaultExportPath)) ? defaultExportPath : data.exportPath)
+  document.getElementById("ffmpeg").value = ((data.ffmpegPath == "" && fs.existsSync(defaultFFmpegPath)) ? defaultFFmpegPath : data.ffmpegPath)
+}
 
-  document.getElementById("export").value = folder[0].toString()
-})
+function getData() {
+  data.exportPath = document.getElementById("export").value
+  if(data.exportPath == "")
+    data.exportPath = defaultExportPath
+  data.ffmpegPath = document.getElementById("ffmpeg").value
+  if(data.ffmpegPath == "") {
+    if(fs.existsSync(defaultFFmpegPath))
+      data.ffmpegPath = defaultFFmpegPath
+    else {
+
+    }
+  }
+
+}
+
+function saveData() {
+  fs.writeFileSync(configPath,
+    JSON.stringify(data, null, "\t"),
+    {encoding: 'utf-8'})
+
+  ipcRenderer.send("preferencesUpdate", data)
+}

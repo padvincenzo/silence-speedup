@@ -22,13 +22,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 <!DOCTYPE html>
 <html lang="it">
 	<head>
-		<title>Silence SpeedUp - Configuration</title>
+		<title>Silence SpeedUp - Preferences</title>
 
 		<meta charset="UTF-8">
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
 		<link rel="stylesheet" type="text/css" href="../common.css" />
-		<link rel="stylesheet" type="text/css" href="config.css" />
-		<script src="config.js"></script>
+		<link rel="stylesheet" type="text/css" href="preferences.css" />
+		<script src="preferences.js"></script>
 	</head>
 
 	<body>
@@ -39,6 +39,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
       <div class="input">
         <input type="text" name="export" id="export" value="">
         <button id="exportChoose" title="Browse">...</button>
+      </div>
+		</div>
+
+		<div>
+			<label for="ffmpeg">FFmpeg path</label>
+      <div class="input">
+        <input type="text" name="ffmpeg" id="ffmpeg" value="">
+        <button id="ffmpegChoose" title="Browse">...</button>
       </div>
 		</div>
 
