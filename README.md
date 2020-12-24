@@ -52,7 +52,7 @@ Choose the format (extension) of your video. Default is set to keep the same ext
 Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
 
 ### Requirements
-This app comes in 2 versions: the one called standalone has FFmpeg binaries inside and it does not require anything to run. The other version is without FFmpeg: you have to download and configure it.\
+This app comes in 2 versions: the one called standalone has FFmpeg binaries inside and it does not require anything to run. The other version is without FFmpeg: you have to download and configure it.
 
 ## Compiling
 This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/). But, if you want to compile and run this program by yourself from the source code, then:
