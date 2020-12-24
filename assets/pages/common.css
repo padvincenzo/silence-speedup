@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	--c-3: #3e6680;
 	--c-4: #0496ff;
 	--c-5: #027bce;
-	--c-dark: #222;
+	--c-dark: #333;
 	--c-light: #eee;
 	--transition: 0.2s;
 }
@@ -33,16 +33,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 html, body {
   margin: 0;
   padding: 0;
-	height: -webkit-fill-available;
-  color: var(--c-dark);
+	background-color: var(--c-light);
+  color: var(--c-dark)
 }
 
 button {
   width: 46px;
   height: 46px;
   border-radius: 5px;
-	border: 1px solid;
+	border: 1px solid var(--c-dark);
 	cursor: pointer;
+	color: var(--c-dark);
+	background-color: #0000;
   background-size: 30px 30px !important;
 	background-position: 8px 8px !important;
 	-webkit-transition: var(--transition);
@@ -62,4 +64,27 @@ button:disabled {
 
 button:disabled:hover {
 	background-color: inherit !important;
+}
+
+a, a:focus, .link, .link:focus {
+  text-decoration: underline;
+  color: var(--c-1);
+  outline: none;
+}
+
+.link:hover {
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--c-5: #00487c;
+		--c-4: #4bb3fd;
+		--c-3: #3e6680;
+		--c-2: #0496ff;
+		--c-1: #027bce;
+		--c-dark: #ccc;
+		--c-light: #333;
+	}
+
 }
