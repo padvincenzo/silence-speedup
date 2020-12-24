@@ -6,16 +6,17 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
 ## Download
-[Download the latest release](https://github.com/padvincenzo/silence-speedup/releases/tag/v1.1.1) (FFmpeg included)
+[Download the latest release](https://github.com/padvincenzo/silence-speedup/releases/tag/latest)
 
 ## Table of Contents
   - [Getting started](#getting-started)
+    - [How to use](#how-to-use)
     - [Program settings](#program-settings)
       - [Silence detect](#silence-detect)
       - [Filter](#filter)
       - [Export](#export)
-  - [Installation](#installation)
     - [Requirements](#requirements)
+  - [Compiling](#compiling)
   - [How it works](#how-it-works)
     - [Note](#note)
   - [Credits](#credits)
@@ -48,12 +49,13 @@ With these settings you can change the speed of spoken/silence parts of the vide
 #### Export
 (Still not implemented) Choose the format (extension) of your video. Default is set to keep the same extension. In this way, I noticed that some formats (e.g. `avi`) loose video quality during the process.
 
-Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings'.
+Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
 
-## Installation
-This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/) and FFmpeg binaries are inside the release.
+### Requirements
+This app comes in 2 versions: the one called standalone has FFmpeg binaries inside and it does not require anything to run. The other version is without FFmpeg: you have to download and configure it.\
 
-But, if you want to compile and run this program by yourself from the source code, then:
+## Compiling
+This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/). But, if you want to compile and run this program by yourself from the source code, then:
 
 ```
 $ git clone https://github.com/padvincenzo/silence-speedup
@@ -62,39 +64,38 @@ $ npm install
 $ npm start
 ```
 
-### Requirements
-If you wish to run this program from the source files then you also need to install [NodeJS](https://nodejs.org/en/).
+If you wish to run this program from source files then you also need to install [NodeJS](https://nodejs.org/en/).
 
 ## How it works
 For each video, this program will:
 
 1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
 
-    ```
-    <ffmpeg bin> -hide_banner -vn \
-      -ss 0.00 -i <Input file> \
-      -af silencedetect=n=<threshold>:d=<duration> \
-      -f null -
-    ```
+```
+<ffmpeg bin> -hide_banner -vn \
+  -ss 0.00 -i <Input file> \
+  -af silencedetect=n=<threshold>:d=<duration> \
+  -f null -
+```
 
 2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
 
-    ```
-    <ffmpeg bin> -hide_banner -loglevel warning -stats \
-      -ss <Start time> -to <End time> -i <Input file> \
-      -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
-      -map [v] -map [a] <Output fragment>
-    ```
+```
+<ffmpeg bin> -hide_banner -loglevel warning -stats \
+  -ss <Start time> -to <End time> -i <Input file> \
+  -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
+  -map [v] -map [a] <Output fragment>
+```
 
 3.  Concatenate all the fragments generated before.
 
-    ```
-    <ffmpeg bin> -hide_banner -loglevel warning -stats \
-      -f concat -safe 0 \
-      -i <Fragment list file> \
-      -c copy \
-      -map v -map a <Output file> -y
-    ```
+```
+<ffmpeg bin> -hide_banner -loglevel warning -stats \
+  -f concat -safe 0 \
+  -i <Fragment list file> \
+  -c copy \
+  -map v -map a <Output file> -y
+```
 
 ### Note
 At the end of execution, the program does not automatically clean the tmp folder.
