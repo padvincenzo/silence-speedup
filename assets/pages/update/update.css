@@ -19,10 +19,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {ipcRenderer} = require("electron")
+body {
+  padding: 0 10px;
+}
 
-ipcRenderer.on("data", (event, version, content, link) => {
-  document.getElementById("version").innerHTML = version
-  document.getElementById("content").innerHTML = content
-  document.getElementById("download").setAttribute("href", link)
-})
+h1 {
+  text-align: center;
+}
+
+h1, h2 {
+  color: var(--c-1);
+}
+
+a {
+  text-align: center;
+  display: block;
+}

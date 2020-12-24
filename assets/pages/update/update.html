@@ -1,4 +1,4 @@
-/*
+<!--
 Silence SpeedUp
 Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 This is an electron-based app.
@@ -17,12 +17,29 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+-->
 
-const {ipcRenderer} = require("electron")
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<title>SpeedUp - New Update Available</title>
 
-ipcRenderer.on("data", (event, version, content, link) => {
-  document.getElementById("version").innerHTML = version
-  document.getElementById("content").innerHTML = content
-  document.getElementById("download").setAttribute("href", link)
-})
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+		<link rel="stylesheet" type="text/css" href="../common.css" />
+		<link rel="stylesheet" type="text/css" href="update.css" />
+		<script src="update.js"></script>
+	</head>
+
+	<body>
+    <h1>Silence SpeedUp <span id="version"></span> available!</h1>
+
+		<h2>What's new</h2>
+    <p id="content"></p>
+
+    <br>
+
+    <a id="download" href="" target="_blank">Go to download page</a>
+
+  </body>
+</html>
