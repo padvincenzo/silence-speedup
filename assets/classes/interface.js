@@ -170,7 +170,8 @@ module.exports = class Interface {
       var list = fs.readdirSync(folder[0])
       var urls = list.map(name => path.join(folder[0], name))
 
-      Shell.log(`Files added: ${EntryList.import(urls)}`)
+      let c = EntryList.import(urls)
+      Shell.log(`Files added: ${c}`)
     })
 
     ipcRenderer.on("cleanShell", (event) => {

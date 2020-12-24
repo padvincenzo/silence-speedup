@@ -54,7 +54,7 @@ module.exports = class FFmpeg {
       } else {
         FFmpeg.command = Config.data.ffmpegPath
       }
-    }
+    } else FFmpeg.command = Config.data.ffmpegPath
   }
 
   static async run(args, data, onstderr, ifGood, ifBad) {
