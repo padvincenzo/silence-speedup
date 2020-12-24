@@ -19,10 +19,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class SpeedUp {
-  static spawn = null
+module.exports = class SpeedUp {
   static stream = null
   static interrupted = true
+  static currentEntry = null
 
   static threshold
   static silenceMinimumDuration
@@ -31,7 +31,7 @@ class SpeedUp {
   static muteAudio
   static silenceSpeed
   static playbackSpeed
-  static videoExtension = "mp4"
+  static videoExtension
 
   static silenceDetectOptions = [
     "-hide_banner",
@@ -44,8 +44,8 @@ class SpeedUp {
   ]
 
   static exportOptions = {
-    "playback": {
-      "options": [
+    playback: {
+      options: [
         "-hide_banner",
         "-loglevel", "warning",
         "-stats",
@@ -53,10 +53,10 @@ class SpeedUp {
         "-to", null,                        // End time
         "-i", null                          // Input file
       ],
-      "index": 10                           // Index for output file
+      index: 10                             // Index for output file
     },
-    "silence": {
-      "options": [
+    silence: {
+      options: [
         "-hide_banner",
         "-loglevel", "warning",
         "-stats",
@@ -64,10 +64,10 @@ class SpeedUp {
         "-to", null,                        // End time
         "-i", null                          // Input file
       ],
-      "index": 10                           // Index for output file
+      index: 10                             // Index for output file
     },
-    "copy": {
-      "options": [
+    copy: {
+      options: [
         "-hide_banner",
         "-loglevel", "warning",
         "-stats",
@@ -81,7 +81,7 @@ class SpeedUp {
     }
   }
 
-  static mergeOptions = [
+  static concatOptions = [
     "-hide_banner",
     "-loglevel", "warning",
     "-stats",
@@ -98,17 +98,17 @@ class SpeedUp {
   static silenceRegExp = new RegExp(/silence_(start|end): (-?\d+(.\d+)?)/, "gm")
 
   static setOptions() {
-    SpeedUp.threshold = Settings.thresholds[Settings.threshold.value].value
-    SpeedUp.silenceMinimumDuration = parseFloat(Settings.silenceMinimumDuration.value)
-    SpeedUp.silenceMargin = parseFloat(Settings.silenceMargin.value)
-    SpeedUp.silenceSpeed = Settings.speed[Settings.silenceSpeed.value].text
+    SpeedUp.threshold = Config.data.thresholds[Interface.threshold.value].value
+    SpeedUp.silenceMinimumDuration = parseFloat(Interface.silenceMinimumDuration.value)
+    SpeedUp.silenceMargin = parseFloat(Interface.silenceMargin.value)
+    SpeedUp.silenceSpeed = Config.data.speeds[Interface.silenceSpeed.value].text
     SpeedUp.dropAudio = (SpeedUp.silenceSpeed == "remove")
     SpeedUp.muteAudio = (SpeedUp.dropAudio ? false : muteAudio.checked)
-    SpeedUp.playbackSpeed = Settings.speed[Settings.playbackSpeed.value].text
-    SpeedUp.videoExtension = Settings.videoExtension.value
+    SpeedUp.playbackSpeed = Config.data.speeds[Interface.playbackSpeed.value].text
+    SpeedUp.videoExtension = Interface.videoExtension.value
 
     SpeedUp.silenceDetectOptions[7] = "silencedetect=n=" + SpeedUp.threshold + ":d=" + (SpeedUp.silenceMinimumDuration + 2 * SpeedUp.silenceMargin)
-    SpeedUp.mergeOptions[9] = Config.fragmentListPath
+    SpeedUp.concatOptions[9] = Config.fragmentListPath
   }
 
   static setFilters() {
@@ -125,8 +125,8 @@ class SpeedUp {
           SpeedUp.exportOptions.silence.index = 12
         }
       } else {
-        let videoFilter = Settings.speed[Settings.silenceSpeed.value].video
-        let audioFilter = SpeedUp.muteAudio ? "[0:a]volume=enable=0[a]" : Settings.speed[Settings.silenceSpeed.value].audio
+        let videoFilter = Config.data.speeds[Interface.silenceSpeed.value].video
+        let audioFilter = SpeedUp.muteAudio ? "[0:a]volume=enable=0[a]" : Config.data.speeds[Interface.silenceSpeed.value].audio
         SpeedUp.exportOptions.silence.options[10] = "-filter_complex"
         SpeedUp.exportOptions.silence.options[11] = videoFilter + audioFilter
         SpeedUp.exportOptions.silence.options[12] = "-map"
@@ -141,8 +141,8 @@ class SpeedUp {
     SpeedUp.exportOptions.playback.index = 10
 
     if(SpeedUp.playbackSpeed != "1x") {
-      let videoFilter = Settings.speed[Settings.playbackSpeed.value].video
-      let audioFilter = Settings.speed[Settings.playbackSpeed.value].audio
+      let videoFilter = Config.data.speeds[Interface.playbackSpeed.value].video
+      let audioFilter = Config.data.speeds[Interface.playbackSpeed.value].audio
       SpeedUp.exportOptions.playback.options[10] = "-filter_complex"
       SpeedUp.exportOptions.playback.options[11] = videoFilter + audioFilter
       SpeedUp.exportOptions.playback.options[12] = "-map"
@@ -153,12 +153,10 @@ class SpeedUp {
     }
   }
 
-  static printData(data) {
-    console.log(data)
-  }
-
-  static start() {
+  static async start() {
     SpeedUp.interrupted = false
+    Interface.viewStop()
+
     SpeedUp.setOptions()
     SpeedUp.setFilters()
 
@@ -166,338 +164,243 @@ class SpeedUp {
     var len = entries.length
 
     if(len == 0) {
-      log("No video queued.")
-      Settings.viewStart()
+      Shell.log("No video queued.")
+      Interface.viewStart()
       return
     }
 
-    ipcRenderer.send("changeTotal", len)
+    ipcRenderer.send("progressUpdate", "total", len)
 
-    SpeedUp.init(entries, 0, len)
+    for(let i = 0; i < len; i++)
+      entries[i].prepare()
+
+    for(let i = 0; i < len && !SpeedUp.interrupted; i++) {
+      let entry = entries[i]
+      SpeedUp.currentEntry = entry // Only for interrupt
+
+      if(SpeedUp.videoExtension != "keep")
+        entry.changeExtension(SpeedUp.videoExtension)
+
+      Interface.setProgressBar(i / len)
+      ipcRenderer.send("progressUpdate", "completed", i)
+
+      await SpeedUp.process(entries[i])
+
+      SpeedUp.currentEntry = null
+    }
+
+    if(SpeedUp.interrupted) return
+    SpeedUp.end()
+  }
+
+  static async process(entry) {
+    let error = false
+    entry.highlight()
+
+    error = await SpeedUp.silenceDetect(entry)
+    if(SpeedUp.interrupted || error) return
+    error = await SpeedUp.exportFragments(entry)
+    if(SpeedUp.interrupted || error) return
+    error = await SpeedUp.concatFragments(entry)
+    if(SpeedUp.interrupted || error) return
+
+    entry.finished()
   }
 
   static interrupt() {
-    if(SpeedUp.interrupted)
-      return
 
+    Shell.err("Stopping...")
     SpeedUp.interrupted = true
+    FFmpeg.interrupt()
 
-    SpeedUp.spawn.kill()
-    log("Stopping...")
-    ipcRenderer.send("changeName", "")
+    if(SpeedUp.currentEntry != null) {
+      SpeedUp.currentEntry.gotError("Interrupted")
+      SpeedUp.currentEntry = null
+    }
 
-    Settings.viewStart()
+    ipcRenderer.send("progressUpdate", "name", "")
+    ipcRenderer.send("progressUpdate", "status", "Interrupted")
+
+    Interface.viewStart()
   }
 
   static end() {
-    log("All done.")
+    Shell.log("All done.")
     FFmpeg.update(null)
 
-    ipcRenderer.send("changeName", "")
+    ipcRenderer.send("progressUpdate", "name", "")
 
-    Settings.viewStart()
+    Interface.viewStart()
   }
 
-  static reportError(msg, code, entries, i, len) {
-    entries[i].gotError("Fallito [" + code + "]")
-    log(msg)
-    SpeedUp.init(entries, i + 1, len)
+  static reportError(msg, entry) {
+    entry.gotError("Failed")
+    Shell.err(msg)
   }
 
-  static init(entries, i, len) {
-    Settings.setProgressBar(i / len)
+  static async silenceDetect(entry) {
+    if(SpeedUp.interrupted) return
 
-    ipcRenderer.send("changeCompleted", i)
+    entry.status = "Detecting silences..."
+    Shell.log("Detecting silences...")
 
-    if(i == len) {
-      SpeedUp.end()
-      return
-    }
+    SpeedUp.silenceDetectOptions[5] = entry.url
 
-    if(SpeedUp.interrupted) {
-      entries[i].gotError("Interrupted")
-      return
-    }
+    return await FFmpeg.run(SpeedUp.silenceDetectOptions, {entry: entry},
+      (str, data) => {
+        let res = null
 
-    entries[i].highlight()
-
-    let url = entries[i].url
-    SpeedUp.silenceDetectOptions[5] = url
-    SpeedUp.exportOptions.playback.options[9] = url
-    SpeedUp.exportOptions.silence.options[9] = url
-    SpeedUp.exportOptions.copy.options[9] = url
-    SpeedUp.mergeOptions[16] = path.join(Config.exportPath, entries[i].outputName)
-
-    SpeedUp.silenceDetect(entries, i, len)
-  }
-
-  static silenceDetect(entries, i, len) {
-    if(SpeedUp.interrupted) {
-      entries[i].gotError("Interrupted")
-      return
-    }
-
-    entries[i].status = "Detecting silences..."
-    log("Detecting silences...")
-
-    // log(SpeedUp.silenceDetectOptions)
-    SpeedUp.spawn = spawn(FFmpeg.command, SpeedUp.silenceDetectOptions)
-
-    let silenceFragments = {
-      "start": {
-        "ts": [],
-        "index": 0,
-        "offset": SpeedUp.silenceMargin
+        while((res = SpeedUp.silenceRegExp.exec(str)) != null)
+          data.entry.appendTS(res[1], parseFloat(res[2]).toFixed(3), SpeedUp.silenceMargin)
       },
-      "end": {
-        "ts": [],
-        "index": 0,
-        "offset": - SpeedUp.silenceMargin
-      }
-    }
+      (data) => {
+        if(data.entry.tsCheck()) {
+          if(data.entry.hasSilences())
+            Shell.log(`${data.entry.silencePercentage()} % of the video detected as silence.`)
+          else
+            Shell.log("No silences detected, moving on to the next.")
+          return
+        }
 
-    SpeedUp.spawn.stdout.on("data", (data) => SpeedUp.printData)
-
-    SpeedUp.spawn.stderr.on("data", (err) => {
-      var str = err.toString()
-      var hasCaptured = false
-      var res = null
-
-      while((res = SpeedUp.silenceRegExp.exec(str)) != null) {
-        silenceFragments[res[1]].ts.push(parseFloat(res[2]))
-        let index = silenceFragments[res[1]].index
-        silenceFragments[res[1]].index += 1
-        if(index > 0)
-          silenceFragments[res[1]].ts[index] += silenceFragments[res[1]].offset
-        hasCaptured = true
-      }
-
-      if(! hasCaptured) {
-        if(! FFmpeg.update(str, entries[i].seconds))
-          console.log(str)
-      }
-    })
-
-    SpeedUp.spawn.on("exit", (code) => {
-      if(code == 0) {
-        if(silenceFragments.start.index == silenceFragments.end.index) {
-          if(silenceFragments.start.index == 0) {
-            log("No silences detected, moving on to the next.")
-            SpeedUp.init(entries, i + 1, len)
-          } else {
-            let seconds = 0.0
-            for(let j = 0; j < silenceFragments.start.index; j++)
-              seconds += silenceFragments.end.ts[j] - silenceFragments.start.ts[j]
-            log((seconds / entries[i].seconds * 100).toFixed(2) + "% of video detected as silence.")
-            SpeedUp.exportFragments(entries, i, len, silenceFragments)
-          }
-        } else SpeedUp.reportError("Data error: indexes do not match.", code, entries, i, len)
-      } else {
-        if(SpeedUp.interrupted)
-          entries[i].gotError("Interrupted")
-        else
-          SpeedUp.reportError("Sorry, no fragments found. Moving on to the next.", code, entries, i, len)
-      }
-    })
+        SpeedUp.reportError("Data error: indexes do not match.", data.entry)
+      },
+      (data) => {
+        SpeedUp.reportError("Sorry, no fragments found. Moving on to the next.", data.entry)
+      })
   }
 
-  static exportFragments(entries, i, len, silenceFragments) {
-    if(SpeedUp.interrupted) {
-      entries[i].gotError("Interrupted")
-      return
-    }
+  static async exportFragments(entry) {
+    if(SpeedUp.interrupted) return true
 
-    entries[i].status = "Exporting..."
-    log("Exporting...")
+    SpeedUp.exportOptions.playback.options[9] = entry.url
+    SpeedUp.exportOptions.silence.options[9] = entry.url
 
-    SpeedUp.videoExtension = Settings.videoExtension.value == "keep" ? entries[i].extension : Settings.videoExtension.value
+    entry.status = "Exporting..."
+    Shell.log("Exporting...")
+
+    SpeedUp.videoExtension = Interface.videoExtension.value == "keep" ? entry.extension : Interface.videoExtension.value
     SpeedUp.stream = fs.createWriteStream(Config.fragmentListPath, {flags:'w'})
 
-    let n = silenceFragments.start.index
-    SpeedUp.exportPlaybackFragment(entries, i, len, silenceFragments, -1, n, 0)
-  }
+    let sf = entry.silenceTS
+    let n = sf.start.length - 1
+    let c = 0
+    let i = 0
+    let error = false
 
-  static getFragmentName(c) {
-    let name = path.join(Config.tmpPath, "f_" + c.toString().padStart(6, "0") + "." + SpeedUp.videoExtension)
-    if(fs.existsSync(name))
-      fs.unlinkSync(name)
-    SpeedUp.stream.write("file '" + name + "'\n")
-    return name
-  }
-
-  static exportSilenceFragment(entries, i, len, silenceFragments, j, n, c) {
-    if(SpeedUp.interrupted) {
-      entries[i].gotError("Interrupted")
-      return
-    }
-
-    if(j == n) {
-      SpeedUp.mergeFragments(entries, i, len, c)
-      return
-    }
-
-    let startTime = silenceFragments.start.ts[j].toFixed(2)
-    let endTime = silenceFragments.end.ts[j].toFixed(2)
-
-    if(SpeedUp.dropAudio) {
-
-      SpeedUp.exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c)
-
-    } else {
-
-      SpeedUp.exportOptions.silence.options[5] = startTime
-      SpeedUp.exportOptions.silence.options[7] = endTime
-      let output = SpeedUp.getFragmentName(c)
-      SpeedUp.exportOptions.silence.options[SpeedUp.exportOptions.silence.index] = output
-
-      SpeedUp.spawn = spawn(FFmpeg.command, SpeedUp.exportOptions.silence.options)
-
-      SpeedUp.spawn.stdout.on("data", (data) => SpeedUp.printData)
-
-      SpeedUp.spawn.stderr.on("data", (err) => {
-        let str = err.toString()
-        if(! FFmpeg.update(str, entries[i].seconds, startTime))
-          console.log(str)
-      })
-
-      SpeedUp.spawn.on("exit", (code) => {
-        if(code == 0)
-          SpeedUp.exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c + 1)
-        else {
-          if(SpeedUp.interrupted)
-            entries[i].gotError("Interrupted")
-          else
-            SpeedUp.exportCopiedFragment(startTime, endTime, output, "playback", entries, i, len, silenceFragments, j, n, c + 1)
-        }
-      })
-    }
-  }
-
-  static exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c) {
-    if(SpeedUp.interrupted) {
-      entries[i].gotError("Interrupted")
-      return
-    }
-
-    if(j > n) {
-      SpeedUp.mergeFragments(entries, i, len, c)
-      return
-    }
-
-    let startTime
-    let endTime
-
-    if(j == -1) {
-      if(silenceFragments.start.ts[0] > 0) {
-        startTime = "0.00"
-        endTime = silenceFragments.start.ts[0].toFixed(2)
-      } else {
-        SpeedUp.exportSilenceFragment(entries, i, len, silenceFragments, 0, n, c)
-        return
+    var counter = {
+      count: 0,
+      name: function (extension) {
+        let number = this.count.toString().padStart(6, "0")
+        this.count += 1
+        let name = `f_${number}.${extension}`
+        let fragmentPath = path.join(Config.tmpPath, name)
+        if(fs.existsSync(fragmentPath))
+          fs.unlinkSync(fragmentPath)
+        SpeedUp.stream.write(`file '${fragmentPath}'\n`)
+        return fragmentPath
       }
-    } else {
-      startTime = silenceFragments.end.ts[j].toFixed(2)
-      endTime = (j == n - 1) ? entries[i].seconds.toFixed(2) : silenceFragments.start.ts[j + 1].toFixed(2)
     }
 
-    SpeedUp.exportOptions.playback.options[5] = startTime
-    SpeedUp.exportOptions.playback.options[7] = endTime
-    let output = SpeedUp.getFragmentName(c)
+    if(sf.start[0] != "0.00") {
+      error = await SpeedUp.exportPlaybackFragment(entry, "0.00", sf.start[0], counter)
+      if(error) return error
+    }
+
+    for(i = 0; i < n && !SpeedUp.interrupted; i++) {
+      error = await SpeedUp.exportSilenceFragment(entry, sf.start[i], sf.end[i], counter)
+      if(error) return error
+      error = await SpeedUp.exportPlaybackFragment(entry, sf.end[i], sf.start[i+1], counter)
+      if(error) return error
+    }
+
+    error = await SpeedUp.exportSilenceFragment(entry, sf.start[i], sf.end[i], counter)
+    if(error) return error
+
+    if(sf.end[i] < entry.seconds) {
+      error = await SpeedUp.exportPlaybackFragment(entry, sf.end[i], entry.seconds, counter)
+      if(error) return error
+    }
+
+    return error
+  }
+
+  static async exportSilenceFragment(entry, startTS, endTS, counter) {
+    if(SpeedUp.interrupted) return true
+
+    if(SpeedUp.dropAudio)
+      return false
+
+    if(parseFloat(endTS) - parseFloat(startTS) <= 0.002)
+      return false
+
+    SpeedUp.exportOptions.silence.options[5] = startTS
+    SpeedUp.exportOptions.silence.options[7] = endTS
+    let output = counter.name(entry.outputExtension)
+    SpeedUp.exportOptions.silence.options[SpeedUp.exportOptions.silence.index] = output
+
+    let error = await FFmpeg.run(SpeedUp.exportOptions.silence.options, {entry: entry, startTS: startTS, endTS: endTS}, null, null, (data) => {
+      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error, trying to copy.`)
+    })
+
+    if(error && !SpeedUp.interrupted)
+      error = await SpeedUp.copyFragment(entry, startTS, endTS, output)
+
+    return error
+  }
+
+  static async exportPlaybackFragment(entry, startTS, endTS, counter) {
+    if(SpeedUp.interrupted) return true
+
+    if(parseFloat(endTS) - parseFloat(startTS) <= 0.002)
+      return false
+
+    SpeedUp.exportOptions.playback.options[5] = startTS
+    SpeedUp.exportOptions.playback.options[7] = endTS
+    let output = counter.name(entry.outputExtension)
     SpeedUp.exportOptions.playback.options[SpeedUp.exportOptions.playback.index] = output
 
-    SpeedUp.spawn = spawn(FFmpeg.command, SpeedUp.exportOptions.playback.options)
-
-    SpeedUp.spawn.stdout.on("data", (data) => SpeedUp.printData)
-
-    SpeedUp.spawn.stderr.on("data", (err) => {
-      let str = err.toString()
-      if(! FFmpeg.update(str, entries[i].seconds, startTime))
-        console.log(str)
+    let error = await FFmpeg.run(SpeedUp.exportOptions.playback.options, {entry: entry, startTS: startTS, endTS: endTS}, null, null, (data) => {
+      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error, trying to copy.`)
     })
 
-    SpeedUp.spawn.on("exit", (code) => {
-      if(code == 0)
-        SpeedUp.exportSilenceFragment(entries, i, len, silenceFragments, j + 1, n, c + 1)
-      else {
-        if(SpeedUp.interrupted)
-          entries[i].gotError("Interrupted")
-        else
-          SpeedUp.exportCopiedFragment(startTime, endTime, output, "silence", entries, i, len, silenceFragments, j + 1, n, c + 1)
-      }
+    if(error && !SpeedUp.interrupted)
+      error = await SpeedUp.copyFragment(entry, startTS, endTS, output)
+
+    return error
+  }
+
+  static async copyFragment(entry, startTS, endTS, name) {
+    if(SpeedUp.interrupted) return true
+
+    SpeedUp.exportOptions.copy.options[5] = startTS
+    SpeedUp.exportOptions.copy.options[7] = endTS
+    SpeedUp.exportOptions.copy.options[9] = entry.url
+    SpeedUp.exportOptions.copy.options[12] = name
+
+    return await FFmpeg.run(SpeedUp.exportOptions.copy.options, {entry: entry, startTS: startTS, endTS: endTS}, null, (data) => {
+      Shell.log("Fragment copied succesfully")
+    },
+    (data) => {
+      SpeedUp.reportError(`Error while copying fragment [${data.startTS} - ${data.endTS}]`, data.entry)
     })
   }
 
-  static exportCopiedFragment(ss, to, out, next, entries, i, len, silenceFragments, j, n, c) {
-    log("Fragment [" + ss + " - " + to + "] got filter error, trying to copy.")
+  static async concatFragments(entry) {
+    if(SpeedUp.stream != null) {
+      SpeedUp.stream.end()
+      SpeedUp.stream = null
+    }
 
-    SpeedUp.exportOptions.copy.options[5] = ss
-    SpeedUp.exportOptions.copy.options[7] = to
-    SpeedUp.exportOptions.copy.options[11] = out
+    if(SpeedUp.interrupted) return true
 
-    SpeedUp.spawn = spawn(FFmpeg.command, SpeedUp.exportOptions.copy.options)
+    entry.status = "Concatenating..."
+    Shell.log("Concatenating...")
 
-    SpeedUp.spawn.stdout.on("data", (data) => SpeedUp.printData)
+    SpeedUp.concatOptions[16] = path.join(Config.data.exportPath, entry.outputName)
 
-    SpeedUp.spawn.stderr.on("data", (err) => {
-      let str = err.toString()
-      if(! FFmpeg.update(str, entries[i].seconds, ss))
-        console.log(str)
-    })
-
-    SpeedUp.spawn.on("exit", (code) => {
-      if(code == 0) {
-        log("Fragment copied succesfully.")
-        switch (next) {
-          case "playback": {
-            SpeedUp.exportPlaybackFragment(entries, i, len, silenceFragments, j, n, c)
-            break
-          }
-          case "silence": {
-            SpeedUp.exportSilenceFragment(entries, i, len, silenceFragments, j, n, c)
-            break
-          }
-          default: {
-            // Nothing
-          }
-        }
-      } else {
-        if(SpeedUp.interrupted)
-          entries[i].gotError("Interrupted")
-        else
-          SpeedUp.reportError("Non sono riuscito a copiare il frammento. Passo al prossimo video.", code, entries, i, len)
-      }
-    })
-  }
-
-  static mergeFragments(entries, i, len, c) {
-    SpeedUp.stream.end()
-
-    entries[i].status = "Concatenating..."
-    log("Concatenating...")
-
-    SpeedUp.spawn = spawn(FFmpeg.command, SpeedUp.mergeOptions)
-
-    SpeedUp.spawn.stdout.on("data", (data) => SpeedUp.printData)
-
-    SpeedUp.spawn.stderr.on("data", (err) => {
-      var str = err.toString()
-      if(! FFmpeg.update(str, entries[i].seconds))
-        console.log(str)
-    })
-
-    SpeedUp.spawn.on("exit", (code) => {
-      if(code == 0) {
-        entries[i].finished()
-        SpeedUp.init(entries, i + 1, len)
-      } else {
-        if(SpeedUp.interrupted)
-          entries[i].gotError("Interrupted")
-        else
-          SpeedUp.reportError("Non sono riuscito a unire i frammenti. Passo al prossimo video.", code, entries, i, len)
-      }
+    return await FFmpeg.run(SpeedUp.concatOptions, {entry: entry}, null, null, (data) => {
+      SpeedUp.reportError("Error during concatenation.", data.entry)
     })
   }
 
 }
-
-module.exports = SpeedUp

@@ -19,8 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class FFmpeg {
+module.exports = class FFmpeg {
   static command
+  static spawn
 
   static progressBar
   static progress
@@ -28,57 +29,73 @@ class FFmpeg {
   static fps
   static time
   static speed
+  static percentage
 
-  static info = new RegExp(/ffmpeg version .\..\..-.+ Copyright \(c\) \d+-\d+ the FFmpeg developers/)
-  static progressRegExp = new RegExp(/time=\s*(\d+:\d+:\d+\.\d+)\s*.*speed=\s*(\d+(\.\d+)?x)/)
+  static progressRegExp = new RegExp(/time=\s*(\d+:\d+:\d+\.\d+)\s*.*speed=\s*(\d+(\.\d+)?x|\d+e\+\d+x)/)
   static durationRegExp = new RegExp(/(^|\s)(\d+:\d+:\d+\.\d+)/)
   static timeRegExp = new RegExp(/(\d+):(\d+):(\d+)\.(\d+)/)
 
   static load() {
-    let platform = os.platform()
-    let ffpath = null
-
-    // Using static binaries
-    switch (platform) {
-      case "darwin": {
-        // https://evermeet.cx/ffmpeg/
-        ffpath = path.join(__dirname, "..", "ffmpeg", "ffmpeg")
-        break
-      }
-      case "win32": {
-        // https://www.gyan.dev/ffmpeg/builds/
-        ffpath = path.join(__dirname, "..", "ffmpeg", "bin", "ffmpeg.exe")
-        break
-      }
-      case "linux": {
-        // https://www.johnvansickle.com/ffmpeg/
-        ffpath = path.join(__dirname, "..", "ffmpeg", "ffmpeg")
-        break
-      }
-    }
-
-    if(ffpath == null || ! fs.existsSync(ffpath)) {
-      Settings.lock()
-      log("FFmpeg binaries not found.")
-    } else {
-      FFmpeg.command = ffpath
-    }
-    // If you have FFmpeg installed on your computer and
-    // you want to use it instead, then just comment
-    // this block above and set the static variable
-    // FFmpeg.command to the path of your ffmpeg executable.
-    //
-    // Note: you can as well use a command that call ffmpeg,
-    // e.g. on linux type:
-    //
-    //            FFmpeg.command = "ffmpeg"
-    //
-    // and should be fine.
-
     FFmpeg.progressBar = document.getElementById("ffmpegProgressBar")
     FFmpeg.progress = document.getElementById("ffmpegProgress")
     FFmpeg.time = document.getElementById("ffmpegProgressTime")
     FFmpeg.speed = document.getElementById("ffmpegProgressSpeed")
+    FFmpeg.percentage = document.getElementById("ffmpegPercentage")
+
+    FFmpeg.updateCommand()
+  }
+
+  static updateCommand() {
+    Interface.viewStart()
+    if(Config.data.ffmpegPath == "") {
+      if(!fs.existsSync(Config.data.ffmpegPath)) {
+        Interface.lock()
+        Shell.warn("Please go to File->Preferences and set the path for ffmpeg.")
+      } else {
+        FFmpeg.command = Config.data.ffmpegPath
+      }
+    }
+  }
+
+  static async run(args, data, onstderr, ifGood, ifBad) {
+    if(FFmpeg.spawn != null) {
+      Shell.log("FFmpeg is still running; cannot run another process.")
+      SpeedUp.interrupted = true
+      return
+    }
+
+    let error = false
+    FFmpeg.spawn = spawn(FFmpeg.command, args)
+
+    for await (var str of FFmpeg.spawn.stderr) {
+      if(onstderr != null)
+        onstderr(str, data)
+      FFmpeg.update(str.toString(), data.entry.seconds, data.startTS == null ? 0 : data.startTS)
+    }
+
+    // Wait until spawn has exited
+    await (async () => {
+      while(FFmpeg.spawn.exitCode == undefined) {
+        await new Promise(r => setTimeout(r, 50));
+      }
+    })()
+
+    error = FFmpeg.spawn.exitCode != 0
+    if(error) {
+      if(!SpeedUp.interrupted && ifBad != null)
+        ifBad(data)
+    } else if(ifGood != null) {
+      ifGood(data)
+    }
+
+    FFmpeg.spawn = null
+
+    return error
+  }
+
+  static interrupt() {
+    if(FFmpeg.spawn != null)
+      FFmpeg.spawn.kill()
   }
 
   static getSecondsFromTime(time) {
@@ -100,13 +117,21 @@ class FFmpeg {
     if(str == null) {
       FFmpeg.time.innerHTML = "--:--:--.--"
       FFmpeg.speed.innerHTML = "-"
-      return false
+      FFmpeg.percentage.innerHTML = "-.-- %"
+      return
     }
 
     let progress = FFmpeg.progressRegExp.exec(str)
 
-    if(progress == null)
-      return false
+    if(progress == null) {
+      if(SpeedUp.interrupted || /\[silencedetect @|silence_(start|end)|Press \[q\] to stop/.test(str))
+        return
+      if(/Error|failed/.test(str))
+        Shell.warn(str)
+      else
+        console.log(str)
+      return
+    }
 
     let time = (offsetCurrentTime == "0") ? progress[1] : FFmpeg.getTimeFromSeconds(parseFloat(offsetCurrentTime) + FFmpeg.getSecondsFromTime(progress[1]))
     FFmpeg.time.innerHTML = time
@@ -114,21 +139,19 @@ class FFmpeg {
 
     var percentage = ((FFmpeg.getSecondsFromTime(progress[1]) + parseFloat(offsetCurrentTime)) / duration * 100)
     FFmpeg.progressBar.style.width = percentage + "%"
-    ipcRenderer.send("changeProgressBar", percentage)
-    return true
+    FFmpeg.percentage.innerHTML = percentage.toFixed(2) + " %"
+    ipcRenderer.send("progressUpdate", "progressBar", percentage)
   }
 
   static getVideoDuration(entry) {
-    var options = [
+    let options = [
       "-hide_banner",
       "-t", "0.001",
       "-i", entry.url,
       "-f", "null", "-"
     ]
 
-    var test = spawn(FFmpeg.command, options)
-
-    test.stdout.on("data", (data) => SpeedUp.printData)
+    let test = spawn(FFmpeg.command, options)
 
     test.stderr.on("data", (err) => {
       let str = err.toString()
@@ -142,10 +165,8 @@ class FFmpeg {
     test.on("exit", (code) => {
       if(code != 0 || entry.duration == null) {
         entry.status = "Error occurred"
-        log("Got error while detecting duration of " + entry.name + ".")
+        Shell.log(`Got error while detecting duration of ${entry.name}.`)
       }
     })
   }
 }
-
-module.exports = FFmpeg

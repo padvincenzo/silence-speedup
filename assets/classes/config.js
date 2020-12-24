@@ -19,39 +19,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Config {
-  static configPath = "config.json"
+module.exports = class Config {
+  static configPath = path.join(__dirname, "..", "..", "config.json")
 
   static defaultExportPath = path.join(os.homedir(), "speededup")
-  static exportPath = null
+  static defaultFFmpegPath = path.join(__dirname, "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"))
+  static tmpPath = path.join(__dirname, "..", "..", "tmp")
+  static fragmentListPath = path.join(Config.tmpPath, "list.txt")
 
-  static tmpPath = null
-  static fragmentListPath = null
+  static data = null
 
   static load() {
-    if (!fs.existsSync(Config.configPath)) {
-      fs.writeFileSync(Config.configPath,
-        JSON.stringify({exportPath:Config.defaultExportPath}),
-        {encoding: 'utf-8'})
+    let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
+    Config.data = JSON.parse(json)
+
+    if(Config.data.exportPath == "") {
+      Config.data.exportPath = Config.defaultExportPath
     }
 
-    let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
-    let config = JSON.parse(json)
-    Config.exportPath = config.exportPath || Config.defaultExportPath
+    if(Config.data.ffmpegPath == "" && fs.existsSync(Config.defaultFFmpegPath)) {
+      Config.data.ffmpegPath = Config.defaultFFmpegPath
+    }
 
-    Config.tmpPath = path.join(Config.exportPath, "speededup_tmp")
-    Config.fragmentListPath = path.join(Config.exportPath, "list.txt")
-
-    if (!fs.existsSync(Config.exportPath))
-      fs.mkdirSync(Config.exportPath)
+    if (!fs.existsSync(Config.data.exportPath))
+      fs.mkdirSync(Config.data.exportPath)
 
     if (!fs.existsSync(Config.tmpPath))
       fs.mkdirSync(Config.tmpPath)
   }
 
-  static save(exportPath) {
-    Config.exportPath = exportPath
+  static update(data) {
+    Config.data = data
   }
 }
-
-module.exports = Config

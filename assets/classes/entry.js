@@ -19,22 +19,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class Entry {
+module.exports = class Entry {
   #url = null
   #name = null
   #outputName = null
   #extension = null
+  #outputExtension = null
   #duration = null
   #seconds = null
   #ref = null
   #progress = null
   #removeBtn = null
 
+  #silenceTS = {start: [], end: []}
+
   constructor(url, name, extension) {
     this.#url = url
     this.#name = name
     this.#outputName = name
     this.#extension = extension
+    this.#outputExtension = extension
 
     this.#ref = document.createElement("div")
     this.#ref.setAttribute("class", "entry")
@@ -60,7 +64,7 @@ class Entry {
 
     FFmpeg.getVideoDuration(this)
 
-    Settings.entryList.appendChild(this.#ref)
+    Interface.entryList.appendChild(this.#ref)
   }
 
   get ref() {
@@ -80,12 +84,23 @@ class Entry {
   }
 
   changeExtension(newExtension) {
-    let lastDot = name.lastIndexOf(".")
+    if(newExtension == "keep") {
+      this.#outputName = this.#name
+      this.#outputExtension = this.#extension
+      return
+    }
+
+    let lastDot = this.#name.lastIndexOf(".") + 1
     this.#outputName = this.#name.substring(0, lastDot) + newExtension
+    this.#outputExtension = newExtension
   }
 
   get outputName() {
     return this.#outputName
+  }
+
+  get outputExtension() {
+    return this.#outputExtension
   }
 
   set duration(duration) {
@@ -112,34 +127,64 @@ class Entry {
 
   set status(status) {
     this.#progress.innerHTML = status
-    ipcRenderer.send("changeStatus", status)
+    ipcRenderer.send("progressUpdate", "status", status)
   }
 
   prepare() {
     this.status = "Queued"
     this.#removeBtn.style.display = "none"
-    this.#ref.style.backgroundColor = "initial"
-    this.#ref.style.color = "var(--c-dark)"
+    this.#ref.setAttribute("class", "entry")
+
+    this.#silenceTS = {start: [], end: []}
   }
 
   highlight() {
-    this.#ref.style.backgroundColor = "var(--c-1)"
-	  this.#ref.style.color = "var(--c-light)"
-    log("Started working on " + this.#name + ".")
-    ipcRenderer.send("changeName", this.#name)
+    this.#ref.setAttribute("class", "entry highlight")
+	  Shell.log(`Started working on ${this.#name}.`)
+    ipcRenderer.send("progressUpdate", "name", this.#name)
   }
 
   gotError(err) {
+    this.#ref.setAttribute("class", "entry error")
     this.#progress.innerHTML = err
-    this.#ref.style.backgroundColor = "var(--c-5)"
     this.#removeBtn.style.display = "inline-block"
   }
 
+  appendTS(i, ts, offset) {
+    let len = this.#silenceTS[i].push(ts)
+    if(len > 1) {
+      offset = parseFloat(offset) * ((i == "start") ? 1 : -1)
+      this.#silenceTS[i][len - 1] = (parseFloat(ts) + offset).toFixed(3)
+    }
+  }
+
+  tsCheck() {
+    return this.#silenceTS.start.length == this.#silenceTS.end.length
+  }
+
+  hasSilences() {
+    return this.#silenceTS.start.length > 0
+  }
+
+  silenceSeconds() {
+    let seconds = 0.0
+    for(let i = 0, len = this.#silenceTS.start.length; i < len; i++)
+      seconds += parseFloat(this.#silenceTS.end[i]) - parseFloat(this.#silenceTS.start[i])
+    return seconds
+  }
+
+  silencePercentage() {
+    return (this.silenceSeconds() / this.seconds * 100).toFixed(2)
+  }
+
+  get silenceTS() {
+    return this.#silenceTS
+  }
+
   finished() {
-    this.#ref.style.backgroundColor = "var(--c-3)"
-    this.#ref.style.color = "var(--c-light)"
+    this.#ref.setAttribute("class", "entry finished")
     this.status = "Completed"
-    log(this.#outputName + " completed.")
+    Shell.log(`${this.#outputName} completed.`)
     this.#removeBtn.style.display = "inline-block"
   }
 
@@ -158,8 +203,6 @@ class Entry {
   }
 
   static isExtensionValid(extension) {
-    return /avi|mkv|mp4/.test(extension)
+    return Config.data.formats.map(format => format.value).indexOf(extension) != -1
   }
 }
-
-module.exports = Entry

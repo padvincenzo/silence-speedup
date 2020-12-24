@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-class EntryList {
+module.exports = class EntryList {
   static list = {}
   static canImport = true
 
@@ -42,7 +42,7 @@ class EntryList {
       let extension = Entry.getExtensionFromName(name)
       if(Entry.isExtensionValid(extension)) {
         if(EntryList.list.hasOwnProperty(name)) {
-          log("Cannot load " + name + ": file name already exists.")
+          Shell.log(`Cannot load ${name}: file name already exists.`)
         } else {
           var entry = new Entry(url, name, extension)
           EntryList.list[name] = entry
@@ -56,17 +56,12 @@ class EntryList {
 
   static remove(name) {
     var entry = EntryList.list[name]
-    Settings.entryList.removeChild(entry.ref)
-    log("File " + entry.name + " removed.")
+    Interface.entryList.removeChild(entry.ref)
+    // Shell.log(`File ${entry.name} removed.`)
     delete EntryList.list[name]
   }
 
   static get values() {
-    var entries = Object.values(EntryList.list)
-    for(let i = 0, len = entries.length; i < len; i++)
-      entries[i].prepare()
-    return entries
+    return Object.values(EntryList.list)
   }
 }
-
-module.exports = EntryList
