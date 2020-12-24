@@ -35,7 +35,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 		<div id="dropZone">Drop videos here</div>
 
-    <div id="GUI">
+    <div id="gui">
       <div id="entryList">
       </div>
 
@@ -46,36 +46,36 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 					<div></div>
 					<button id="addFolder" title="Add folder"></button>
 					<div></div>
-					<button id="configuration"title="Configuration"></button>
+					<button id="preferences"title="Preferences"></button>
 					<div></div>
-					<button id="info" title="Info"></button>
+					<button id="about" title="About"></button>
 				</div>
 
         <div id="videoSettings">
 
           <div class="setting" id="silenceDetectSettings">
             <div>
-              <label for="threshold">Background noise: <span id="thresholdValue">Mid</span></label>
-							<input type="range" min="0" max="2" value="1" class="slider" id="threshold" name="threshold">
+              <label for="threshold">Background noise: <span id="thresholdValue"></span></label>
+							<input type="range" class="slider" min="0" id="threshold" name="threshold">
             </div>
 						<div>
-              <label for="silenceMinimumDuration">Silence min duration: <span id="silenceMinimumDurationValue">0.30s</span></label>
-							<input type="range" min="0" max="10" step="0.05" value="0.3" class="slider" id="silenceMinimumDuration" name="silenceMinimumDuration">
+              <label for="silenceMinimumDuration">Silence min duration: <span id="silenceMinimumDurationValue"></span></label>
+							<input type="range" class="slider" id="silenceMinimumDuration" name="silenceMinimumDuration">
             </div>
             <div>
-              <label for="silenceMargin">Silence margin: <span id="silenceMarginValue">0.10s</span></label>
-							<input type="range" min="0" max="10" step="0.05" value="0.1" class="slider" id="silenceMargin" name="silenceMargin">
+              <label for="silenceMargin">Silence margin: <span id="silenceMarginValue"></span></label>
+							<input type="range" class="slider" id="silenceMargin" name="silenceMargin">
             </div>
           </div>
 
           <div class="setting" id="filterSettings">
             <div>
-              <label for="silenceSpeed">Silence speed: <span id="silenceSpeedValue">8x</span></label>
-							<input type="range" min="0" max="10" value="8" class="slider" id="silenceSpeed" name="silenceSpeed">
+              <label for="silenceSpeed">Silence speed: <span id="silenceSpeedValue"></span></label>
+							<input type="range" min="0" class="slider" id="silenceSpeed" name="silenceSpeed">
 					  </div>
 						<div>
-							<label for="playbackSpeed">Playback speed: <span id="playbackSpeedValue">1x</span></label>
-							<input type="range" min="0" max="9" value="2" class="slider" id="playbackSpeed" name="playbackSpeed">
+							<label for="playbackSpeed">Playback speed: <span id="playbackSpeedValue"></span></label>
+							<input type="range" min="0" class="slider" id="playbackSpeed" name="playbackSpeed">
             </div>
 						<div>
               <input type="checkbox" id="muteAudio" name="muteAudio">
@@ -85,17 +85,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
           <div class="setting" id="exportSettings">
             <div>
-              <label for="videoExtension">Output video format: </label>
-              <select id="videoExtension" name="videoExtension" disabled>
-                <option value="keep" selected>keep</option>
-                <option value="avi">AVI</option>
-								<option value="flv">FLV</option>
-								<option value="mkv">MKV</option>
-								<option value="mov">MOV</option>
-								<option value="mp4">MP4</option>
-								<option value="webm">WebM</option>
-								<option value="wmv">WMV</option>
-              </select>
+              <label for="videoExtension">Video format: </label>
+              <select id="videoExtension" name="videoExtension"></select>
             </div>
           </div>
         </div>
@@ -104,7 +95,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 					<button id="start" title="Start">Start</button>
 					<button id="stop" title="Stop" disabled>Stop</button>
 					<div></div>
-					<button id="minimize" title="View progress mode" disabled></button>
+					<button id="progressMode" title="Switch to progress mode" disabled></button>
 				</div>
       </div>
 
@@ -114,9 +105,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 				<div id="ffmpegProgressTime">--:--:--.--</div>
 				<div>Speed</div>
 				<div id="ffmpegProgressSpeed">-</div>
+				<div id="ffmpegPercentage">-.-- %</div>
 			</div>
 
-	    <textarea readonly id="shell"></textarea>
+	    <div id="shell"></div>
     </div>
 
   </body>

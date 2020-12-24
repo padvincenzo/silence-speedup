@@ -1,0 +1,120 @@
+{
+	"exportPath": "",
+	"ffmpegPath": "",
+	"formats": [
+		{
+			"label": "keep",
+			"value": "keep"
+		},
+		{
+			"label": "AVI",
+			"value": "avi"
+		},
+		{
+			"label": "FLV",
+			"value": "flv"
+		},
+		{
+			"label": "MKV",
+			"value": "mkv"
+		},
+		{
+			"label": "MOV",
+			"value": "mov"
+		},
+		{
+			"label": "MP4",
+			"value": "mp4"
+		},
+		{
+			"label": "WebM",
+			"value": "webm"
+		},
+		{
+			"label": "WMV",
+			"value": "wmv"
+		}
+	],
+	"speeds": [
+		{
+			"text": "0.5x",
+			"video": "[0:v]setpts=2*PTS[v];",
+			"audio": "[0:a]atempo=0.5[a]"
+		},
+		{
+			"text": "0.8x",
+			"video": "[0:v]setpts=1.25*PTS[v];",
+			"audio": "[0:a]atempo=0.8[a]"
+		},
+		{
+			"text": "1x"
+		},
+		{
+			"text": "1.25x",
+			"video": "[0:v]setpts=0.8*PTS[v];",
+			"audio": "[0:a]atempo=1.25[a]"
+		},
+		{
+			"text": "1.6x",
+			"video": "[0:v]setpts=0.625*PTS[v];",
+			"audio": "[0:a]atempo=1.6[a]"
+		},
+		{
+			"text": "2x",
+			"video": "[0:v]setpts=0.5*PTS[v];",
+			"audio": "[0:a]atempo=2[a]"
+		},
+		{
+			"text": "2.5x",
+			"video": "[0:v]setpts=0.4*PTS[v];",
+			"audio": "[0:a]atempo=2.5[a]"
+		},
+		{
+			"text": "4x",
+			"video": "[0:v]setpts=0.25*PTS[v];",
+			"audio": "[0:a]atempo=4[a]"
+		},
+		{
+			"text": "8x",
+			"video": "[0:v]setpts=0.125*PTS[v];",
+			"audio": "[0:a]atempo=8[a]"
+		},
+		{
+			"text": "20x",
+			"video": "[0:v]setpts=0.05*PTS[v];",
+			"audio": "[0:a]atempo=20[a]"
+		},
+		{
+			"text": "remove"
+		}
+	],
+	"initialSilenceSpeed": 8,
+	"initialPlaybackSpeed": 2,
+	"thresholds": [
+		{
+			"text": "Low",
+			"value": "0.002"
+		},
+		{
+			"text": "Mid",
+			"value": "0.02"
+		},
+		{
+			"text": "High",
+			"value": "0.1"
+		}
+	],
+	"initialThreshold": 1,
+	"silenceMinimumDuration": {
+		"min": "0",
+		"max": "10",
+		"step": "0.05",
+		"initialValue": "0.3"
+	},
+	"silenceMargin": {
+		"min": "0",
+		"max": "10",
+		"step": "0.05",
+		"initialValue": "0.1"
+	}
+}

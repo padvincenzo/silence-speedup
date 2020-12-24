@@ -25,55 +25,23 @@ const fs = require("fs")
 const path = require("path")
 const os = require("os")
 
-const Settings = require("./assets/classes/settings.js")
+const Shell = require("./assets/classes/shell.js")
+const Interface = require("./assets/classes/interface.js")
 const Config = require("./assets/classes/config.js")
 const FFmpeg = require("./assets/classes/ffmpeg.js")
 const EntryList = require("./assets/classes/entrylist.js")
 const Entry = require("./assets/classes/entry.js")
 const SpeedUp = require("./assets/classes/speedup.js")
 
-function log(msg) {
-  Settings.shell.innerHTML += msg + "\n"
-  Settings.shell.scrollTop = Settings.shell.scrollHeight
-}
-
 window.onload = () => {
-  Settings.load()
   Config.load()
+  Shell.load()
+  Interface.load()
   FFmpeg.load()
 }
 
-ipcRenderer.on("selectedFiles", (event, fileNames) => {
-  if(fileNames == undefined)
-    return
-
-  c = EntryList.import(fileNames)
-  log("Files added: " + c)
-})
-
-ipcRenderer.on("selectedFolder", (event, folder) => {
-  if(folder == undefined)
-    return
-
-  var list = fs.readdirSync(folder[0])
-  urls = list.map(name => path.join(folder[0], name))
-
-  log("Files added: " + EntryList.import(urls))
-})
-
-ipcRenderer.on("start", (event) => {
-  SpeedUp.start()
-})
-
-ipcRenderer.on("stop", (event) => {
-  SpeedUp.interrupt()
-})
-
-ipcRenderer.on("stopAndExit", (event) => {
-  SpeedUp.interrupt()
-  ipcRenderer.send("quit")
-})
-
-ipcRenderer.on("configReload", (event) => {
-  Config.load()
+ipcRenderer.on("preferencesUpdate", (event, data) => {
+  Config.update(data)
+  Interface.update()
+  FFmpeg.updateCommand()
 })

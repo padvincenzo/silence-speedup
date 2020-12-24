@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #EEE;
+    background-color: var(--c-light);
     box-shadow: none;
     -webkit-transition: var(--transition);
     text-align: center;
@@ -33,11 +33,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     font-size: 8vw;
 }
 
-#GUI {
+#gui {
   width: -webkit-fill-available;
   height: -webkit-fill-available;
-  background-color: #EEE;
-	margin-bottom: 230px;
+  background-color: var(--c-light);
+	margin-bottom: 228px;
 	display: flex;
   position: fixed;
   top: 0;
@@ -49,8 +49,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   width: 100%;
 	height: -webkit-fill-available;
   margin: 0 10px 1px 0;
-	overflow-y: scroll;
-
+	overflow-y: auto;
 }
 
 #menu {
@@ -67,6 +66,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	color: var(--c-dark);
 	display: flex;
 	width: -webkit-fill-available;
+}
+
+.entry.highlight {
+  color: var(--c-1);
+}
+
+.entry.error {
+  color: darkred;
+}
+
+.entry.finished {
+  color: darkgreen;
+}
+
+.entry:hover {
+  background-color: #0001
 }
 
 .entryName {
@@ -115,11 +130,11 @@ button#addFolder {
 	background: url(assets/icons/add_folder.svg) no-repeat;
 }
 
-button#configuration {
+button#preferences {
 	background: url(assets/icons/settings.svg) no-repeat;
 }
 
-button#info {
+button#about {
 	background: url(assets/icons/info.svg) no-repeat;
 }
 
@@ -138,7 +153,7 @@ button#start, button#stop {
   text-align: left;
 }
 
-button#minimize {
+button#progressMode {
 	background: url(assets/icons/minimize.svg) no-repeat;
   display: none;
 }
@@ -158,9 +173,9 @@ button#minimize {
 .setting::before {
   position: relative;
   top: -14px;
-  background-color: #EEE;
+  background-color: var(--c-light);
   padding: 2px 5px;
-  color: #888;
+  color: var(--c-dark);
   font-variant: small-caps;
 }
 
@@ -219,36 +234,31 @@ button#minimize {
 }
 
 select {
-  border: 1px solid transparent;
+  border: 1px solid #0000;
 }
 
 #ffmpegProgressBar {
 	background-color: var(--c-5);
-  color: #222;
   width: 0px;
-	height: 21px;
-	position: fixed;
-	bottom: 208px;
-	left: 0;
 	-webkit-transition: var(--transition);
 	-webkit-transition-timing-function: ease-out;
 }
 
 #ffmpegProgress {
 	background-color: rgba(170, 170, 170, 0.5);
-  padding: 3px;
   color: var(--c-dark);
-  font-size: 13px;
-	text-align: center;
-	line-height: 15px;
-	height: 15px;
 	width: -webkit-fill-available;
-	position: fixed;
-	bottom: 208px;
-	left: 0;
 	display: flex;
-	border: 0px solid #000;
-	border-top-width: 1px;
+}
+
+#ffmpegProgressBar, #ffmpegProgress {
+  position: fixed;
+	bottom: 206px;
+	left: 0;
+  height: 22px;
+  line-height: 22px;
+	font-size: 13px;
+  font-family: monospace;
 }
 
 #ffmpegProgress div {
@@ -262,18 +272,75 @@ select {
 
 #ffmpegProgress div:nth-child(odd) {
 	text-align: right;
+  flex: none;
 }
 
 #shell {
   background-color: var(--c-3);
   padding: 3px;
   color: var(--c-light);
-  font-size: 14px;
-	line-height: 18px;
+  font-family: monospace;
+  font-size: 1.2rem;
+	line-height: 1.2rem;
   height: 200px;
   width: -webkit-fill-available;
-  resize: none;
+  overflow-y: auto;
 	position: fixed;
 	bottom: 0;
 	left: 0;
+}
+
+#shell div {
+  display: block;
+}
+
+#shell div.error {
+  color: #C00;
+}
+
+#shell div.warning {
+  color: orange;
+}
+
+@media (prefers-color-scheme: dark) {
+  .entry:hover {
+    background-color: #FFF1
+  }
+
+  button#addFiles {
+  	background: url(assets/icons/add_video_dark.svg) no-repeat;
+  }
+
+  button#addFolder {
+  	background: url(assets/icons/add_folder_dark.svg) no-repeat;
+  }
+
+  button#preferences {
+  	background: url(assets/icons/settings_dark.svg) no-repeat;
+  }
+
+  button#about {
+  	background: url(assets/icons/info_dark.svg) no-repeat;
+  }
+
+  button#start {
+  	background: url(assets/icons/start_dark.svg) no-repeat;
+  }
+
+  button#stop {
+  	background: url(assets/icons/stop_dark.svg) no-repeat;
+  }
+
+  button#progressMode {
+  	background: url(assets/icons/minimize_dark.svg) no-repeat;
+  }
+
+  #ffmpegProgress {
+  	background-color: #0003;
+  }
+
+  #shell {
+    background-color: #222;
+    color: var(--c-1);
+  }
 }
