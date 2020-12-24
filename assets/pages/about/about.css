@@ -32,8 +32,8 @@ h1, h2, h3 {
 }
 
 img {
-  width: 40%;
-  margin-left: 30%;
+  width: 30%;
+  margin-left: 35%;
 }
 
 ul {
@@ -43,14 +43,4 @@ ul {
 
 li {
   margin: 2px 0;
-}
-
-a, a:focus, .link, .link:focus {
-  text-decoration: underline;
-  color: var(--c-1);
-  outline: none;
-}
-
-.link:hover {
-  cursor: pointer;
 }

@@ -25,14 +25,6 @@ const fs = require("fs")
 const path = require("path")
 
 window.onload = () => {
-  document.getElementById("showWarrantyDetails").addEventListener("click", (event) => {
-    ipcRenderer.send("showWarrantyDetails")
-  })
-
-  document.getElementById("showRedistributingDetails").addEventListener("click", (event) => {
-    ipcRenderer.send("showRedistributingDetails")
-  })
-
   let div = document.getElementById("ffmpeg-info")
 
   if(os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
