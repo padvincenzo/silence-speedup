@@ -270,7 +270,6 @@ function reload() {
 	win.reload()
 	about.reload()
 	progress.reload()
-	preferences.update()
 	checkUpdates()
 }
 
