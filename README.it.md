@@ -19,6 +19,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
   - [Compilazione](#compilazione)
   - [Come funziona](#come-funziona)
     - [Note](#note)
+  - [Contribuire](#contribuire)
   - [Crediti](#crediti)
 
 ## Per iniziare
@@ -111,6 +112,15 @@ Per ogni video, questo programma:
 
 ### Note
 Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella tmp.
+
+## Contribuire
+Chiunque può contribuire a questo progetto, in diversi modi:
+* Traducendo il progetto in altre lingue;
+* Scovando e segnalando/risolvendo bug;
+* Suggerendo nuove idee;
+* Implementando nuove funzionalità.
+
+Per qualunque dubbio o perplessità possiamo [discuterne qui](https://github.com/padvincenzo/silence-speedup/discussions).
 
 ## Crediti
 Questo software usa eseguibili del progetto FFmpeg, che io non possiedo, sotto la licenza GPLv3.
