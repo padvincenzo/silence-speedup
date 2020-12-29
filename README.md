@@ -5,11 +5,11 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 
 *Read this in other languages: [English](README.md), [Italian](README.it.md).*
 
-## Download
-[Download the latest release](https://github.com/padvincenzo/silence-speedup/releases/latest)
-
 ## Table of Contents
   - [Getting started](#getting-started)
+    - [Download](#download)
+      - [Standalone](#standalone)
+      - [Without FFmpeg binaries](#without-ffmpeg-binaries)
     - [How to use](#how-to-use)
     - [Program settings](#program-settings)
       - [Silence detect](#silence-detect)
@@ -27,6 +27,20 @@ This program, built with Electron, makes use of FFmpeg in order to speed up (or 
 It is really helpful for video lessons, where the professor takes long time for writing something on the board, makes lots of pauses, or just speaks slowly. With this program you can skip this boring parts and save time.
 
 Of course this program is not perfect, and you might have to practice a bit with it.
+
+### Download
+
+#### Standalone
+(FFmpeg binaries inside)
+
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32-standalone.zip) (97.1 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64-standalone.zip) (245 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64-standalone.zip) (101 MB)
+
+#### Without FFmpeg binaries
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32.zip) (72 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64.zip) (223 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64.zip) (74.1 MB)
 
 ### How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
