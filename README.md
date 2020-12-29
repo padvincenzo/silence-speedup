@@ -19,6 +19,7 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
   - [Compiling](#compiling)
   - [How it works](#how-it-works)
     - [Note](#note)
+  - [Contributing](#contributing)
   - [Credits](#credits)
 
 ## Getting started
@@ -113,6 +114,15 @@ For each video, this program will:
 
 ### Note
 At the end of execution, the program does not automatically clean the tmp folder.
+
+## Contributing
+Anyone can contribute to this project, in many ways:
+* Translating this project in other languages;
+* Finding and report/fix bugs;
+* Suggesting new ideas;
+* Implementing new functionalities.
+
+For any doubt or perplexity we can [discuss here](https://github.com/padvincenzo/silence-speedup/discussions)
 
 ## Credits
 This software uses binaries of the FFmpeg project, which I do not own, under the GPLv3.
