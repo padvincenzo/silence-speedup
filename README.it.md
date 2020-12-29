@@ -5,11 +5,11 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 
 *Leggi in altre lingue: [Inglese](README.md), [Italiano](README.it.md).*
 
-## Download
-[Scarica l'ultima versione](https://github.com/padvincenzo/silence-speedup/releases/latest)
-
 ## Indice dei contenuti
   - [Per iniziare](#per-iniziare)
+    - [Download](#download)
+      - [FFmpeg incluso](#ffmpeg-incluso)
+      - [FFmpeg non incluso](#ffmpeg-non-incluso)
     - [Utilizzo](#utilizzo)
     - [Configurazioni](#configurazione)
       - [Rilevamento silenzi](#rilevamento-silenzi)
@@ -27,6 +27,18 @@ Questo programma, sviluppato per Electron, fa uso di FFmpeg per velocizzare (o s
 È molto utile per le video lezioni, in cui un professore impiega molto tempo per scrivere qualcosa alla lavagna, fa molte pause o parla lentamente. Con questo programma puoi saltare queste parti noiose e risparmiare tempo.
 
 Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' con esso.
+
+### Download
+
+#### FFmpeg incluso
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32-standalone.zip) (97.1 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64-standalone.zip) (245 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64-standalone.zip) (101 MB)
+
+#### FFmpeg non incluso
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32.zip) (72 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64.zip) (223 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64.zip) (74.1 MB)
 
 ### Utilizzo
 Importa i tuoi video, scegli la [configurazione](#configurazioni) e premi ``Start``. L'app ti mostrerà lo stato di avanzamento, che consiste in 3 step: ``Detecting silences``, ``Exporting`` e ``Concatenating``.
