@@ -122,7 +122,7 @@ Anyone can contribute to this project, in many ways:
 * Suggesting new ideas;
 * Implementing new functionalities.
 
-For any doubt or perplexity we can [discuss here](https://github.com/padvincenzo/silence-speedup/discussions)
+For any doubt or perplexity we can [discuss here](https://github.com/padvincenzo/silence-speedup/discussions).
 
 ## Credits
 This software uses binaries of the FFmpeg project, which I do not own, under the GPLv3.
