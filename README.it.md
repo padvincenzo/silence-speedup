@@ -10,7 +10,7 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
     - [Download](#download)
       - [FFmpeg incluso](#ffmpeg-incluso)
       - [FFmpeg non incluso](#ffmpeg-non-incluso)
-    - [Utilizzo](#utilizzo)
+  - [Come si usa](#come-si-usa)
     - [Configurazioni](#configurazione)
       - [Rilevamento silenzi](#rilevamento-silenzi)
       - [Filtri](#filtri)
@@ -41,7 +41,7 @@ Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' 
 * [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64.zip) (223 MB)
 * [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64.zip) (74.1 MB)
 
-### Utilizzo
+## Come si usa
 Importa i tuoi video, scegli la [configurazione](#configurazioni) e premi ``Start``. L'app ti mostrerà lo stato di avanzamento, che consiste in 3 step: ``Detecting silences``, ``Exporting`` e ``Concatenating``.
 
 ### Configurazioni
