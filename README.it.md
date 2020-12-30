@@ -115,6 +115,7 @@ Al termine dell'esecuzione, il programma non pulisce automaticamente la cartella
 
 ## Contribuire
 Chiunque può contribuire a questo progetto, in diversi modi:
+* Condividendo il progetto;
 * Traducendo il progetto in altre lingue;
 * Scovando e segnalando/risolvendo bug;
 * Suggerendo nuove idee;
