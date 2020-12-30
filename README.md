@@ -29,8 +29,6 @@ It is really helpful for video lessons, where the professor takes long time for 
 
 Of course this program is not perfect, and you might have to practice a bit with it.
 
-If you like this project, please give it a star.
-
 ### Download
 
 #### Standalone
@@ -119,6 +117,7 @@ At the end of execution, the program does not automatically clean the tmp folder
 
 ## Contributing
 Anyone can contribute to this project, in many ways:
+* Sharing the project;
 * Translating this project in other languages;
 * Finding and report/fix bugs;
 * Suggesting new ideas;
