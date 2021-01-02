@@ -94,8 +94,10 @@ module.exports = class FFmpeg {
   }
 
   static interrupt() {
-    if(FFmpeg.spawn != null)
+    if(FFmpeg.spawn != null) {
       FFmpeg.spawn.kill()
+      FFmpeg.spawn = null
+    }
   }
 
   static getSecondsFromTime(time) {
