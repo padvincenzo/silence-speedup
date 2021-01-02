@@ -32,14 +32,14 @@ Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' 
 ### Download
 
 #### FFmpeg incluso
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-win32-x64-standalone.zip) (101 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-darwin-x64-standalone.zip) (245 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-linux-x64-standalone.zip) (101 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-win32-x64-standalone.zip) (101 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-darwin-x64-standalone.zip) (245 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-linux-x64-standalone.zip) (101 MB)
 
 #### FFmpeg non incluso
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-win32-x64.zip) (75.9 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-darwin-x64.zip) (222 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-linux-x64.zip) (74 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-win32-x64.zip) (75.9 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-darwin-x64.zip) (222 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-linux-x64.zip) (74 MB)
 
 ## Come si usa
 Importa i tuoi video, scegli la [configurazione](#configurazioni) e premi ``Start``. L'app ti mostrerà lo stato di avanzamento, che consiste in 3 step: ``Detecting silences``, ``Exporting`` e ``Concatenating``.
