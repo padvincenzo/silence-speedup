@@ -34,14 +34,14 @@ Of course this program is not perfect, and you might have to practice a bit with
 #### Standalone
 (FFmpeg binaries inside)
 
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32-standalone.zip) (97.1 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64-standalone.zip) (245 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64-standalone.zip) (101 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-win32-x64-standalone.zip) (97.1 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-darwin-x64-standalone.zip) (245 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-linux-x64-standalone.zip) (101 MB)
 
 #### Without FFmpeg binaries
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-win32-ia32.zip) (72 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-darwin-x64.zip) (223 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.0-linux-x64.zip) (74.1 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-win32-x64.zip) (72 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-darwin-x64.zip) (223 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.0/Silence-SpeedUp-v1.2.1-linux-x64.zip) (74.1 MB)
 
 ## How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
