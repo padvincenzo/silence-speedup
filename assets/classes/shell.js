@@ -24,6 +24,10 @@ module.exports = class Shell {
 
   static load() {
     Shell.shell = document.getElementById("shell")
+
+    ipcRenderer.on("cleanShell", (event) => {
+      Shell.shell.innerHTML = ""
+    })
   }
 
   static log(msg) {

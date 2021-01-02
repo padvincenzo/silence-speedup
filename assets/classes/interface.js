@@ -174,10 +174,6 @@ module.exports = class Interface {
       Shell.log(`Files added: ${c}`)
     })
 
-    ipcRenderer.on("cleanShell", (event) => {
-      Interface.shell.innerHTML = ""
-    })
-
     ipcRenderer.on("start", (event) => {
       SpeedUp.start()
     })
