@@ -82,7 +82,7 @@ Se desideri eseguire questo programma dal codice sorgente hai bisogno di install
 ## Come funziona
 Per ogni video, questo programma:
 
-1. Eseguirà ffmpeg con il filtro ``silencedetect``, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
+1. Esegue ffmpeg con il filtro ``silencedetect``, per ottenere l'elenco dei timestamp di inizio/fine dei silenzi.
 
 ```
 <ffmpeg bin> -hide_banner -vn \
@@ -91,7 +91,7 @@ Per ogni video, questo programma:
   -f null -
 ```
 
-2. Usando quell'elenco, dividerà il video originale dentro una cartella tmp, applicando un filtro di velocità, se presente.
+2. Usando quell'elenco, divide il video originale dentro una cartella tmp, applicando un filtro di velocità, se presente.
 
 ```
 <ffmpeg bin> -hide_banner -loglevel warning -stats \
