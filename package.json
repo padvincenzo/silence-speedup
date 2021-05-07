@@ -1,7 +1,7 @@
 {
   "name": "silence-speedup",
   "productName": "Silence SpeedUp",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Speed-up your videos speeding-up (or removing) silences, using FFmpeg. This is an electron-based app.",
   "main": "main.js",
   "scripts": {
@@ -38,6 +38,10 @@
     "electron-packager": "^15.2.0"
   },
   "dependencies": {
-    "feed-read": "0.0.1"
+    "agentkeepalive": "^4.1.4",
+    "decompress-zip": "^0.2.2",
+    "electron-download-manager": "^2.1.2",
+    "feed-read": "0.0.1",
+    "fs-extra": "^9.0.1"
   }
 }
