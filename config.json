@@ -1,6 +1,6 @@
 {
-	"exportPath": "/home/vincent/Video/speededup",
-	"ffmpegPath": "ffmpeg",
+	"exportPath": "",
+	"ffmpegPath": "",
 	"formats": [
 		{
 			"label": "keep",
