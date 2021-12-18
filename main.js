@@ -47,7 +47,7 @@ function createWindows () {
 		title: "Silence SpeedUp",
 		icon: icon,
 		width: 750,
-		height: 800,
+		height: 900,
 		minWidth: 600,
 		minHeight: 750,
 		show: false,

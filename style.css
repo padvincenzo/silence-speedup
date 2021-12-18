@@ -192,11 +192,33 @@ button#progressMode {
 }
 
 .setting div {
-	margin: 3px 0;
+	margin: 10px 0;
 }
 
 .setting div:first-child {
   margin-top: -8px;
+}
+
+.setting .setting-select {
+  display: flex;
+}
+
+.setting .setting-select label {
+  flex: none;
+  margin-right: 5px;
+}
+
+.setting .setting-select select {
+  width: 100%;
+  color: var(--c-dark);
+  background-color: transparent;
+  border: 0px solid var(--c-dark);
+  border-bottom-width: 1px;
+}
+
+.setting .setting-select option {
+  color: var(--c-dark);
+  background-color: var(--c-light);
 }
 
 .slider {
@@ -231,10 +253,6 @@ button#progressMode {
   cursor: default;
 	background: gray;
 	opacity: 1;
-}
-
-select {
-  border: 1px solid #0000;
 }
 
 #ffmpegProgressBar {

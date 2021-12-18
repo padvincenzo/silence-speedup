@@ -44,6 +44,9 @@ module.exports = class Interface {
   static playbackSpeedValue
   static videoExtension
 
+  static preset
+  static fps
+
   static load() {
     Interface.dropZone = document.getElementById("dropZone")
     Interface.gui = document.getElementById("gui")
@@ -119,6 +122,15 @@ module.exports = class Interface {
     })
 
     Interface.videoExtension = document.getElementById("videoExtension")
+
+    Interface.fps = document.getElementById("fps")
+    Interface.preset = document.getElementById("preset")
+
+    Interface.crf = document.getElementById("crf")
+    Interface.crfValue = document.getElementById("crfValue")
+    Interface.crf.addEventListener("input", (event) => {
+      Interface.crfValue.innerHTML = Interface.crf.value
+    })
 
     Interface.update()
 
@@ -220,6 +232,20 @@ module.exports = class Interface {
     })
     Interface.videoExtension.innerHTML = options
 
+    options = ""
+    Config.data.presets.forEach((preset, i) => {
+      options += `<option value="${preset.value}"${Config.data.initialPreset == i ? " selected" : ""}>${preset.label}</option>`
+    })
+    Interface.preset.innerHTML = options
+
+    options = ""
+    Config.data.fps.forEach((fps, i) => {
+      options += `<option value="${fps.value}"${Config.data.initialFps == i ? " selected" : ""}>${fps.label}</option>`
+    })
+    Interface.fps.innerHTML = options
+
+    Interface.crf.value = Config.data.initialCrf
+    Interface.crfValue.innerHTML = Interface.crf.value
   }
 
   static lock() {

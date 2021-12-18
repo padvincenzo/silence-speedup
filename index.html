@@ -84,10 +84,30 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
           </div>
 
           <div class="setting" id="exportSettings">
-            <div>
-              <label for="videoExtension">Video format: </label>
-              <select id="videoExtension" name="videoExtension"></select>
+						<div>
+							<label for="crf">CRF: <span id="crfValue"></span></label>
+							<input type="range" class="slider" id="crf" name="crf" min="0" max="51" value="22">
+						</div>
+						<!-- <div>
+              <label for="codecAudio">Codec Audio: </label>
+							<select id="codecAudio" name="codecAudio"></select>
             </div>
+						<div>
+              <label for="codecVideo">Codec Video: </label>
+							<select id="codecVideo" name="codecVideo"></select>
+            </div> -->
+						<div class="setting-select">
+              <label for="fps">FPS: </label>
+              <select id="fps" name="fps"></select>
+            </div>
+						<div class="setting-select">
+              <label for="preset">Preset: </label>
+              <select id="preset" name="preset"></select>
+            </div>
+						<div class="setting-select">
+							<label for="videoExtension">Video format: </label>
+							<select id="videoExtension" name="videoExtension"></select>
+						</div>
           </div>
         </div>
 

@@ -19,32 +19,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const codec_audio = "aac";
-const codec_video = "h264";
-
-/* TUNE (not implemented)
- * film – use for high quality movie content; lowers deblocking
- * animation – good for cartoons; uses higher deblocking and more reference frames
- * grain – preserves the grain structure in old, grainy film material
- * stillimage – good for slideshow-like content
- * fastdecode – allows faster decoding by disabling certain filters
- * zerolatency – good for fast encoding and low-latency streaming
- */
-// const tune = null;
-
 module.exports = class SpeedUp {
-  static stream = null;
-  static interrupted = true;
-  static currentEntry = null;
+  static stream = null
+  static interrupted = true
+  static currentEntry = null
 
-  static threshold;
-  static silenceMinimumDuration;
-  static silenceMargin;
-  static dropAudio;
-  static muteAudio;
-  static silenceSpeed;
-  static playbackSpeed;
-  static videoExtension;
+  static threshold
+  static silenceMinimumDuration
+  static silenceMargin
+  static dropAudio
+  static muteAudio
+  static silenceSpeed
+  static playbackSpeed
+  static videoExtension
 
   static silenceDetectOptions = [
     "-hide_banner",
@@ -54,7 +41,7 @@ module.exports = class SpeedUp {
     "-af", null,                            // silencedetect filter
     "-f", "null",
     "-"
-  ];
+  ]
 
   static exportOptions = {
     playback: {
@@ -64,16 +51,9 @@ module.exports = class SpeedUp {
         "-stats",
         "-ss", null,                        // Start time
         "-to", null,                        // End time
-        "-i", null,                         // Input file
-        "-codec:a", codec_audio,
-        "-codec:v", codec_video,
-        "-preset", "medium",
-        "-crf", "22",
-        "-map_metadata", "-1",
-        "-segment_time_metadata", "0",
-        "-max_muxing_queue_size", "9999"
+        "-i", null                          // Input file
       ],
-      index: 24                             // Index for output file
+      index: 10                             // Index for output file
     },
     silence: {
       options: [
@@ -82,18 +62,24 @@ module.exports = class SpeedUp {
         "-stats",
         "-ss", null,                        // Start time
         "-to", null,                        // End time
-        "-i", null,                         // Input file
-        "-codec:a", codec_audio,
-        "-codec:v", codec_video,
-        "-preset", "medium",
-        "-crf", "22",
-        "-map_metadata", "-1",
-        "-segment_time_metadata", "0",
-        "-max_muxing_queue_size", "9999"
+        "-i", null                          // Input file
       ],
-      index: 24                             // Index for output file
+      index: 10                             // Index for output file
+    },
+    copy: {
+      options: [
+        "-hide_banner",
+        "-loglevel", "warning",
+        "-stats",
+        "-ss", null,                        // Start time
+        "-to", null,                        // End time
+        "-i", null,                         // Input file
+        "-c", "copy",
+        null,                               // Output file
+        "-y"
+      ]
     }
-  };
+  }
 
   static concatOptions = [
     "-hide_banner",
@@ -102,12 +88,9 @@ module.exports = class SpeedUp {
     "-f", "concat",
     "-safe", "0",
     "-i", null,                             // Input file
-    "-map_metadata", "-1",
-    "-segment_time_metadata", "0",
     "-c", "copy",
     "-map", "v",
     "-map", "a",
-    "-vsync", "vfr",
     null,                                   // Output file
     "-y"
   ]
@@ -130,59 +113,44 @@ module.exports = class SpeedUp {
 
   static setFilters() {
 
-    SpeedUp.exportOptions.silence.options[15] = Interface.preset.value;
-    SpeedUp.exportOptions.silence.options[17] = Interface.crf.value;
-
-    SpeedUp.exportOptions.playback.options[15] = Interface.preset.value;
-    SpeedUp.exportOptions.playback.options[17] = Interface.crf.value;
-
-    SpeedUp.exportOptions.silence.options.splice(24);
-    SpeedUp.exportOptions.silence.index = 24;
-
     if(! SpeedUp.dropAudio) {
 
+      SpeedUp.exportOptions.silence.options.splice(10, 7)
+      SpeedUp.exportOptions.silence.index = 10
+
       if(SpeedUp.silenceSpeed == "1x") {
-        SpeedUp.exportOptions.silence.options[24] = "-vf";
-        SpeedUp.exportOptions.silence.options[25] = `fps=${Interface.fps.value}`;
-        SpeedUp.exportOptions.silence.index = 26;
         if(SpeedUp.muteAudio) {
-          SpeedUp.exportOptions.silence.options[26] = "-af";
-          SpeedUp.exportOptions.silence.options[27] = "volume=enable=0";
-          SpeedUp.exportOptions.silence.index = 28;
+          SpeedUp.exportOptions.silence.options[10] = "-af"
+          SpeedUp.exportOptions.silence.options[11] = "volume=enable=0"
+          SpeedUp.exportOptions.silence.index = 12
         }
       } else {
-        let videoFilter = Config.data.speeds[Interface.silenceSpeed.value].video.replace(/\[0:v\]/, `[0:v]fps=${Interface.fps.value},`);
-        let audioFilter = SpeedUp.muteAudio ? "[0:a]volume=enable=0[a]" : Config.data.speeds[Interface.silenceSpeed.value].audio;
-        SpeedUp.exportOptions.silence.options[24] = "-filter_complex";
-        SpeedUp.exportOptions.silence.options[25] = videoFilter + audioFilter;
-        SpeedUp.exportOptions.silence.options[26] = "-map";
-        SpeedUp.exportOptions.silence.options[27] = "[v]";
-        SpeedUp.exportOptions.silence.options[28] = "-map";
-        SpeedUp.exportOptions.silence.options[29] = "[a]";
-        SpeedUp.exportOptions.silence.index = 30;
+        let videoFilter = Config.data.speeds[Interface.silenceSpeed.value].video
+        let audioFilter = SpeedUp.muteAudio ? "[0:a]volume=enable=0[a]" : Config.data.speeds[Interface.silenceSpeed.value].audio
+        SpeedUp.exportOptions.silence.options[10] = "-filter_complex"
+        SpeedUp.exportOptions.silence.options[11] = videoFilter + audioFilter
+        SpeedUp.exportOptions.silence.options[12] = "-map"
+        SpeedUp.exportOptions.silence.options[13] = "[v]"
+        SpeedUp.exportOptions.silence.options[14] = "-map"
+        SpeedUp.exportOptions.silence.options[15] = "[a]"
+        SpeedUp.exportOptions.silence.index = 16
       }
     }
 
-    SpeedUp.exportOptions.playback.options.splice(24);
-    SpeedUp.exportOptions.playback.index = 24;
+    SpeedUp.exportOptions.playback.options.splice(10, 7)
+    SpeedUp.exportOptions.playback.index = 10
 
-    if(SpeedUp.playbackSpeed == "1x") {
-      SpeedUp.exportOptions.playback.options[24] = "-vf";
-      SpeedUp.exportOptions.playback.options[25] = `fps=${Interface.fps.value}`;
-      SpeedUp.exportOptions.playback.index = 26;
-    } else {
-      let videoFilter = Config.data.speeds[Interface.playbackSpeed.value].video.replace(/\[0:v\]/, `[0:v]fps=${Interface.fps.value},`);
-      let audioFilter = Config.data.speeds[Interface.playbackSpeed.value].audio;
-      SpeedUp.exportOptions.playback.options[24] = "-filter_complex";
-      SpeedUp.exportOptions.playback.options[25] = videoFilter + audioFilter;
-      SpeedUp.exportOptions.playback.options[26] = "-map";
-      SpeedUp.exportOptions.playback.options[27] = "[v]";
-      SpeedUp.exportOptions.playback.options[28] = "-map";
-      SpeedUp.exportOptions.playback.options[29] = "[a]";
-      SpeedUp.exportOptions.playback.index = 30;
+    if(SpeedUp.playbackSpeed != "1x") {
+      let videoFilter = Config.data.speeds[Interface.playbackSpeed.value].video
+      let audioFilter = Config.data.speeds[Interface.playbackSpeed.value].audio
+      SpeedUp.exportOptions.playback.options[10] = "-filter_complex"
+      SpeedUp.exportOptions.playback.options[11] = videoFilter + audioFilter
+      SpeedUp.exportOptions.playback.options[12] = "-map"
+      SpeedUp.exportOptions.playback.options[13] = "[v]"
+      SpeedUp.exportOptions.playback.options[14] = "-map"
+      SpeedUp.exportOptions.playback.options[15] = "[a]"
+      SpeedUp.exportOptions.playback.index = 16
     }
-
-    console.log("Options", SpeedUp.exportOptions);
   }
 
   static async start() {
@@ -231,10 +199,6 @@ module.exports = class SpeedUp {
 
     error = await SpeedUp.silenceDetect(entry)
     if(SpeedUp.interrupted || error) return
-    if(!entry.hasSilences()) {
-      entry.finished()
-      return
-    }
     error = await SpeedUp.exportFragments(entry)
     if(SpeedUp.interrupted || error) return
     error = await SpeedUp.concatFragments(entry)
@@ -375,8 +339,11 @@ module.exports = class SpeedUp {
     SpeedUp.exportOptions.silence.options[SpeedUp.exportOptions.silence.index] = output
 
     let error = await FFmpeg.run(SpeedUp.exportOptions.silence.options, {entry: entry, startTS: startTS, endTS: endTS}, null, null, (data) => {
-      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error.`)
+      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error, trying to copy.`)
     })
+
+    if(error && !SpeedUp.interrupted)
+      error = await SpeedUp.copyFragment(entry, startTS, endTS, output)
 
     return error
   }
@@ -393,10 +360,29 @@ module.exports = class SpeedUp {
     SpeedUp.exportOptions.playback.options[SpeedUp.exportOptions.playback.index] = output
 
     let error = await FFmpeg.run(SpeedUp.exportOptions.playback.options, {entry: entry, startTS: startTS, endTS: endTS}, null, null, (data) => {
-      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error.`)
+      Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error, trying to copy.`)
     })
 
+    if(error && !SpeedUp.interrupted)
+      error = await SpeedUp.copyFragment(entry, startTS, endTS, output)
+
     return error
+  }
+
+  static async copyFragment(entry, startTS, endTS, name) {
+    if(SpeedUp.interrupted) return true
+
+    SpeedUp.exportOptions.copy.options[5] = startTS
+    SpeedUp.exportOptions.copy.options[7] = endTS
+    SpeedUp.exportOptions.copy.options[9] = entry.url
+    SpeedUp.exportOptions.copy.options[12] = name
+
+    return await FFmpeg.run(SpeedUp.exportOptions.copy.options, {entry: entry, startTS: startTS, endTS: endTS}, null, (data) => {
+      Shell.log("Fragment copied succesfully")
+    },
+    (data) => {
+      SpeedUp.reportError(`Error while copying fragment [${data.startTS} - ${data.endTS}]`, data.entry)
+    })
   }
 
   static async concatFragments(entry) {
@@ -410,7 +396,7 @@ module.exports = class SpeedUp {
     entry.status = "Concatenating..."
     Shell.log("Concatenating...")
 
-    SpeedUp.concatOptions[22] = path.join(Config.data.exportPath, entry.outputName)
+    SpeedUp.concatOptions[16] = path.join(Config.data.exportPath, entry.outputName)
 
     return await FFmpeg.run(SpeedUp.concatOptions, {entry: entry}, null, null, (data) => {
       SpeedUp.reportError("Error during concatenation.", data.entry)

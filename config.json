@@ -1,6 +1,6 @@
 {
-	"exportPath": "",
-	"ffmpegPath": "",
+	"exportPath": "/home/vincent/Video/speededup",
+	"ffmpegPath": "ffmpeg",
 	"formats": [
 		{
 			"label": "keep",
@@ -116,5 +116,108 @@
 		"max": "10",
 		"step": "0.05",
 		"initialValue": "0.1"
-	}
+	},
+	"presets": [
+		{
+			"label": "Ultra fast",
+			"value": "ultrafast"
+		},
+		{
+			"label": "Super fast",
+			"value": "superfast"
+		},
+		{
+			"label": "Very fast",
+			"value": "veryfast"
+		},
+		{
+			"label": "Faster",
+			"value": "faster"
+		},
+		{
+			"label": "Fast",
+			"value": "fast"
+		},
+		{
+			"label": "Medium",
+			"value": "medium"
+		},
+		{
+			"label": "Slow",
+			"value": "slow"
+		},
+		{
+			"label": "Slower",
+			"value": "slower"
+		},
+		{
+			"label": "Very slow",
+			"value": "veryslow"
+		}
+	],
+	"initialPreset": 5,
+	"fps": [
+		{
+			"label": "10",
+			"value": "10"
+		},
+		{
+			"label": "20",
+			"value": "20"
+		},
+		{
+			"label": "24 NTSC",
+			"value": "24"
+		},
+		{
+			"label": "25 PAL",
+			"value": "25"
+		},
+		{
+			"label": "29.97",
+			"value": "29.97"
+		},
+		{
+			"label": "30",
+			"value": "30"
+		},
+		{
+			"label": "48",
+			"value": "48"
+		},
+		{
+			"label": "50 PAL",
+			"value": "50"
+		},
+		{
+			"label": "59.94",
+			"value": "59.94"
+		},
+		{
+			"label": "60",
+			"value": "60"
+		},
+		{
+			"label": "72",
+			"value": "72"
+		},
+		{
+			"label": "75",
+			"value": "75"
+		},
+		{
+			"label": "90",
+			"value": "90"
+		},
+		{
+			"label": "100",
+			"value": "100"
+		},
+		{
+			"label": "120",
+			"value": "120"
+		}
+	],
+	"initialFps": 4,
+	"initialCrf": 22
 }
