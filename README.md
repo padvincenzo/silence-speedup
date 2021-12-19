@@ -34,14 +34,14 @@ Of course this program is not perfect, and you might have to practice a bit with
 #### Standalone
 (FFmpeg binaries inside)
 
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-win32-x64-standalone.zip) (101 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-darwin-x64-standalone.zip) (245 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-linux-x64-standalone.zip) (101 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-win32-x64-standalone.zip) (102 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-darwin-x64-standalone.zip) (246 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-linux-x64-standalone.zip) (102 MB)
 
 #### Without FFmpeg binaries
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-win32-x64.zip) (75.9 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-darwin-x64.zip) (222 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.1/Silence-SpeedUp-v1.2.1-linux-x64.zip) (74 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-win32-x64.zip) (75.5 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-darwin-x64.zip) (224 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-linux-x64.zip) (74.6 MB)
 
 ## How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
@@ -62,7 +62,7 @@ These settings change the way FFmpeg detect silences. You can set:
 With these settings you can change the speed of spoken/silence parts of the video, and also set silence parts to be video-only.
 
 #### Export
-Choose the format (extension) of your video. Default is set to keep the same extension. In this way, I noticed that some formats (e.g. `avi`) loose video quality during the process.
+Choose the format (extension) of your video (default is set to keep the same extension as the input file). Other settings include [`fps` (frame per second)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` and `preset` (these are settings for the [video codec `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). The codec used for audio is `aac`.
 
 Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
 
