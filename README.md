@@ -11,11 +11,10 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
       - [Standalone](#standalone)
       - [Without FFmpeg binaries](#without-ffmpeg-binaries)
   - [How to use](#how-to-use)
-    - [Program settings](#program-settings)
-      - [Silence detect](#silence-detect)
-      - [Filter](#filter)
-      - [Export](#export)
-    - [Requirements](#requirements)
+    - [Silence detect](#silence-detect)
+    - [Filter](#filter)
+    - [Export](#export)
+  - [Requirements](#requirements)
   - [Compiling](#compiling)
   - [How it works](#how-it-works)
     - [Note](#note)
@@ -46,27 +45,30 @@ Of course this program is not perfect, and you might have to practice a bit with
 ## How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
 
-### Program settings
 Not all videos are with the same audio volume, and you may want to choose which silences should be treaten as that. So, here we have the configurable parts.
 
-#### Silence detect
+### Silence detect
 These settings change the way FFmpeg detect silences. You can set:
 
-* The background noise of the video (`Low` for a silent room with a microphone, `Mid` for the average noisy room, `High` for a noisy room). Note: if your are new, try a video with defaults settings and see the result.
+* The background noise of the video (`Low` for a silent room with a microphone, `Mid` for the average noisy room, `High` for a noisy room).
+
+  _Note: if your are new, try a video with defaults settings and see the result._
 
 * How many seconds the smallest silence lasts (this value prevent brief pauses to be treaten as silences).
 
-* How many seconds of silences should not be treaten as silences (explaination: without a minimum time of margin, spoken words might merge and the result would be an incomprehensible speech).
+* How many seconds of silences should not be treaten as silences.
 
-#### Filter
+  _Explaination: without a minimum time of margin, spoken words might merge and the result would be an incomprehensible speech._
+
+### Filter
 With these settings you can change the speed of spoken/silence parts of the video, and also set silence parts to be video-only.
 
-#### Export
+### Export
 Choose the format (extension) of your video (default is set to keep the same extension as the input file). Other settings include [`fps` (frame per second)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` and `preset` (these are settings for the [video codec `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). The codec used for audio is `aac`.
 
 Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
 
-### Requirements
+## Requirements
 This app comes in 2 versions: the one called standalone has FFmpeg binaries inside and it does not require anything to run. The other version is without FFmpeg: you have to download and configure it.
 
 ## Compiling
