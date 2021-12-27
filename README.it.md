@@ -11,11 +11,10 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
       - [FFmpeg incluso](#ffmpeg-incluso)
       - [FFmpeg non incluso](#ffmpeg-non-incluso)
   - [Come si usa](#come-si-usa)
-    - [Configurazioni](#configurazione)
-      - [Rilevamento silenzi](#rilevamento-silenzi)
-      - [Filtri](#filtri)
-      - [Esportazione](#esportazione)
-    - [Requisiti](#requisiti)
+    - [Rilevamento silenzi](#rilevamento-silenzi)
+    - [Filtri](#filtri)
+    - [Esportazione](#esportazione)
+  - [Requisiti](#requisiti)
   - [Compilazione](#compilazione)
   - [Come funziona](#come-funziona)
     - [Note](#note)
@@ -44,27 +43,30 @@ Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' 
 ## Come si usa
 Importa i tuoi video, scegli la [configurazione](#configurazioni) e premi ``Start``. L'app ti mostrerà lo stato di avanzamento, che consiste in 3 step: ``Detecting silences``, ``Exporting`` e ``Concatenating``.
 
-### Configurazioni
 Non tutti i video hanno lo stesso livello di volume, e potresti voler scegliere quali silenzi devono essere trattati come tali. Quindi, ecco le parti configurabili.
 
-#### Rilevamento silenzi
+### Rilevamento silenzi
 Queste impostazioni cambiano il modo in cui FFmpeg rileva i silenzi. Puoi impostare:
 
-* Il rumore di fondo del video (``Low`` per una stanza silenziosa con microfono, ``Mid`` per una stanza mediamente rumorosa, ``High`` per una stanza rumorosa). Nota: se sei nuovo, prova un video con le impostazioni predefinite e guarda il risultato.
+* Il rumore di fondo del video (``Low`` per una stanza silenziosa con microfono, ``Mid`` per una stanza mediamente rumorosa, ``High`` per una stanza rumorosa).
+
+  _Nota: se sei nuovo, prova un video con le impostazioni predefinite e guarda il risultato._
 
 * Quanti secondi dura il più piccolo silenzio (questo valore evita che brevi pause siano considerate silenzi).
 
-* Quanti secondi di silenzio non devono essere trattati come silenzi (spiegazione: senza un tempo minimo di margine, le parole pronunciate potrebbero fondersi e il risultato sarebbe un discorso incomprensibile).
+* Quanti secondi di silenzio non devono essere trattati come silenzi.
 
-#### Filtri
+  _Spiegazione: senza un tempo minimo di margine, le parole pronunciate potrebbero fondersi e il risultato sarebbe un discorso incomprensibile._
+
+### Filtri
 Con queste impostazioni è possibile modificare la velocità delle parti parlate/silenziose del video, e anche impostare le parti silenziose in modo che siano solo video.
 
-#### Esportazione
+### Esportazione
 Scegli il formato (l'estensione) del tuo video (per impostazione predefinita il video mantiene la stessa estensione).  Altre impostazioni sono per gli [`fps` (frame per secondo)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` e `preset` (questi sono specifici per il [codec video `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). Per l'audio invece utilizza il codec `aac`.
 
-Nota: il percorso predefinito dei video (così come dei file temporanei) è impostato su ``<la tua home>/speededup/``. Se vuoi cambiarlo, premi il pulsante delle impostazioni o vai su ``File -> Impostazioni``.
+_Nota: il percorso predefinito dei video (così come dei file temporanei) è impostato su ``<la tua home>/speededup/``. Se vuoi cambiarlo, premi il pulsante delle impostazioni o vai su ``File -> Impostazioni``._
 
-### Requisiti
+## Requisiti
 Questa app è rilasciata in 2 varianti: quella chiamata standalone ha al suo interno i binari di FFmpeg e perciò non richiede nulla per essere eseguita. L'altra variante non include FFmpeg: devi scaricarlo e configurarlo manualmente.
 
 ## Compilazione
