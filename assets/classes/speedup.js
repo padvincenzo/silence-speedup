@@ -300,6 +300,7 @@ module.exports = class SpeedUp {
     Shell.log("All done.");
     FFmpeg.update(null);
 
+    Interface.setProgressBar(1);
     ipcRenderer.send("progressUpdate", "name", "");
 
     Interface.viewStart();

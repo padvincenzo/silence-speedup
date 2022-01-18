@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {BrowserWindow, Menu, app, shell, dialog, ipcMain, nativeTheme} = require("electron");
+const {BrowserWindow, Menu, app, shell, dialog, ipcMain, nativeTheme, Notification} = require("electron");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
@@ -467,6 +467,11 @@ ipcMain.on("menuEnabler", (event, change) => {
 ipcMain.on("setProgressBar", (event, value) => {
 	win.setProgressBar(value);
 	progress.setProgressBar(value);
+
+	// Send notification on complete
+	if(value == 1) {
+		new Notification({ title: "Silence SpeedUp", body: "All videos have been speeded up"}).show();
+	}
 });
 
 
