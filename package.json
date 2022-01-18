@@ -1,7 +1,7 @@
 {
   "name": "silence-speedup",
   "productName": "Silence SpeedUp",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Speed-up your videos speeding-up (or removing) silences, using FFmpeg. This is an electron-based app.",
   "main": "main.js",
   "scripts": {

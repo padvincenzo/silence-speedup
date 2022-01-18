@@ -154,7 +154,7 @@ module.exports = class Entry {
     let len = this.#silenceTS[i].push(ts)
     if(len > 1) {
       offset = parseFloat(offset) * ((i == "start") ? 1 : -1)
-      this.#silenceTS[i][len - 1] = (parseFloat(ts) + offset).toFixed(3)
+      this.#silenceTS[i][len - 1] = (parseFloat(ts) + offset).toFixed(7)
     }
   }
 

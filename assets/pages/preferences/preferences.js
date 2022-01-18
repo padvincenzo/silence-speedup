@@ -19,72 +19,79 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {ipcRenderer} = require("electron")
-const fs = require("fs")
-const path = require("path")
-const os = require("os")
+const {ipcRenderer} = require("electron");
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
 
-const configPath = path.join(__dirname, "..", "..", "..", "config.json")
-const defaultExportPath = path.join(os.homedir(), "speededup")
-const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"))
+const configPath = path.join(__dirname, "..", "..", "..", "config.json");
+const defaultExportPath = path.join(os.homedir(), "speededup");
+const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
 
-let data
+let data;
 
 window.onload = () => {
-  let json = fs.readFileSync(configPath, {encoding: 'utf-8'})
-  data = JSON.parse(json)
-  setData()
+  let json = fs.readFileSync(configPath, {encoding: 'utf-8'});
+  data = JSON.parse(json);
+  setData();
 
   document.getElementById("exportChoose").addEventListener("click", (event) => {
-    let folder = ipcRenderer.sendSync("exportChoose")
-    if(folder == undefined)
-      return
+    let folder = ipcRenderer.sendSync("exportChoose");
+    if(folder == undefined) {
+      return;
+    }
 
-    document.getElementById("export").value = folder[0].toString()
-  })
+    document.getElementById("export").value = folder[0].toString();
+  });
 
   document.getElementById("ffmpegChoose").addEventListener("click", (event) => {
-    let file = ipcRenderer.sendSync("ffmpegChoose")
-    if(file == undefined)
-      return
+    let file = ipcRenderer.sendSync("ffmpegChoose");
+    if(file == undefined) {
+      return;
+    }
 
-    document.getElementById("ffmpeg").value = file[0].toString()
-  })
+    document.getElementById("ffmpeg").value = file[0].toString();
+  });
 
   document.getElementById("reset").addEventListener("click", (event) => {
-    setData()
-  })
+    setData();
+  });
 
   document.getElementById("save").addEventListener("click", (event) => {
-    getData()
-    saveData()
-  })
+    getData();
+    saveData();
+  });
 }
 
 function setData() {
-  document.getElementById("export").value = ((data.exportPath == "" && fs.existsSync(defaultExportPath)) ? defaultExportPath : data.exportPath)
-  document.getElementById("ffmpeg").value = ((data.ffmpegPath == "" && fs.existsSync(defaultFFmpegPath)) ? defaultFFmpegPath : data.ffmpegPath)
+  document.getElementById("export").value = ((data.exportPath == "" && fs.existsSync(defaultExportPath)) ? defaultExportPath : data.exportPath);
+  document.getElementById("ffmpeg").value = ((data.ffmpegPath == "" && fs.existsSync(defaultFFmpegPath)) ? defaultFFmpegPath : data.ffmpegPath);
 }
 
 function getData() {
-  data.exportPath = document.getElementById("export").value
-  if(data.exportPath == "")
-    data.exportPath = defaultExportPath
-  data.ffmpegPath = document.getElementById("ffmpeg").value
+  data.exportPath = document.getElementById("export").value;
+  if(data.exportPath == "") {
+    data.exportPath = defaultExportPath;
+  }
+  data.ffmpegPath = document.getElementById("ffmpeg").value;
   if(data.ffmpegPath == "") {
-    if(fs.existsSync(defaultFFmpegPath))
-      data.ffmpegPath = defaultFFmpegPath
-    else {
-
+    if(fs.existsSync(defaultFFmpegPath)) {
+      data.ffmpegPath = defaultFFmpegPath;
+    } else {
+      // Do nothing
     }
   }
-
 }
 
 function saveData() {
+  ipcRenderer.send("preferencesUpdate", data);
+
+  if(data.ffmpegPath == defaultFFmpegPath) {
+    data.ffmpegPath = "";
+  }
+
   fs.writeFileSync(configPath,
     JSON.stringify(data, null, "\t"),
-    {encoding: 'utf-8'})
+    {encoding: 'utf-8'});
 
-  ipcRenderer.send("preferencesUpdate", data)
 }

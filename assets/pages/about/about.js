@@ -19,24 +19,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {ipcRenderer} = require("electron")
-const os = require("os")
-const fs = require("fs")
-const path = require("path")
+const {ipcRenderer} = require("electron");
+const os = require("os");
+const fs = require("fs");
+const path = require("path");
 
 window.onload = () => {
-  let div = document.getElementById("ffmpeg-info")
+  let div = document.getElementById("ffmpeg-info");
 
   if(os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
-    readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.txt")
+    readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
     fs.readFile(readmePath, {encoding: 'utf-8'}, (err, data) => {
-      if (err)
-        div.innerHTML = "Error reading readme.txt"
-      else
-        div.innerHTML = data
-    })
+      if (err) {
+        div.innerHTML = "Error reading readme file";
+      } else {
+        div.innerHTML = data;
+      }
+    });
 
   } else {
-    div.innerHTML = "FFmpeg not configured for this platform."
+    div.innerHTML = "FFmpeg not configured for this platform.";
   }
 }

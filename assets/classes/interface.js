@@ -44,8 +44,11 @@ module.exports = class Interface {
   static playbackSpeedValue
   static videoExtension
 
-  static preset
+  static crf
   static fps
+  static preset
+  static audioRate
+  static tune
 
   static load() {
     Interface.dropZone = document.getElementById("dropZone")
@@ -131,6 +134,9 @@ module.exports = class Interface {
     Interface.crf.addEventListener("input", (event) => {
       Interface.crfValue.innerHTML = Interface.crf.value
     })
+
+    Interface.audioRate = document.getElementById("audioRate")
+    Interface.tune = document.getElementById("tune")
 
     Interface.update()
 
@@ -246,6 +252,18 @@ module.exports = class Interface {
 
     Interface.crf.value = Config.data.initialCrf
     Interface.crfValue.innerHTML = Interface.crf.value
+
+    options = ""
+    Config.data.audioRates.forEach((audioRate, i) => {
+      options += `<option value="${audioRate.value}"${Config.data.initialAudioRate == i ? " selected" : ""}>${audioRate.label}</option>`
+    })
+    Interface.audioRate.innerHTML = options
+
+    options = ""
+    Config.data.tunes.forEach((tune, i) => {
+      options += `<option value="${tune.value}">${tune.label}</option>`
+    })
+    Interface.tune.innerHTML = options
   }
 
   static lock() {
@@ -253,7 +271,7 @@ module.exports = class Interface {
     Interface.addFolder.disabled = true
     Interface.start.disabled = true
     Interface.stop.disabled = false
-    Interface.progressMode.disabled = false
+    Interface.progressMode.disabled = true
 
     Interface.threshold.disabled = true
     Interface.silenceMinimumDuration.disabled = true
@@ -262,6 +280,11 @@ module.exports = class Interface {
     Interface.silenceSpeed.disabled = true
     Interface.playbackSpeed.disabled = true
     Interface.videoExtension.disabled = true
+    Interface.crf.disabled = true
+    Interface.fps.disabled = true
+    Interface.preset.disabled = true
+    Interface.audioRate.disabled = true
+    Interface.tune.disabled = true
 
     EntryList.canImport = false
     ipcRenderer.send("menuEnabler", "lock")
@@ -281,28 +304,33 @@ module.exports = class Interface {
     Interface.silenceSpeed.disabled = false
     Interface.playbackSpeed.disabled = false
     Interface.videoExtension.disabled = false
+    Interface.crf.disabled = false
+    Interface.fps.disabled = false
+    Interface.preset.disabled = false
+    Interface.audioRate.disabled = false
+    Interface.tune.disabled = false
 
     EntryList.canImport = true
     ipcRenderer.send("menuEnabler", "unlock")
   }
 
   static viewStart() {
+    Interface.unlock()
     Interface.start.style.display = "inline-block"
     Interface.stop.style.display = "none"
-    Interface.progressMode.style.display = "none"
+    Interface.progressMode.disabled = true
     Interface.preferences.disabled = false
 
-    Interface.unlock()
     ipcRenderer.send("menuEnabler", "viewStart")
   }
 
   static viewStop() {
+    Interface.lock()
     Interface.start.style.display = "none"
     Interface.stop.style.display = "inline-block"
-    Interface.progressMode.style.display = "inline-block"
+    Interface.progressMode.disabled = false
     Interface.preferences.disabled = true
 
-    Interface.lock()
     ipcRenderer.send("menuEnabler", "viewStop")
   }
 

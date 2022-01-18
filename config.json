@@ -3,7 +3,7 @@
 	"ffmpegPath": "",
 	"formats": [
 		{
-			"label": "keep",
+			"label": "Keep",
 			"value": "keep"
 		},
 		{
@@ -38,57 +38,67 @@
 	"speeds": [
 		{
 			"text": "0.5x",
-			"video": "[0:v]setpts=2*PTS[v];",
-			"audio": "[0:a]atempo=0.5[a]"
+			"video": "setpts=2*PTS",
+			"audio": "atempo=0.5"
 		},
 		{
 			"text": "0.8x",
-			"video": "[0:v]setpts=1.25*PTS[v];",
-			"audio": "[0:a]atempo=0.8[a]"
+			"video": "setpts=1.25*PTS",
+			"audio": "atempo=0.8"
 		},
 		{
 			"text": "1x"
 		},
 		{
 			"text": "1.25x",
-			"video": "[0:v]setpts=0.8*PTS[v];",
-			"audio": "[0:a]atempo=1.25[a]"
+			"video": "setpts=0.8*PTS",
+			"audio": "atempo=1.25"
 		},
 		{
 			"text": "1.6x",
-			"video": "[0:v]setpts=0.625*PTS[v];",
-			"audio": "[0:a]atempo=1.6[a]"
+			"video": "setpts=0.625*PTS",
+			"audio": "atempo=1.6"
 		},
 		{
 			"text": "2x",
-			"video": "[0:v]setpts=0.5*PTS[v];",
-			"audio": "[0:a]atempo=2[a]"
+			"video": "setpts=0.5*PTS",
+			"audio": "atempo=2"
 		},
 		{
 			"text": "2.5x",
-			"video": "[0:v]setpts=0.4*PTS[v];",
-			"audio": "[0:a]atempo=2.5[a]"
+			"video": "setpts=0.4*PTS",
+			"audio": "atempo=2.5"
 		},
 		{
 			"text": "4x",
-			"video": "[0:v]setpts=0.25*PTS[v];",
-			"audio": "[0:a]atempo=4[a]"
+			"video": "setpts=0.25*PTS",
+			"audio": "atempo=4"
+		},
+		{
+			"text": "5x",
+			"video": "setpts=0.2*PTS",
+			"audio": "atempo=5"
 		},
 		{
 			"text": "8x",
-			"video": "[0:v]setpts=0.125*PTS[v];",
-			"audio": "[0:a]atempo=8[a]"
+			"video": "setpts=0.125*PTS",
+			"audio": "atempo=8"
+		},
+		{
+			"text": "16x",
+			"video": "setpts=0.0625*PTS",
+			"audio": "atempo=16"
 		},
 		{
 			"text": "20x",
-			"video": "[0:v]setpts=0.05*PTS[v];",
-			"audio": "[0:a]atempo=20[a]"
+			"video": "setpts=0.05*PTS",
+			"audio": "atempo=20"
 		},
 		{
 			"text": "remove"
 		}
 	],
-	"initialSilenceSpeed": 8,
+	"initialSilenceSpeed": 9,
 	"initialPlaybackSpeed": 2,
 	"thresholds": [
 		{
@@ -159,65 +169,122 @@
 	"fps": [
 		{
 			"label": "10",
-			"value": "10"
+			"value": "fps=10:round=near"
 		},
 		{
 			"label": "20",
-			"value": "20"
+			"value": "fps=20:round=near"
 		},
 		{
 			"label": "24 NTSC",
-			"value": "24"
+			"value": "fps=24:round=near"
 		},
 		{
 			"label": "25 PAL",
-			"value": "25"
+			"value": "fps=25:round=near"
 		},
 		{
 			"label": "29.97",
-			"value": "29.97"
+			"value": "fps=30000/1001:round=near"
 		},
 		{
 			"label": "30",
-			"value": "30"
+			"value": "fps=30:round=near"
 		},
 		{
 			"label": "48",
-			"value": "48"
+			"value": "fps=48:round=near"
 		},
 		{
 			"label": "50 PAL",
-			"value": "50"
+			"value": "fps=50:round=near"
 		},
 		{
 			"label": "59.94",
-			"value": "59.94"
+			"value": "fps=60000/1001:round=near"
 		},
 		{
 			"label": "60",
-			"value": "60"
+			"value": "fps=60:round=near"
 		},
 		{
 			"label": "72",
-			"value": "72"
+			"value": "fps=72:round=near"
 		},
 		{
 			"label": "75",
-			"value": "75"
+			"value": "fps=75:round=near"
 		},
 		{
 			"label": "90",
-			"value": "90"
+			"value": "fps=90:round=near"
 		},
 		{
 			"label": "100",
-			"value": "100"
+			"value": "fps=100:round=near"
 		},
 		{
 			"label": "120",
-			"value": "120"
+			"value": "fps=120:round=near"
 		}
 	],
-	"initialFps": 4,
-	"initialCrf": 22
+	"initialFps": 5,
+	"initialCrf": 23,
+	"audioRates": [
+		{
+			"label": "Keep",
+			"value": "-"
+		},
+		{
+			"label": "32 kHz",
+			"value": "32000"
+		},
+		{
+			"label": "44.1 kHz",
+			"value": "44100"
+		},
+		{
+			"label": "48 kHz",
+			"value": "48000"
+		},
+		{
+			"label": "88.2 kHz",
+			"value": "88200"
+		},
+		{
+			"label": "96 kHz",
+			"value": "96000"
+		}
+	],
+	"initialAudioRate": 0,
+	"tunes": [
+		{
+			"label": "None",
+			"value": "-"
+		},
+		{
+			"label": "Film",
+			"value": "film"
+		},
+		{
+			"label": "Animation",
+			"value": "animation"
+		},
+		{
+			"label": "Grain",
+			"value": "grain"
+		},
+		{
+			"label": "Still image",
+			"value": "stillimage"
+		},
+		{
+			"label": "Fast decode",
+			"value": "fastdecode"
+		},
+		{
+			"label": "Zero latency",
+			"value": "zerolatency"
+		}
+	]
 }

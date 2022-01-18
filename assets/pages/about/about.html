@@ -34,14 +34,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 	<body>
     <h1>Silence SpeedUp</h1>
 
-		<img src="../../icons/icon.svg" alt="Icona app">
+		<div class="presentation">
+			<img src="../../icons/icon.svg" alt="Icona app">
+			<div>
+				<p>
+					Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+					This is an electron-based app.
+				</p>
+				<p>Copyright (C) 2020  Vincenzo Padula</p>
+			</div>
+		</div>
 
-		<p>
-			Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-			This is an electron-based app.
-			<a href="https://github.com/padvincenzo/silence-speedup#readme" target="_blank">More info</a>
-		</p>
-		<p>Copyright (C) 2020  Vincenzo Padula</p>
 		<p>
 			This program comes with <b>absolutely no warranty</b>;
 			for details view license.
@@ -51,11 +54,91 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
     	under certain conditions; for details  view license.
 		</p>
 
+		<h2>How to use</h2>
+		<p>
+			Import your videos, choose the program settings and press <b>Start</b>.
+			The app shows you the progress status, which consists of 3 steps:
+			<i>Detecting silences</i>, <i>Exporting</i> and <i>Concatenating</i>.
+		</p>
+
+		<p>
+			Not all videos are with the same audio volume, and you may want to choose
+			which silences should be treaten as that. So, here we have the configurable
+			parts.
+		</p>
+
+		<h3>Silence detect</h3>
+		<p>
+			These settings change the way FFmpeg detect silences. You can set:
+			<ul>
+				<li>
+					<p>
+						The background noise of the video (<code>Low</code> for a silent
+						room with a microphone, <code>Mid</code> for the average noisy room,
+						<code>High</code> for a noisy room).
+					</p>
+					<p><i>
+						Note: if your are new, try a video with defaults settings and
+						see the result.
+					</i></p>
+				</li>
+				<li>
+					<p>
+						How many seconds the smallest silence lasts (this value prevent
+						brief pauses to be treaten as silences).
+					</p>
+				</li>
+				<li>
+					<p>
+						How many seconds of silences should not be treaten as silences.
+					</p>
+					<p><i>
+						Explaination: without a minimum time of margin, spoken words might
+						merge and the result would be an incomprehensible speech.
+					</i></p>
+				</li>
+			</ul>
+		</p>
+
+		<h3>Filter</h3>
+		<p>
+			With these settings you can change the speed of spoken/silence parts of
+			the video, and also set silence parts to be video-only.
+		</p>
+
+		<h3>Export</h3>
+		<p>
+			Choose the format (extension) of your video (default is set to keep the
+			same extension as the input file). Other settings include
+			<a href="https://trac.ffmpeg.org/wiki/ChangingFrameRate"><code>FPS</code> (frame per second)</a>,
+			<code>CFR</code> and <code>preset</code> (these are settings for the
+			<a href="https://trac.ffmpeg.org/wiki/Encode/H.264">video codec <code>h264</code></a>).
+			The codec used for audio is <code>aac</code>.
+		</p>
+
+		<p><i>
+			Note: the default path of the videos (as well as temporary files) is set
+			to <code>your_home/speededup/</code>. If you want to change it,
+			press the settings button or go to <code>File->Settings</code>.
+		</i></p>
+
+		<p>
+			For more info you can visit the
+			<a href="https://github.com/padvincenzo/silence-speedup#readme" target="_blank">GitHub page</a>.
+		</p>
+
 		<h2>Credits</h2>
+
+		<h3>FFmpeg</h3>
+
+		<div id="ffmpeg-info"></div>
 
 		<h3>Icons</h3>
 
-		<p>Icons from <a href="http://www.onlinewebfonts.com/icon" target="_blank">Icon Fonts</a> under license <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>:</p>
+		<p>
+			Icons from <a href="http://www.onlinewebfonts.com/icon" target="_blank">Icon Fonts</a>
+			under license <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank">CC BY 3.0</a>:
+		</p>
 		<ul>
 			<li><a href="https://www.onlinewebfonts.com/icon/507744" target="_blank">Add Video</a></li>
 			<li><a href="https://www.onlinewebfonts.com/icon/452183" target="_blank">Settings</a></li>
@@ -65,26 +148,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 			<li><a href="https://www.onlinewebfonts.com/icon/525896" target="_blank">Minimize</a> / Maximize</li>
 		</ul>
 
-		<p>Icons from <a href="https://www.flaticon.com/" target="_blank">www.flaticon.com</a>:</p>
+		<p>
+			Icons from <a href="https://www.flaticon.com/" target="_blank">www.flaticon.com</a>:
+		</p>
 		<ul>
-			<li><a href="https://www.flaticon.com/free-icon/add-to-folder_101222" target="_blank">Add To Folder</a> di <a href="https://www.flaticon.com/authors/roundicons-freebies" target="_blank">Roundicons Freebies</a></li>
+			<li>
+				<a href="https://www.flaticon.com/free-icon/add-to-folder_101222" target="_blank">Add To Folder</a>
+				di <a href="https://www.flaticon.com/authors/roundicons-freebies" target="_blank">Roundicons Freebies</a>
+			</li>
 		</ul>
 
-		<p>Icons from <a href="https://creazilla.com/" target="_blank">creazilla.com</a> under license <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>:</p>
+		<p>
+			Icons from <a href="https://creazilla.com/" target="_blank">creazilla.com</a>
+			under license <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>:
+		</p>
 		<ul>
-			<li><a href="https://creazilla.com/it/nodes/58721-persona-che-parla-clipart" target="_blank">Persona che parla</a>¹</li>
+			<li>
+				<a href="https://creazilla.com/it/nodes/58721-persona-che-parla-clipart" target="_blank">Persona che parla</a>
+			</li>
 		</ul>
 
-		<p>Icons from <a href="https://commons.wikimedia.org" target="_blank">commons.wikimedia.org</a> under license <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank">Attribution-ShareAlike 3.0 Unported</a>:</p>
+		<p>
+			Icons from <a href="https://commons.wikimedia.org" target="_blank">commons.wikimedia.org</a>
+			under license <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.en" target="_blank">Attribution-ShareAlike 3.0 Unported</a>:
+		</p>
 		<ul>
-			<li><a href="https://commons.wikimedia.org/wiki/Image:Italian_traffic_signs_-_direzione_obbligatoria_a_sinistra.svg?uselang=en" target="_blank">Italian traffic signs - direzione obbligatoria a sinistra</a>¹</li>
+			<li>
+				<a href="https://commons.wikimedia.org/wiki/Image:Italian_traffic_signs_-_direzione_obbligatoria_a_sinistra.svg?uselang=en" target="_blank">Italian traffic signs - direzione obbligatoria a sinistra</a>
+			</li>
 		</ul>
 
-		<p>¹ remixed</p>
-
-		<h3>FFmpeg</h3>
-
-		<div id="ffmpeg-info">...</div>
+		<p>* All icons are remixed</p>
 
 		<br>
   </body>

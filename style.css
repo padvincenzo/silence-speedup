@@ -48,8 +48,19 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #entryList {
   width: 100%;
 	height: -webkit-fill-available;
-  margin: 0 10px 1px 0;
+  margin: 0 10px 1px 10px;
 	overflow-y: auto;
+  padding: 5px 0;
+}
+
+#entryList:empty {
+  text-align: center;
+  margin: 1em;
+}
+
+#entryList:empty::before {
+  content: "Import a video and press Start to speedup/remove its silences.";
+  color: var(--c-dark);
 }
 
 #menu {
@@ -57,11 +68,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   text-align: center;
 	padding: 5px;
 	flex: none;
+  overflow-y: auto;
 }
 
 .entry {
-  font-size: 15px;
-	line-height: 22px;
+  font-size: 1em;
+	line-height: 2em;
   padding: 3px 0 3px 8px;
 	color: var(--c-dark);
 	display: flex;
@@ -81,7 +93,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .entry:hover {
-  background-color: #0001
+  background-color: #0001;
 }
 
 .entryName {
@@ -102,11 +114,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .remove {
-	font-family: monospace;
-	width: 18px;
-	height: 18px;
-	border-radius: 2px;
-	text-align: center;
+  font-family: monospace;
+  width: 1em;
+  height: 1em;
+  border-radius: 2px;
+  text-align: center;
+  font-size: 2em;
+  line-height: 1em;
+  margin: 3px 5px;
 }
 
 .remove:hover {
@@ -116,11 +131,24 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 .buttons {
   display: flex;
+  flex-direction: column;
+  margin: 10px 5px;
 }
 
-.buttons div {
-  width: -webkit-fill-available;
+.buttons button {
+  margin-bottom: 10px;
+  width: 56px;
+  height: 56px;
+  background-size: 40px 40px !important;
+	background-position: 8px 8px !important;
 }
+
+/* #entryList .buttons button {
+  width: 130px;
+  padding-left: 46px;
+  text-align: left;
+  margin-left: 5px;
+} */
 
 button#addFiles {
 	background: url(assets/icons/add_video.svg) no-repeat;
@@ -136,6 +164,7 @@ button#preferences {
 
 button#about {
 	background: url(assets/icons/info.svg) no-repeat;
+  margin-bottom: 30px;
 }
 
 button#start {
@@ -147,15 +176,14 @@ button#stop {
 	display: none;
 }
 
-button#start, button#stop {
-  width: 130px;
+/* button#start, button#stop {
+  width: 120px;
   padding-left: 46px;
   text-align: left;
-}
+} */
 
 button#progressMode {
 	background: url(assets/icons/minimize.svg) no-repeat;
-  display: none;
 }
 
 #videoSettings {
@@ -166,8 +194,12 @@ button#progressMode {
 	border: 1px solid var(--c-1);
 	border-radius: 5px;
 	padding: 6px;
-	margin: 12px 0 8px 0;
+	margin: 12px 0 25px 0;
 	text-align: left;
+}
+
+.setting:last-child {
+  margin-bottom: 12px;
 }
 
 .setting::before {
@@ -214,6 +246,8 @@ button#progressMode {
   background-color: transparent;
   border: 0px solid var(--c-dark);
   border-bottom-width: 1px;
+  text-align-last: right;
+  padding-right: 6px;
 }
 
 .setting .setting-select option {
@@ -233,7 +267,9 @@ button#progressMode {
 	margin-bottom: 15px;
 }
 
-.slider:hover {
+.slider:hover,
+.slider:active,
+.slider:focus {
   opacity: 1;
 }
 
@@ -320,9 +356,19 @@ button#progressMode {
   color: orange;
 }
 
+#shell .error::selection {
+  background-color: #C00;
+  color: #FFF;
+}
+
+#shell .warning::selection {
+  background-color: orange;
+  color: #FFF;
+}
+
 @media (prefers-color-scheme: dark) {
   .entry:hover {
-    background-color: #FFF1
+    background-color: #FFF1;
   }
 
   button#addFiles {

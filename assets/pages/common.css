@@ -52,9 +52,12 @@ button {
   flex: none;
 }
 
-button:hover {
-  background-color: var(--c-3) !important;
+button:hover,
+button:focus,
+button:active {
+  background-color: #666 !important;
 	-webkit-transition: var(--transition);
+	outline: none;
 }
 
 button:disabled {
@@ -74,6 +77,11 @@ a, a:focus, .link, .link:focus {
 
 .link:hover {
   cursor: pointer;
+}
+
+::selection {
+	background-color: #027bce;
+	color: #FFF;
 }
 
 @media (prefers-color-scheme: dark) {

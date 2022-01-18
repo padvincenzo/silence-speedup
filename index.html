@@ -36,20 +36,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 		<div id="dropZone">Drop videos here</div>
 
     <div id="gui">
-      <div id="entryList">
-      </div>
+
+			<div class="buttons">
+				<button id="addFiles" title="Add video(s)"></button>
+				<button id="addFolder" title="Add folder"></button>
+				<button id="preferences"title="Preferences"></button>
+				<button id="about" title="About"></button>
+				<button id="start" title="Start"></button>
+				<button id="stop" title="Stop" disabled></button>
+				<button id="progressMode" title="Switch to progress mode" disabled></button>
+			</div>
+
+			<div id="entryList"></div>
 
       <div id="menu">
-
-				<div class="buttons">
-	        <button id="addFiles" title="Add video(s)"></button>
-					<div></div>
-					<button id="addFolder" title="Add folder"></button>
-					<div></div>
-					<button id="preferences"title="Preferences"></button>
-					<div></div>
-					<button id="about" title="About"></button>
-				</div>
 
         <div id="videoSettings">
 
@@ -88,14 +88,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 							<label for="crf">CRF: <span id="crfValue"></span></label>
 							<input type="range" class="slider" id="crf" name="crf" min="0" max="51" value="22">
 						</div>
-						<!-- <div>
-              <label for="codecAudio">Codec Audio: </label>
-							<select id="codecAudio" name="codecAudio"></select>
-            </div>
-						<div>
-              <label for="codecVideo">Codec Video: </label>
-							<select id="codecVideo" name="codecVideo"></select>
-            </div> -->
 						<div class="setting-select">
               <label for="fps">FPS: </label>
               <select id="fps" name="fps"></select>
@@ -105,18 +97,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
               <select id="preset" name="preset"></select>
             </div>
 						<div class="setting-select">
+							<label for="audioRate">Audio rate: </label>
+							<select id="audioRate" name="audioRate"></select>
+						</div>
+						<div class="setting-select">
+							<label for="tune">Tune: </label>
+							<select id="tune" name="tune"></select>
+						</div>
+						<div class="setting-select">
 							<label for="videoExtension">Video format: </label>
 							<select id="videoExtension" name="videoExtension"></select>
 						</div>
           </div>
         </div>
 
-				<div class="buttons">
-					<button id="start" title="Start">Start</button>
-					<button id="stop" title="Stop" disabled>Stop</button>
-					<div></div>
-					<button id="progressMode" title="Switch to progress mode" disabled></button>
-				</div>
       </div>
 
 			<div id="ffmpegProgressBar"></div>

@@ -19,42 +19,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-const {ipcRenderer} = require("electron")
+const {ipcRenderer} = require("electron");
 
-let total
-let completed
-let currentVideo
-let currentStatus
-let progressBar
+let total;
+let completed;
+let currentVideo;
+let currentStatus;
+let progressBar;
 
 window.onload = () => {
-  total = document.getElementById("total")
-  completed = document.getElementById("completed")
-  currentVideo = document.getElementById("currentVideo")
-  currentStatus = document.getElementById("currentStatus")
-  progressBar = document.getElementById("progressBar")
+  total = document.getElementById("total");
+  completed = document.getElementById("completed");
+  currentVideo = document.getElementById("currentVideo");
+  currentStatus = document.getElementById("currentStatus");
+  progressBar = document.getElementById("progressBar");
 
   document.getElementById("defaultMode").addEventListener("click", (event) => {
-    ipcRenderer.send("switchToDefaultMode")
-  })
+    ipcRenderer.send("switchToDefaultMode");
+  });
 }
 
 ipcRenderer.on("total", (event, value) => {
-  total.innerHTML = "/" + value
-})
+  total.innerHTML = "/" + value;
+});
 
 ipcRenderer.on("completed", (event, value) => {
-  completed.innerHTML = value
-})
+  completed.innerHTML = value;
+});
 
 ipcRenderer.on("name", (event, value) => {
-  currentVideo.innerHTML = value
-})
+  currentVideo.innerHTML = value;
+});
 
 ipcRenderer.on("status", (event, value) => {
-  currentStatus.innerHTML = value
-})
+  currentStatus.innerHTML = value;
+});
 
 ipcRenderer.on("progressBar", (event, value) => {
-  progressBar.style.width = value + "%"
-})
+  progressBar.style.width = value + "%";
+});
