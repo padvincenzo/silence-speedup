@@ -33,14 +33,14 @@ Of course this program is not perfect, and you might have to practice a bit with
 #### Standalone
 (FFmpeg binaries inside)
 
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-win32-x64-standalone.zip) (102 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-darwin-x64-standalone.zip) (246 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-linux-x64-standalone.zip) (102 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3-win32-x64-standalone.zip) (120 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3-darwin-x64-standalone.zip) (247 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3-linux-x64-standalone.zip) (103 MB)
 
 #### Without FFmpeg binaries
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-win32-x64.zip) (75.5 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-darwin-x64.zip) (224 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.2/Silence-SpeedUp-v1.2.2-linux-x64.zip) (74.6 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3win32-x64.zip) (76.5 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3-darwin-x64.zip) (224 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.3/Silence-SpeedUp-v1.2.3-linux-x64.zip) (74.6 MB)
 
 ## How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
