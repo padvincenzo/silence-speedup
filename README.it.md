@@ -79,7 +79,9 @@ $ npm install
 $ npm start
 ```
 
-Se desideri eseguire questo programma dal codice sorgente hai bisogno di installare [NodeJS](https://nodejs.org/en/).
+Se vuoi anche includere l'eseguibile di FFmpeg, [qui è descritto come fare](https://github.com/padvincenzo/silence-speedup/discussions/6).
+
+Nota: per eseguire questo programma dal codice sorgente hai bisogno di installare [NodeJS](https://nodejs.org/en/).
 
 ## Come funziona
 Per ogni video, questo programma:
