@@ -81,7 +81,7 @@ $ npm install
 $ npm start
 ```
 
-If you also want to embed the ffmpeg binaries, [here is explained how to](https://github.com/padvincenzo/silence-speedup/discussions/6).
+If you also want to embed the FFmpeg binaries, [here is explained how to](https://github.com/padvincenzo/silence-speedup/discussions/6).
 
 Note: if you wish to run this program from source files then you also need to install [NodeJS](https://nodejs.org/en/).
 
