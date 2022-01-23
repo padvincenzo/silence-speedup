@@ -1,9 +1,0 @@
-<p>FFmpeg binaries are included only in standalone versions; they are downloaded from:</p>
-
-<ul>
-<li>Windows: <a href="https://www.gyan.dev/ffmpeg/builds/" target="_blank">www.gyan.dev</a></li>
-<li>Mac: <a href="https://evermeet.cx/ffmpeg/" target="_blank">evermeet.cx</a></li>
-<li>Linux: <a href="https://www.johnvansickle.com/ffmpeg/" target="_blank">www.johnvansickle.com</a></li>
-</ul>
-
-<p>This is <b>not</b> a standalone version: you need to go to <span style="font-family:monospace;display:inline-block;">File->Preferences</span> and configure the path for FFmpeg.</p>
