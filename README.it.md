@@ -31,7 +31,6 @@ Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' 
 ### Download
 
 #### FFmpeg incluso
-
 * [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-win32-x64-standalone.zip) (129 MB)
 * [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-darwin-x64-standalone.zip) (261 MB)
 * [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-linux-x64-standalone.zip) (124 MB)
