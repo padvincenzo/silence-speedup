@@ -20,35 +20,37 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 module.exports = class Config {
-  static configPath = path.join(__dirname, "..", "..", "config.json")
+  static configPath = path.join(__dirname, "..", "..", "config.json");
 
-  static defaultExportPath = path.join(os.homedir(), "speededup")
-  static defaultFFmpegPath = path.join(__dirname, "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"))
-  static tmpPath = path.join(__dirname, "..", "..", "tmp")
-  static fragmentListPath = path.join(Config.tmpPath, "list.txt")
+  static defaultExportPath = path.join(os.homedir(), "speededup");
+  static defaultFFmpegPath = path.join(__dirname, "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
+  static tmpPath = path.join(__dirname, "..", "..", "tmp");
+  static fragmentListPath = path.join(Config.tmpPath, "list.txt");
 
-  static data = null
+  static data = null;
 
   static load() {
-    let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'})
-    Config.data = JSON.parse(json)
+    let json = fs.readFileSync(Config.configPath, {encoding: 'utf-8'});
+    Config.data = JSON.parse(json);
 
     if(Config.data.exportPath == "") {
-      Config.data.exportPath = Config.defaultExportPath
+      Config.data.exportPath = Config.defaultExportPath;
     }
 
     if(Config.data.ffmpegPath == "" && fs.existsSync(Config.defaultFFmpegPath)) {
-      Config.data.ffmpegPath = Config.defaultFFmpegPath
+      Config.data.ffmpegPath = Config.defaultFFmpegPath;
     }
 
-    if (!fs.existsSync(Config.data.exportPath))
-      fs.mkdirSync(Config.data.exportPath)
+    if (!fs.existsSync(Config.data.exportPath)) {
+      fs.mkdirSync(Config.data.exportPath);
+    }
 
-    if (!fs.existsSync(Config.tmpPath))
-      fs.mkdirSync(Config.tmpPath)
+    if (!fs.existsSync(Config.tmpPath)) {
+      fs.mkdirSync(Config.tmpPath);
+    }
   }
 
   static update(data) {
-    Config.data = data
+    Config.data = data;
   }
 }
