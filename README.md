@@ -8,8 +8,6 @@ Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
 ## Table of Contents
   - [Getting started](#getting-started)
     - [Download](#download)
-      - [Standalone](#standalone)
-      - [Without FFmpeg binaries](#without-ffmpeg-binaries)
   - [How to use](#how-to-use)
     - [Silence detect](#silence-detect)
     - [Filter](#filter)
@@ -29,18 +27,9 @@ It is really helpful for video lessons, where the professor takes long time for 
 Of course this program is not perfect, and you might have to practice a bit with it.
 
 ### Download
-
-#### Standalone
-(FFmpeg binaries inside)
-
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-win32-x64-standalone.zip) (129 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-darwin-x64-standalone.zip) (261 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-linux-x64-standalone.zip) (124 MB)
-
-#### Without FFmpeg binaries
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-win32-x64.zip) (82.8 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-darwin-x64.zip) (237 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-linux-x64.zip) (96.2 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-win32-x64.zip) (129 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-darwin-x64.zip) (261 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-linux-x64.zip) (124 MB)
 
 ## How to use
 Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
@@ -67,9 +56,6 @@ With these settings you can change the speed of spoken/silence parts of the vide
 Choose the format (extension) of your video (default is set to keep the same extension as the input file). Other settings include [`fps` (frame per second)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` and `preset` (these are settings for the [video codec `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). The codec used for audio is `aac`.
 
 Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
-
-## Requirements
-This app comes in 2 versions: the one called standalone has FFmpeg binaries inside and it does not require anything to run. The other version is without FFmpeg: you have to download and configure it.
 
 ## Compiling
 This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/). But, if you want to compile and run this program by yourself from the source code, then:
