@@ -8,8 +8,6 @@ Velocizza i tuoi video velocizzando (o rimuovendo) i silenzi, tramite FFmpeg.
 ## Indice dei contenuti
   - [Per iniziare](#per-iniziare)
     - [Download](#download)
-      - [FFmpeg incluso](#ffmpeg-incluso)
-      - [FFmpeg non incluso](#ffmpeg-non-incluso)
   - [Come si usa](#come-si-usa)
     - [Rilevamento silenzi](#rilevamento-silenzi)
     - [Filtri](#filtri)
@@ -29,16 +27,9 @@ Questo programma, sviluppato per Electron, fa uso di FFmpeg per velocizzare (o s
 Ovviamente questo programma non è perfetto e potresti dover esercitarti un po' con esso.
 
 ### Download
-
-#### FFmpeg incluso
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-win32-x64-standalone.zip) (129 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-darwin-x64-standalone.zip) (261 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-linux-x64-standalone.zip) (124 MB)
-
-#### FFmpeg non incluso
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-win32-x64.zip) (82.8 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-darwin-x64.zip) (237 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.4/Silence-SpeedUp-v1.2.4-linux-x64.zip) (96.2 MB)
+* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-win32-x64.zip) (129 MB)
+* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-darwin-x64.zip) (261 MB)
+* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-linux-x64.zip) (124 MB)
 
 ## Come si usa
 Importa i tuoi video, scegli la [configurazione](#configurazioni) e premi ``Start``. L'app ti mostrerà lo stato di avanzamento, che consiste in 3 step: ``Detecting silences``, ``Exporting`` e ``Concatenating``.
@@ -65,9 +56,6 @@ Con queste impostazioni è possibile modificare la velocità delle parti parlate
 Scegli il formato (l'estensione) del tuo video (per impostazione predefinita il video mantiene la stessa estensione).  Altre impostazioni sono per gli [`fps` (frame per secondo)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` e `preset` (questi sono specifici per il [codec video `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). Per l'audio invece utilizza il codec `aac`.
 
 _Nota: il percorso predefinito dei video (così come dei file temporanei) è impostato su ``<la tua home>/speededup/``. Se vuoi cambiarlo, premi il pulsante delle impostazioni o vai su ``File -> Impostazioni``._
-
-## Requisiti
-Questa app è rilasciata in 2 varianti: quella chiamata standalone ha al suo interno i binari di FFmpeg e perciò non richiede nulla per essere eseguita. L'altra variante non include FFmpeg: devi scaricarlo e configurarlo manualmente.
 
 ## Compilazione
 Questo programma non ha bisogno di essere installato per funzionare, poiché è impacchettato con [``electron-packager``](https://electron.github.io/electron-packager/master/). Ma, se vuoi compilare ed eseguire questo programma per conto tuo dal codice sorgente, allora:
