@@ -34,7 +34,7 @@
     "silences"
   ],
   "devDependencies": {
-    "electron": "^16.0.7",
+    "electron": "^18.3.7",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
