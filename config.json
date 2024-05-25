@@ -67,32 +67,32 @@
 		{
 			"text": "2.5x",
 			"video": "setpts=0.4*PTS",
-			"audio": "atempo=2.5"
+			"audio": "atempo=2,atempo=1.25"
 		},
 		{
 			"text": "4x",
 			"video": "setpts=0.25*PTS",
-			"audio": "atempo=4"
+			"audio": "atempo=2,atempo=2"
 		},
 		{
 			"text": "5x",
 			"video": "setpts=0.2*PTS",
-			"audio": "atempo=5"
+			"audio": "atempo=2,atempo=2,atempo=1.25"
 		},
 		{
 			"text": "8x",
 			"video": "setpts=0.125*PTS",
-			"audio": "atempo=8"
+			"audio": "atempo=2,atempo=2,atempo=2"
 		},
 		{
 			"text": "16x",
 			"video": "setpts=0.0625*PTS",
-			"audio": "atempo=16"
+			"audio": "atempo=2,atempo=2,atempo=2,atempo=2"
 		},
 		{
 			"text": "20x",
 			"video": "setpts=0.05*PTS",
-			"audio": "atempo=20"
+			"audio": "atempo=2,atempo=2,atempo=1.25,atempo=2,atempo=2"
 		},
 		{
 			"text": "remove"
