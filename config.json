@@ -67,7 +67,7 @@
 		{
 			"text": "2.5x",
 			"video": "setpts=0.4*PTS",
-			"audio": "atempo=sqrt(2.5),atempo=sqrt(2.5)"
+			"audio": "atempo=2,atempo=1.25"
 		},
 		{
 			"text": "4x",
