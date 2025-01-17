@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ipcRenderer } from "electron";
-import { readFileSync, existsSync, writeFileSync } from "fs";
-import { join } from "path";
-import { homedir, type } from "os";
+const { ipcRenderer } = require("electron");
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
 
 const configPath = join(__dirname, "..", "..", "..", "config.json");
 const defaultExportPath = join(homedir(), "speededup");

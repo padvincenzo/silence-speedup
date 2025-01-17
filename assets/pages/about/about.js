@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ipcRenderer } from "electron";
-import { platform } from "os";
-import { readFile } from "fs";
-import { join } from "path";
+const { ipcRenderer } = require("electron");
+const os = require("os");
+const fs = require("fs");
+const path = require("path");
 
 window.onload = () => {
     let div = document.getElementById("ffmpeg-info");

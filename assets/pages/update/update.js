@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { ipcRenderer } from "electron"
+const { ipcRenderer } = require("electron");
 
 ipcRenderer.on("data", (event, version, content, link) => {
     document.getElementById("version").innerHTML = version
