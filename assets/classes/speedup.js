@@ -31,7 +31,7 @@ const codec_video = "libx264";
  * zerolatency – good for fast encoding and low-latency streaming
  */
 
-export default class SpeedUp {
+module.exports = class SpeedUp {
     static stream = null;
     static interrupted = true;
     static currentEntry = null;

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export default class FFmpeg {
+module.exports = class FFmpeg {
     static command;
     static spawn;
 

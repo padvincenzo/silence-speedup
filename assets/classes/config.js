@@ -19,7 +19,7 @@
  * along with this program.If not, see < https://www.gnu.org/licenses/>.
  */
 
-export default class Config {
+module.exports = class Config {
     static configPath = path.join(__dirname, "..", "..", "config.json");
 
     static defaultExportPath = path.join(os.homedir(), "speededup");

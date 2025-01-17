@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-export default class Entry {
+module.exports = class Entry {
     #url = null
     #name = null
     #outputName = null
