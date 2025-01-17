@@ -1,44 +1,44 @@
-/*
-Silence SpeedUp
-Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-This is an electron-based app.
-
-Copyright (C) 2020  Vincenzo Padula
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+/**
+ * Silence SpeedUp
+ * Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+ * This is an electron-based app.
+ *
+ * Copyright (C) 2025  Vincenzo Padula
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 #dropZone {
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: var(--c-light);
-    box-shadow: none;
-    -webkit-transition: var(--transition);
-    text-align: center;
-    line-height: 100vh;
-    font-size: 8vw;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--c-light);
+  box-shadow: none;
+  -webkit-transition: var(--transition);
+  text-align: center;
+  line-height: 100vh;
+  font-size: 8vw;
 }
 
 #gui {
   width: -webkit-fill-available;
   height: -webkit-fill-available;
   background-color: var(--c-light);
-	margin-bottom: 228px;
-	display: flex;
+  margin-bottom: 228px;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -47,9 +47,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #entryList {
   width: 100%;
-	height: -webkit-fill-available;
+  height: -webkit-fill-available;
   margin: 0 10px 1px 10px;
-	overflow-y: auto;
+  overflow-y: auto;
   padding: 5px 0;
 }
 
@@ -66,18 +66,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #menu {
   width: 200px;
   text-align: center;
-	padding: 5px;
-	flex: none;
+  padding: 5px;
+  flex: none;
   overflow-y: auto;
 }
 
 .entry {
   font-size: 1em;
-	line-height: 2em;
+  line-height: 2em;
   padding: 3px 0 3px 8px;
-	color: var(--c-dark);
-	display: flex;
-	width: -webkit-fill-available;
+  color: var(--c-dark);
+  display: flex;
+  width: -webkit-fill-available;
 }
 
 .entry.highlight {
@@ -97,20 +97,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .entryName {
-	width: -webkit-fill-available;
+  width: -webkit-fill-available;
   text-overflow: ellipsis;
   word-break: break-all;
   overflow: hidden;
   white-space: nowrap;
 }
 
-.remove, .progress {
+.remove,
+.progress {
   margin: 0 5px;
-	flex: none;
+  flex: none;
 }
 
 .progress {
-	width: 180px;
+  width: 180px;
 }
 
 .remove {
@@ -125,8 +126,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 }
 
 .remove:hover {
-	background-color: var(--c-3);
-	cursor: pointer;
+  background-color: var(--c-3);
+  cursor: pointer;
 }
 
 .buttons {
@@ -140,7 +141,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
   width: 56px;
   height: 56px;
   background-size: 40px 40px !important;
-	background-position: 8px 8px !important;
+  background-position: 8px 8px !important;
 }
 
 /* #entryList .buttons button {
@@ -151,29 +152,29 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 } */
 
 button#addFiles {
-	background: url(assets/icons/add_video.svg) no-repeat;
+  background: url(assets/icons/add_video.svg) no-repeat;
 }
 
 button#addFolder {
-	background: url(assets/icons/add_folder.svg) no-repeat;
+  background: url(assets/icons/add_folder.svg) no-repeat;
 }
 
 button#preferences {
-	background: url(assets/icons/settings.svg) no-repeat;
+  background: url(assets/icons/settings.svg) no-repeat;
 }
 
 button#about {
-	background: url(assets/icons/info.svg) no-repeat;
+  background: url(assets/icons/info.svg) no-repeat;
   margin-bottom: 30px;
 }
 
 button#start {
-	background: url(assets/icons/start.svg) no-repeat;
+  background: url(assets/icons/start.svg) no-repeat;
 }
 
 button#stop {
-	background: url(assets/icons/stop.svg) no-repeat;
-	display: none;
+  background: url(assets/icons/stop.svg) no-repeat;
+  display: none;
 }
 
 /* button#start, button#stop {
@@ -183,19 +184,19 @@ button#stop {
 } */
 
 button#progressMode {
-	background: url(assets/icons/minimize.svg) no-repeat;
+  background: url(assets/icons/minimize.svg) no-repeat;
 }
 
 #videoSettings {
-	font-size: 14px;
+  font-size: 14px;
 }
 
 .setting {
-	border: 1px solid var(--c-1);
-	border-radius: 5px;
-	padding: 6px;
-	margin: 12px 0 25px 0;
-	text-align: left;
+  border: 1px solid var(--c-1);
+  border-radius: 5px;
+  padding: 6px;
+  margin: 12px 0 25px 0;
+  text-align: left;
 }
 
 .setting:last-child {
@@ -224,7 +225,7 @@ button#progressMode {
 }
 
 .setting div {
-	margin: 10px 0;
+  margin: 10px 0;
 }
 
 .setting div:first-child {
@@ -264,7 +265,7 @@ button#progressMode {
   outline: none;
   opacity: 0.7;
   -webkit-transition: var(--transition);
-	margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .slider:hover,
@@ -287,45 +288,46 @@ button#progressMode {
 .slider:disabled:hover,
 .slider:disabled::-webkit-slider-thumb {
   cursor: default;
-	background: gray;
-	opacity: 1;
+  background: gray;
+  opacity: 1;
 }
 
 #ffmpegProgressBar {
-	background-color: var(--c-5);
+  background-color: var(--c-5);
   width: 0px;
-	-webkit-transition: var(--transition);
-	-webkit-transition-timing-function: ease-out;
+  -webkit-transition: var(--transition);
+  -webkit-transition-timing-function: ease-out;
 }
 
 #ffmpegProgress {
-	background-color: rgba(170, 170, 170, 0.5);
+  background-color: rgba(170, 170, 170, 0.5);
   color: var(--c-dark);
-	width: -webkit-fill-available;
-	display: flex;
+  width: -webkit-fill-available;
+  display: flex;
 }
 
-#ffmpegProgressBar, #ffmpegProgress {
+#ffmpegProgressBar,
+#ffmpegProgress {
   position: fixed;
-	bottom: 206px;
-	left: 0;
+  bottom: 206px;
+  left: 0;
   height: 22px;
   line-height: 22px;
-	font-size: 13px;
+  font-size: 13px;
   font-family: monospace;
 }
 
 #ffmpegProgress div {
-	padding: 0 5px;
+  padding: 0 5px;
 }
 
 #ffmpegProgress div:nth-child(even) {
-	text-align: left;
-	width: 100%;
+  text-align: left;
+  width: 100%;
 }
 
 #ffmpegProgress div:nth-child(odd) {
-	text-align: right;
+  text-align: right;
   flex: none;
 }
 
@@ -335,13 +337,13 @@ button#progressMode {
   color: var(--c-light);
   font-family: monospace;
   font-size: 1rem;
-	line-height: 1.3rem;
+  line-height: 1.3rem;
   height: 200px;
   width: -webkit-fill-available;
   overflow-y: auto;
-	position: fixed;
-	bottom: 0;
-	left: 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
 #shell div {
@@ -372,35 +374,35 @@ button#progressMode {
   }
 
   button#addFiles {
-  	background: url(assets/icons/add_video_dark.svg) no-repeat;
+    background: url(assets/icons/add_video_dark.svg) no-repeat;
   }
 
   button#addFolder {
-  	background: url(assets/icons/add_folder_dark.svg) no-repeat;
+    background: url(assets/icons/add_folder_dark.svg) no-repeat;
   }
 
   button#preferences {
-  	background: url(assets/icons/settings_dark.svg) no-repeat;
+    background: url(assets/icons/settings_dark.svg) no-repeat;
   }
 
   button#about {
-  	background: url(assets/icons/info_dark.svg) no-repeat;
+    background: url(assets/icons/info_dark.svg) no-repeat;
   }
 
   button#start {
-  	background: url(assets/icons/start_dark.svg) no-repeat;
+    background: url(assets/icons/start_dark.svg) no-repeat;
   }
 
   button#stop {
-  	background: url(assets/icons/stop_dark.svg) no-repeat;
+    background: url(assets/icons/stop_dark.svg) no-repeat;
   }
 
   button#progressMode {
-  	background: url(assets/icons/minimize_dark.svg) no-repeat;
+    background: url(assets/icons/minimize_dark.svg) no-repeat;
   }
 
   #ffmpegProgress {
-  	background-color: #0003;
+    background-color: #0003;
   }
 
   #shell {

@@ -1,43 +1,43 @@
-/*
-Silence SpeedUp
-Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-This is an electron-based app.
+/**
+ * Silence SpeedUp
+ * Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+ * This is an electron-based app.
+ *
+ * Copyright (C) 2025  Vincenzo Padula
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
-Copyright (C) 2020  Vincenzo Padula
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
-
-const {ipcRenderer} = require("electron");
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
+import { ipcRenderer } from "electron";
+import { platform } from "os";
+import { readFile } from "fs";
+import { join } from "path";
 
 window.onload = () => {
-  let div = document.getElementById("ffmpeg-info");
+    let div = document.getElementById("ffmpeg-info");
 
-  if(os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
-    readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
-    fs.readFile(readmePath, {encoding: 'utf-8'}, (err, data) => {
-      if (err) {
-        div.innerHTML = "Error reading readme file";
-      } else {
-        div.innerHTML = data;
-      }
-    });
+    if (platform() == "darwin" || platform() == "win32" || platform() == "linux") {
+        readmePath = join(__dirname, "..", "..", "ffmpeg", "readme.html");
+        readFile(readmePath, { encoding: 'utf-8' }, (err, data) => {
+            if (err) {
+                div.innerHTML = "Error reading readme file";
+            } else {
+                div.innerHTML = data;
+            }
+        });
 
-  } else {
-    div.innerHTML = "FFmpeg not configured for this platform.";
-  }
+    } else {
+        div.innerHTML = "FFmpeg not configured for this platform.";
+    }
 }

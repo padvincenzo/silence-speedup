@@ -1,39 +1,40 @@
-/*
-Silence SpeedUp
-Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-This is an electron-based app.
-
-Copyright (C) 2020  Vincenzo Padula
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+/**
+ * Silence SpeedUp
+ * Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+ * This is an electron-based app.
+ *
+ * Copyright (C) 2025  Vincenzo Padula
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 :root {
-	--c-1: #00487c;
-	--c-2: #4bb3fd;
-	--c-3: #3e6680;
-	--c-4: #0496ff;
-	--c-5: #027bce;
-	--c-dark: #333;
-	--c-light: #eee;
-	--transition: 0.2s;
+  --c-1: #00487c;
+  --c-2: #4bb3fd;
+  --c-3: #3e6680;
+  --c-4: #0496ff;
+  --c-5: #027bce;
+  --c-dark: #333;
+  --c-light: #eee;
+  --transition: 0.2s;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-	background-color: var(--c-light);
+  background-color: var(--c-light);
   color: var(--c-dark)
 }
 
@@ -41,13 +42,13 @@ button {
   width: 46px;
   height: 46px;
   border-radius: 5px;
-	border: 1px solid var(--c-dark);
-	cursor: pointer;
-	color: var(--c-dark);
-	background-color: #0000;
+  border: 1px solid var(--c-dark);
+  cursor: pointer;
+  color: var(--c-dark);
+  background-color: #0000;
   background-size: 30px 30px !important;
-	background-position: 8px 8px !important;
-	-webkit-transition: var(--transition);
+  background-position: 8px 8px !important;
+  -webkit-transition: var(--transition);
   -webkit-app-region: no-drag;
   flex: none;
 }
@@ -56,20 +57,23 @@ button:hover,
 button:focus,
 button:active {
   background-color: #666 !important;
-	-webkit-transition: var(--transition);
-	outline: none;
+  -webkit-transition: var(--transition);
+  outline: none;
 }
 
 button:disabled {
-	cursor: not-allowed;
-	opacity: 0.5;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 button:disabled:hover {
-	background-color: inherit !important;
+  background-color: inherit !important;
 }
 
-a, a:focus, .link, .link:focus {
+a,
+a:focus,
+.link,
+.link:focus {
   text-decoration: underline;
   color: var(--c-1);
   outline: none;
@@ -80,19 +84,19 @@ a, a:focus, .link, .link:focus {
 }
 
 ::selection {
-	background-color: #027bce;
-	color: #FFF;
+  background-color: #027bce;
+  color: #FFF;
 }
 
 @media (prefers-color-scheme: dark) {
-	:root {
-		--c-5: #00487c;
-		--c-4: #4bb3fd;
-		--c-3: #3e6680;
-		--c-2: #0496ff;
-		--c-1: #027bce;
-		--c-dark: #ccc;
-		--c-light: #333;
-	}
+  :root {
+    --c-5: #00487c;
+    --c-4: #4bb3fd;
+    --c-3: #3e6680;
+    --c-2: #0496ff;
+    --c-1: #027bce;
+    --c-dark: #ccc;
+    --c-light: #333;
+  }
 
 }

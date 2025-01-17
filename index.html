@@ -1,129 +1,111 @@
-<!--
-Silence SpeedUp
-Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-This is an electron-based app.
-
-Copyright (C) 2020  Vincenzo Padula
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
--->
-
 <!DOCTYPE html>
-<html lang="it">
-	<head>
-		<title>Silence SpeedUp</title>
+<html>
 
-		<meta charset="UTF-8">
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
-		<link rel="stylesheet" type="text/css" href="assets/pages/common.css" />
-		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script src="code.js"></script>
-	</head>
+<head>
+    <title>Silence SpeedUp</title>
 
-	<body>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+    <link rel="stylesheet" type="text/css" href="assets/pages/common.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="code.js"></script>
+</head>
 
-		<div id="dropZone">Drop videos here</div>
+<body>
+
+    <div id="dropZone">Drop videos here</div>
 
     <div id="gui">
 
-			<div class="buttons">
-				<button id="addFiles" title="Add video(s)"></button>
-				<button id="addFolder" title="Add folder"></button>
-				<button id="preferences"title="Preferences"></button>
-				<button id="about" title="About"></button>
-				<button id="start" title="Start"></button>
-				<button id="stop" title="Stop" disabled></button>
-				<button id="progressMode" title="Switch to progress mode" disabled></button>
-			</div>
-
-			<div id="entryList"></div>
-
-      <div id="menu">
-
-        <div id="videoSettings">
-
-          <div class="setting" id="silenceDetectSettings">
-            <div>
-              <label for="threshold">Background noise: <span id="thresholdValue"></span></label>
-							<input type="range" class="slider" min="0" id="threshold" name="threshold">
-            </div>
-						<div>
-              <label for="silenceMinimumDuration">Silence min duration: <span id="silenceMinimumDurationValue"></span></label>
-							<input type="range" class="slider" id="silenceMinimumDuration" name="silenceMinimumDuration">
-            </div>
-            <div>
-              <label for="silenceMargin">Silence margin: <span id="silenceMarginValue"></span></label>
-							<input type="range" class="slider" id="silenceMargin" name="silenceMargin">
-            </div>
-          </div>
-
-          <div class="setting" id="filterSettings">
-            <div>
-              <label for="silenceSpeed">Silence speed: <span id="silenceSpeedValue"></span></label>
-							<input type="range" min="0" class="slider" id="silenceSpeed" name="silenceSpeed">
-					  </div>
-						<div>
-							<label for="playbackSpeed">Playback speed: <span id="playbackSpeedValue"></span></label>
-							<input type="range" min="0" class="slider" id="playbackSpeed" name="playbackSpeed">
-            </div>
-						<div>
-              <input type="checkbox" id="muteAudio" name="muteAudio">
-              <label for="muteAudio">Mute silences</label>
-            </div>
-          </div>
-
-          <div class="setting" id="exportSettings">
-						<div>
-							<label for="crf">CRF: <span id="crfValue"></span></label>
-							<input type="range" class="slider" id="crf" name="crf" min="0" max="51" value="22">
-						</div>
-						<div class="setting-select">
-              <label for="fps">FPS: </label>
-              <select id="fps" name="fps"></select>
-            </div>
-						<div class="setting-select">
-              <label for="preset">Preset: </label>
-              <select id="preset" name="preset"></select>
-            </div>
-						<div class="setting-select">
-							<label for="audioRate">Audio rate: </label>
-							<select id="audioRate" name="audioRate"></select>
-						</div>
-						<div class="setting-select">
-							<label for="tune">Tune: </label>
-							<select id="tune" name="tune"></select>
-						</div>
-						<div class="setting-select">
-							<label for="videoExtension">Video format: </label>
-							<select id="videoExtension" name="videoExtension"></select>
-						</div>
-          </div>
+        <div class="buttons">
+            <button id="addFiles" title="Add video(s)"></button>
+            <button id="addFolder" title="Add folder"></button>
+            <button id="preferences" title="Preferences"></button>
+            <button id="about" title="About"></button>
+            <button id="start" title="Start"></button>
+            <button id="stop" title="Stop" disabled></button>
+            <button id="progressMode" title="Switch to progress mode" disabled></button>
         </div>
 
-      </div>
+        <div id="entryList"></div>
 
-			<div id="ffmpegProgressBar"></div>
-			<div id="ffmpegProgress">
-				<div>Time</div>
-				<div id="ffmpegProgressTime">--:--:--.--</div>
-				<div>Speed</div>
-				<div id="ffmpegProgressSpeed">-</div>
-				<div id="ffmpegPercentage">-.-- %</div>
-			</div>
+        <div id="menu">
 
-	    <div id="shell"></div>
+            <div id="videoSettings">
+
+                <div class="setting" id="silenceDetectSettings">
+                    <div>
+                        <label for="threshold">Background noise: <span id="thresholdValue"></span></label>
+                        <input type="range" class="slider" min="0" id="threshold" name="threshold">
+                    </div>
+                    <div>
+                        <label for="silenceMinimumDuration">Silence min duration: <span
+                                id="silenceMinimumDurationValue"></span></label>
+                        <input type="range" class="slider" id="silenceMinimumDuration" name="silenceMinimumDuration">
+                    </div>
+                    <div>
+                        <label for="silenceMargin">Silence margin: <span id="silenceMarginValue"></span></label>
+                        <input type="range" class="slider" id="silenceMargin" name="silenceMargin">
+                    </div>
+                </div>
+
+                <div class="setting" id="filterSettings">
+                    <div>
+                        <label for="silenceSpeed">Silence speed: <span id="silenceSpeedValue"></span></label>
+                        <input type="range" min="0" class="slider" id="silenceSpeed" name="silenceSpeed">
+                    </div>
+                    <div>
+                        <label for="playbackSpeed">Playback speed: <span id="playbackSpeedValue"></span></label>
+                        <input type="range" min="0" class="slider" id="playbackSpeed" name="playbackSpeed">
+                    </div>
+                    <div>
+                        <input type="checkbox" id="muteAudio" name="muteAudio">
+                        <label for="muteAudio">Mute silences</label>
+                    </div>
+                </div>
+
+                <div class="setting" id="exportSettings">
+                    <div>
+                        <label for="crf">CRF: <span id="crfValue"></span></label>
+                        <input type="range" class="slider" id="crf" name="crf" min="0" max="51" value="22">
+                    </div>
+                    <div class="setting-select">
+                        <label for="fps">FPS: </label>
+                        <select id="fps" name="fps"></select>
+                    </div>
+                    <div class="setting-select">
+                        <label for="preset">Preset: </label>
+                        <select id="preset" name="preset"></select>
+                    </div>
+                    <div class="setting-select">
+                        <label for="audioRate">Audio rate: </label>
+                        <select id="audioRate" name="audioRate"></select>
+                    </div>
+                    <div class="setting-select">
+                        <label for="tune">Tune: </label>
+                        <select id="tune" name="tune"></select>
+                    </div>
+                    <div class="setting-select">
+                        <label for="videoExtension">Video format: </label>
+                        <select id="videoExtension" name="videoExtension"></select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="ffmpegProgressBar"></div>
+        <div id="ffmpegProgress">
+            <div>Time</div>
+            <div id="ffmpegProgressTime">--:--:--.--</div>
+            <div>Speed</div>
+            <div id="ffmpegProgressSpeed">-</div>
+            <div id="ffmpegPercentage">-.-- %</div>
+        </div>
+
+        <div id="shell"></div>
     </div>
 
-  </body>
+</body>
+
 </html>

@@ -1,290 +1,290 @@
 {
-	"exportPath": "",
-	"ffmpegPath": "",
-	"formats": [
-		{
-			"label": "Keep",
-			"value": "keep"
-		},
-		{
-			"label": "AVI",
-			"value": "avi"
-		},
-		{
-			"label": "FLV",
-			"value": "flv"
-		},
-		{
-			"label": "MKV",
-			"value": "mkv"
-		},
-		{
-			"label": "MOV",
-			"value": "mov"
-		},
-		{
-			"label": "MP4",
-			"value": "mp4"
-		},
-		{
-			"label": "WebM",
-			"value": "webm"
-		},
-		{
-			"label": "WMV",
-			"value": "wmv"
-		}
-	],
-	"speeds": [
-		{
-			"text": "0.5x",
-			"video": "setpts=2*PTS",
-			"audio": "atempo=0.5"
-		},
-		{
-			"text": "0.8x",
-			"video": "setpts=1.25*PTS",
-			"audio": "atempo=0.8"
-		},
-		{
-			"text": "1x"
-		},
-		{
-			"text": "1.25x",
-			"video": "setpts=0.8*PTS",
-			"audio": "atempo=1.25"
-		},
-		{
-			"text": "1.6x",
-			"video": "setpts=0.625*PTS",
-			"audio": "atempo=1.6"
-		},
-		{
-			"text": "2x",
-			"video": "setpts=0.5*PTS",
-			"audio": "atempo=2"
-		},
-		{
-			"text": "2.5x",
-			"video": "setpts=0.4*PTS",
-			"audio": "atempo=2,atempo=1.25"
-		},
-		{
-			"text": "4x",
-			"video": "setpts=0.25*PTS",
-			"audio": "atempo=2,atempo=2"
-		},
-		{
-			"text": "5x",
-			"video": "setpts=0.2*PTS",
-			"audio": "atempo=2,atempo=2,atempo=1.25"
-		},
-		{
-			"text": "8x",
-			"video": "setpts=0.125*PTS",
-			"audio": "atempo=2,atempo=2,atempo=2"
-		},
-		{
-			"text": "16x",
-			"video": "setpts=0.0625*PTS",
-			"audio": "atempo=2,atempo=2,atempo=2,atempo=2"
-		},
-		{
-			"text": "20x",
-			"video": "setpts=0.05*PTS",
-			"audio": "atempo=2,atempo=2,atempo=1.25,atempo=2,atempo=2"
-		},
-		{
-			"text": "remove"
-		}
-	],
-	"initialSilenceSpeed": 9,
-	"initialPlaybackSpeed": 2,
-	"thresholds": [
-		{
-			"text": "Low",
-			"value": "0.002"
-		},
-		{
-			"text": "Mid",
-			"value": "0.02"
-		},
-		{
-			"text": "High",
-			"value": "0.1"
-		}
-	],
-	"initialThreshold": 1,
-	"silenceMinimumDuration": {
-		"min": "0",
-		"max": "10",
-		"step": "0.05",
-		"initialValue": "0.3"
-	},
-	"silenceMargin": {
-		"min": "0",
-		"max": "10",
-		"step": "0.05",
-		"initialValue": "0.1"
-	},
-	"presets": [
-		{
-			"label": "Ultra fast",
-			"value": "ultrafast"
-		},
-		{
-			"label": "Super fast",
-			"value": "superfast"
-		},
-		{
-			"label": "Very fast",
-			"value": "veryfast"
-		},
-		{
-			"label": "Faster",
-			"value": "faster"
-		},
-		{
-			"label": "Fast",
-			"value": "fast"
-		},
-		{
-			"label": "Medium",
-			"value": "medium"
-		},
-		{
-			"label": "Slow",
-			"value": "slow"
-		},
-		{
-			"label": "Slower",
-			"value": "slower"
-		},
-		{
-			"label": "Very slow",
-			"value": "veryslow"
-		}
-	],
-	"initialPreset": 5,
-	"fps": [
-		{
-			"label": "10",
-			"value": "fps=10:round=near"
-		},
-		{
-			"label": "20",
-			"value": "fps=20:round=near"
-		},
-		{
-			"label": "24 NTSC",
-			"value": "fps=24:round=near"
-		},
-		{
-			"label": "25 PAL",
-			"value": "fps=25:round=near"
-		},
-		{
-			"label": "29.97",
-			"value": "fps=30000/1001:round=near"
-		},
-		{
-			"label": "30",
-			"value": "fps=30:round=near"
-		},
-		{
-			"label": "48",
-			"value": "fps=48:round=near"
-		},
-		{
-			"label": "50 PAL",
-			"value": "fps=50:round=near"
-		},
-		{
-			"label": "59.94",
-			"value": "fps=60000/1001:round=near"
-		},
-		{
-			"label": "60",
-			"value": "fps=60:round=near"
-		},
-		{
-			"label": "72",
-			"value": "fps=72:round=near"
-		},
-		{
-			"label": "75",
-			"value": "fps=75:round=near"
-		},
-		{
-			"label": "90",
-			"value": "fps=90:round=near"
-		},
-		{
-			"label": "100",
-			"value": "fps=100:round=near"
-		},
-		{
-			"label": "120",
-			"value": "fps=120:round=near"
-		}
-	],
-	"initialFps": 5,
-	"initialCrf": 23,
-	"audioRates": [
-		{
-			"label": "Keep",
-			"value": "-"
-		},
-		{
-			"label": "32 kHz",
-			"value": "32000"
-		},
-		{
-			"label": "44.1 kHz",
-			"value": "44100"
-		},
-		{
-			"label": "48 kHz",
-			"value": "48000"
-		},
-		{
-			"label": "88.2 kHz",
-			"value": "88200"
-		},
-		{
-			"label": "96 kHz",
-			"value": "96000"
-		}
-	],
-	"initialAudioRate": 0,
-	"tunes": [
-		{
-			"label": "None",
-			"value": "-"
-		},
-		{
-			"label": "Film",
-			"value": "film"
-		},
-		{
-			"label": "Animation",
-			"value": "animation"
-		},
-		{
-			"label": "Grain",
-			"value": "grain"
-		},
-		{
-			"label": "Still image",
-			"value": "stillimage"
-		},
-		{
-			"label": "Fast decode",
-			"value": "fastdecode"
-		},
-		{
-			"label": "Zero latency",
-			"value": "zerolatency"
-		}
-	]
+  "exportPath": "",
+  "ffmpegPath": "",
+  "formats": [
+    {
+      "label": "Keep",
+      "value": "keep"
+    },
+    {
+      "label": "AVI",
+      "value": "avi"
+    },
+    {
+      "label": "FLV",
+      "value": "flv"
+    },
+    {
+      "label": "MKV",
+      "value": "mkv"
+    },
+    {
+      "label": "MOV",
+      "value": "mov"
+    },
+    {
+      "label": "MP4",
+      "value": "mp4"
+    },
+    {
+      "label": "WebM",
+      "value": "webm"
+    },
+    {
+      "label": "WMV",
+      "value": "wmv"
+    }
+  ],
+  "speeds": [
+    {
+      "text": "0.5x",
+      "video": "setpts=2*PTS",
+      "audio": "atempo=0.5"
+    },
+    {
+      "text": "0.8x",
+      "video": "setpts=1.25*PTS",
+      "audio": "atempo=0.8"
+    },
+    {
+      "text": "1x"
+    },
+    {
+      "text": "1.25x",
+      "video": "setpts=0.8*PTS",
+      "audio": "atempo=1.25"
+    },
+    {
+      "text": "1.6x",
+      "video": "setpts=0.625*PTS",
+      "audio": "atempo=1.6"
+    },
+    {
+      "text": "2x",
+      "video": "setpts=0.5*PTS",
+      "audio": "atempo=2"
+    },
+    {
+      "text": "2.5x",
+      "video": "setpts=0.4*PTS",
+      "audio": "atempo=2,atempo=1.25"
+    },
+    {
+      "text": "4x",
+      "video": "setpts=0.25*PTS",
+      "audio": "atempo=2,atempo=2"
+    },
+    {
+      "text": "5x",
+      "video": "setpts=0.2*PTS",
+      "audio": "atempo=2,atempo=2,atempo=1.25"
+    },
+    {
+      "text": "8x",
+      "video": "setpts=0.125*PTS",
+      "audio": "atempo=2,atempo=2,atempo=2"
+    },
+    {
+      "text": "16x",
+      "video": "setpts=0.0625*PTS",
+      "audio": "atempo=2,atempo=2,atempo=2,atempo=2"
+    },
+    {
+      "text": "20x",
+      "video": "setpts=0.05*PTS",
+      "audio": "atempo=2,atempo=2,atempo=2,atempo=2,atempo=1.25"
+    },
+    {
+      "text": "remove"
+    }
+  ],
+  "initialSilenceSpeed": 9,
+  "initialPlaybackSpeed": 2,
+  "thresholds": [
+    {
+      "text": "Low",
+      "value": "0.002"
+    },
+    {
+      "text": "Mid",
+      "value": "0.02"
+    },
+    {
+      "text": "High",
+      "value": "0.1"
+    }
+  ],
+  "initialThreshold": 1,
+  "silenceMinimumDuration": {
+    "min": "0",
+    "max": "10",
+    "step": "0.05",
+    "initialValue": "0.3"
+  },
+  "silenceMargin": {
+    "min": "0",
+    "max": "10",
+    "step": "0.05",
+    "initialValue": "0.1"
+  },
+  "presets": [
+    {
+      "label": "Ultra fast",
+      "value": "ultrafast"
+    },
+    {
+      "label": "Super fast",
+      "value": "superfast"
+    },
+    {
+      "label": "Very fast",
+      "value": "veryfast"
+    },
+    {
+      "label": "Faster",
+      "value": "faster"
+    },
+    {
+      "label": "Fast",
+      "value": "fast"
+    },
+    {
+      "label": "Medium",
+      "value": "medium"
+    },
+    {
+      "label": "Slow",
+      "value": "slow"
+    },
+    {
+      "label": "Slower",
+      "value": "slower"
+    },
+    {
+      "label": "Very slow",
+      "value": "veryslow"
+    }
+  ],
+  "initialPreset": 5,
+  "fps": [
+    {
+      "label": "10",
+      "value": "fps=10:round=near"
+    },
+    {
+      "label": "20",
+      "value": "fps=20:round=near"
+    },
+    {
+      "label": "24 NTSC",
+      "value": "fps=24:round=near"
+    },
+    {
+      "label": "25 PAL",
+      "value": "fps=25:round=near"
+    },
+    {
+      "label": "29.97",
+      "value": "fps=30000/1001:round=near"
+    },
+    {
+      "label": "30",
+      "value": "fps=30:round=near"
+    },
+    {
+      "label": "48",
+      "value": "fps=48:round=near"
+    },
+    {
+      "label": "50 PAL",
+      "value": "fps=50:round=near"
+    },
+    {
+      "label": "59.94",
+      "value": "fps=60000/1001:round=near"
+    },
+    {
+      "label": "60",
+      "value": "fps=60:round=near"
+    },
+    {
+      "label": "72",
+      "value": "fps=72:round=near"
+    },
+    {
+      "label": "75",
+      "value": "fps=75:round=near"
+    },
+    {
+      "label": "90",
+      "value": "fps=90:round=near"
+    },
+    {
+      "label": "100",
+      "value": "fps=100:round=near"
+    },
+    {
+      "label": "120",
+      "value": "fps=120:round=near"
+    }
+  ],
+  "initialFps": 5,
+  "initialCrf": 23,
+  "audioRates": [
+    {
+      "label": "Keep",
+      "value": "-"
+    },
+    {
+      "label": "32 kHz",
+      "value": "32000"
+    },
+    {
+      "label": "44.1 kHz",
+      "value": "44100"
+    },
+    {
+      "label": "48 kHz",
+      "value": "48000"
+    },
+    {
+      "label": "88.2 kHz",
+      "value": "88200"
+    },
+    {
+      "label": "96 kHz",
+      "value": "96000"
+    }
+  ],
+  "initialAudioRate": 0,
+  "tunes": [
+    {
+      "label": "None",
+      "value": "-"
+    },
+    {
+      "label": "Film",
+      "value": "film"
+    },
+    {
+      "label": "Animation",
+      "value": "animation"
+    },
+    {
+      "label": "Grain",
+      "value": "grain"
+    },
+    {
+      "label": "Still image",
+      "value": "stillimage"
+    },
+    {
+      "label": "Fast decode",
+      "value": "fastdecode"
+    },
+    {
+      "label": "Zero latency",
+      "value": "zerolatency"
+    }
+  ]
 }
