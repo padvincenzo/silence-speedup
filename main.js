@@ -329,8 +329,6 @@ function showPreferences() {
         }
     });
 
-    preferences.webContents.openDevTools();
-
     preferences.menuBarVisible = false;
     preferences.excludedFromShownWindowsMenu = true;
     preferences.loadFile("assets/pages/preferences/preferences.html");
