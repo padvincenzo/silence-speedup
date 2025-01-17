@@ -24,14 +24,14 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-const configPath = join(__dirname, "..", "..", "..", "config.json");
-const defaultExportPath = join(homedir(), "speededup");
-const defaultFFmpegPath = join(__dirname, "..", "..", "ffmpeg", (type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
+const configPath = path.join(__dirname, "..", "..", "..", "config.json");
+const defaultExportPath = path.join(os.homedir(), "speededup");
+const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
 
 let data;
 
 window.onload = () => {
-    let json = readFileSync(configPath, { encoding: 'utf-8' });
+    let json = fs.readFileSync(configPath, { encoding: "utf-8" });
     data = JSON.parse(json);
     setData();
 
@@ -64,8 +64,8 @@ window.onload = () => {
 };
 
 function setData() {
-    document.getElementById("export").value = ((data.exportPath == "" && existsSync(defaultExportPath)) ? defaultExportPath : data.exportPath);
-    document.getElementById("ffmpeg").value = ((data.ffmpegPath == "" && existsSync(defaultFFmpegPath)) ? defaultFFmpegPath : data.ffmpegPath);
+    document.getElementById("export").value = ((data.exportPath == "" && fs.existsSync(defaultExportPath)) ? defaultExportPath : data.exportPath);
+    document.getElementById("ffmpeg").value = ((data.ffmpegPath == "" && fs.existsSync(defaultFFmpegPath)) ? defaultFFmpegPath : data.ffmpegPath);
 }
 
 function getData() {
@@ -75,7 +75,7 @@ function getData() {
     }
     data.ffmpegPath = document.getElementById("ffmpeg").value;
     if (data.ffmpegPath == "") {
-        if (existsSync(defaultFFmpegPath)) {
+        if (fs.existsSync(defaultFFmpegPath)) {
             data.ffmpegPath = defaultFFmpegPath;
         } else {
             // Do nothing
@@ -90,7 +90,7 @@ function saveData() {
         data.ffmpegPath = "";
     }
 
-    writeFileSync(configPath,
+    fs.writeFileSync(configPath,
         JSON.stringify(data, null, "\t"),
-        { encoding: 'utf-8' });
+        { encoding: "utf-8" });
 }

@@ -38,12 +38,14 @@
     "electron-packager": "^17.1.2"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.9.6",
     "agentkeepalive": "^4.6.0",
+    "bootstrap": "^5.3.3",
     "decompress-zip": "^0.3.3",
     "electron-download-manager": "^2.1.2",
     "feed-read": "0.0.1",
+    "font-awesome": "^4.7.0",
     "fs-extra": "^11.3.0",
-    "hosted-git-info": "^8.0.2",
-    "@xmldom/xmldom": "^0.9.6"
+    "hosted-git-info": "^8.0.2"
   }
 }

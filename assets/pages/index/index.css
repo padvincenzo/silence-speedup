@@ -152,28 +152,28 @@
 } */
 
 button#addFiles {
-  background: url(assets/icons/add_video.svg) no-repeat;
+  background: url(../../../assets/icons/add_video.svg) no-repeat;
 }
 
 button#addFolder {
-  background: url(assets/icons/add_folder.svg) no-repeat;
+  background: url(../../../assets/icons/add_folder.svg) no-repeat;
 }
 
 button#preferences {
-  background: url(assets/icons/settings.svg) no-repeat;
+  background: url(../../../assets/icons/settings.svg) no-repeat;
 }
 
 button#about {
-  background: url(assets/icons/info.svg) no-repeat;
+  background: url(../../../assets/icons/info.svg) no-repeat;
   margin-bottom: 30px;
 }
 
 button#start {
-  background: url(assets/icons/start.svg) no-repeat;
+  background: url(../../../assets/icons/start.svg) no-repeat;
 }
 
 button#stop {
-  background: url(assets/icons/stop.svg) no-repeat;
+  background: url(../../../assets/icons/stop.svg) no-repeat;
   display: none;
 }
 
@@ -184,7 +184,7 @@ button#stop {
 } */
 
 button#progressMode {
-  background: url(assets/icons/minimize.svg) no-repeat;
+  background: url(../../../assets/icons/minimize.svg) no-repeat;
 }
 
 #videoSettings {
@@ -374,31 +374,31 @@ button#progressMode {
   }
 
   button#addFiles {
-    background: url(assets/icons/add_video_dark.svg) no-repeat;
+    background: url(../../../assets/icons/add_video_dark.svg) no-repeat;
   }
 
   button#addFolder {
-    background: url(assets/icons/add_folder_dark.svg) no-repeat;
+    background: url(../../../assets/icons/add_folder_dark.svg) no-repeat;
   }
 
   button#preferences {
-    background: url(assets/icons/settings_dark.svg) no-repeat;
+    background: url(../../../assets/icons/settings_dark.svg) no-repeat;
   }
 
   button#about {
-    background: url(assets/icons/info_dark.svg) no-repeat;
+    background: url(../../../assets/icons/info_dark.svg) no-repeat;
   }
 
   button#start {
-    background: url(assets/icons/start_dark.svg) no-repeat;
+    background: url(../../../assets/icons/start_dark.svg) no-repeat;
   }
 
   button#stop {
-    background: url(assets/icons/stop_dark.svg) no-repeat;
+    background: url(../../../assets/icons/stop_dark.svg) no-repeat;
   }
 
   button#progressMode {
-    background: url(assets/icons/minimize_dark.svg) no-repeat;
+    background: url(../../../assets/icons/minimize_dark.svg) no-repeat;
   }
 
   #ffmpegProgress {

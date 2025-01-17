@@ -28,7 +28,7 @@ window.onload = () => {
     let div = document.getElementById("ffmpeg-info");
 
     if (platform() == "darwin" || platform() == "win32" || platform() == "linux") {
-        readmePath = join(__dirname, "..", "..", "ffmpeg", "readme.html");
+        readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
         readFile(readmePath, { encoding: 'utf-8' }, (err, data) => {
             if (err) {
                 div.innerHTML = "Error reading readme file";

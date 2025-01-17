@@ -57,7 +57,7 @@ function createWindows() {
         }
     });
 
-    win.loadFile("index.html");
+    win.loadFile("assets/pages/index/index.html");
 
     win.once("ready-to-show", () => {
         win.show();
@@ -328,6 +328,8 @@ function showPreferences() {
             contextIsolation: false
         }
     });
+
+    preferences.webContents.openDevTools();
 
     preferences.menuBarVisible = false;
     preferences.excludedFromShownWindowsMenu = true;

@@ -24,13 +24,13 @@ const { spawn, spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
-const Shell = require("./assets/classes/shell.js");
-const Interface = require("./assets/classes/interface.js");
-const Config = require("./assets/classes/config.js");
-const FFmpeg = require("./assets/classes/ffmpeg.js");
-const EntryList = require("./assets/classes/entrylist.js");
-const Entry = require("./assets/classes/entry.js");
-const SpeedUp = require("./assets/classes/speedup.js");
+const Shell = require("../../classes/shell.js");
+const Interface = require("../../classes/interface.js");
+const Config = require("../../classes/config.js");
+const FFmpeg = require("../../classes/ffmpeg.js");
+const EntryList = require("../../classes/entrylist.js");
+const Entry = require("../../classes/entry.js");
+const SpeedUp = require("../../classes/speedup.js");
 
 window.onload = () => {
     Config.load();
