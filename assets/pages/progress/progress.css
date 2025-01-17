@@ -8,6 +8,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+body {
+  overflow: hidden;
+}
+
 button#defaultMode {
   border: none;
   background-size: 30px 30px !important;
