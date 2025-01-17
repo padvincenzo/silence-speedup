@@ -17,7 +17,7 @@ module.exports = class Entry {
     #duration = null;
     #seconds = null;
     #ref = null;
-    #progress = null;
+    #status = null;
     #removeBtn = null;
 
     #silenceTS = { start: [], end: [] };
@@ -38,10 +38,10 @@ module.exports = class Entry {
         text.appendChild(document.createTextNode(this.#name));
         this.#ref.appendChild(text);
 
-        this.#progress = document.createElement("div");
-        this.#progress.setAttribute("class", "progress");
-        this.#progress.innerHTML = "Loading...";
-        this.#ref.appendChild(this.#progress);
+        this.#status = document.createElement("div");
+        this.#status.setAttribute("class", "status");
+        this.#status.innerHTML = "Loading...";
+        this.#ref.appendChild(this.#status);
 
         this.#removeBtn = document.createElement("div");
         this.#removeBtn.setAttribute("class", "remove");
@@ -116,7 +116,7 @@ module.exports = class Entry {
     }
 
     set status(status) {
-        this.#progress.innerHTML = status;
+        this.#status.innerHTML = status;
         ipcRenderer.send("progressUpdate", "status", status);
     }
 
@@ -136,7 +136,7 @@ module.exports = class Entry {
 
     gotError(err) {
         this.#ref.setAttribute("class", "entry error");
-        this.#progress.innerHTML = err;
+        this.#status.innerHTML = err;
         this.#removeBtn.style.display = "inline-block";
     }
 
