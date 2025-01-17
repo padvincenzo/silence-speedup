@@ -14,12 +14,18 @@ const path = require("path");
 const os = require("os");
 
 const configPath = path.join(__dirname, "..", "..", "..", "config.json");
+const configPathDefaults = path.join(__dirname, "..", "..", "..", "config.json.example");
 const defaultExportPath = path.join(os.homedir(), "speededup");
 const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
 
 let data;
 
 window.onload = () => {
+    if (!fs.existsSync(configPath)) {
+        // Copy initial configuration.
+        fs.copyFileSync(configPathDefaults, configPath);
+    }
+
     let json = fs.readFileSync(configPath, { encoding: "utf-8" });
     data = JSON.parse(json);
     setData();

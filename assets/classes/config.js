@@ -9,6 +9,7 @@
  */
 
 module.exports = class Config {
+    static configPathDefaults = path.join(__dirname, "..", "..", "config.json.example");
     static configPath = path.join(__dirname, "..", "..", "config.json");
 
     static defaultExportPath = path.join(os.homedir(), "speededup");
@@ -19,6 +20,11 @@ module.exports = class Config {
     static data = null;
 
     static load() {
+        if (!fs.existsSync(Config.configPath)) {
+            // Copy initial configuration.
+            fs.copyFileSync(Config.configPathDefaults, Config.configPath);
+        }
+
         let json = fs.readFileSync(Config.configPath, { encoding: 'utf-8' });
         Config.data = JSON.parse(json);
 
