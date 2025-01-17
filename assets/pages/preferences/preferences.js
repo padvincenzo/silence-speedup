@@ -30,7 +30,7 @@ window.onload = () => {
     data = JSON.parse(json);
     setData();
 
-    document.getElementById("exportChoose").addEventListener("click", (event) => {
+    document.getElementById("export-browse").addEventListener("click", (event) => {
         let folder = ipcRenderer.sendSync("exportChoose");
         if (folder == undefined) {
             return;
@@ -39,7 +39,7 @@ window.onload = () => {
         document.getElementById("export").value = folder[0].toString();
     });
 
-    document.getElementById("ffmpegChoose").addEventListener("click", (event) => {
+    document.getElementById("ffmpeg-browse").addEventListener("click", (event) => {
         let file = ipcRenderer.sendSync("ffmpegChoose");
         if (file == undefined) {
             return;

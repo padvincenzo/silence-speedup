@@ -16,13 +16,13 @@ const path = require("path");
 window.onload = () => {
     let div = document.getElementById("ffmpeg-info");
 
-    if (platform() == "darwin" || platform() == "win32" || platform() == "linux") {
+    if (os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
         readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
-        readFile(readmePath, { encoding: 'utf-8' }, (err, data) => {
+        fs.readFile(readmePath, { encoding: 'utf-8' }, (err, data) => {
             if (err) {
                 div.innerHTML = "Error reading readme file";
             } else {
-                div.innerHTML = data;
+                div.innerHTML = data.length == 0 ? "-" : data;
             }
         });
 

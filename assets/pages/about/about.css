@@ -8,44 +8,14 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-body {
-  padding: 0 10px;
-}
-
-h1,
-h2 {
-  text-align: center;
-}
-
-h1,
-h2,
-h3 {
+.h1,
+.h2,
+.h4 {
   color: var(--c-1);
 }
 
-ul {
-  margin-top: -10px;
-  margin-bottom: 10px;
-}
-
-li {
-  margin: 2px 0;
-}
-
-div.presentation {
-  display: flex;
-}
-
-div.presentation img {
+#logo {
   width: 5em;
   height: 5em;
-  margin: 0 10px 0 5px;
-}
-
-div.presentation p {
-  margin-top: 0;
-}
-
-div.presentation p:last-child {
-  margin-bottom: 0;
+  margin-right: 1em;
 }

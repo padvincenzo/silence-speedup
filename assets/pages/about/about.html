@@ -6,35 +6,31 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+
+    <!-- Dependencies -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="about.css" />
     <script src="about.js"></script>
 </head>
 
-<body>
-    <h1>Silence SpeedUp</h1>
+<body class="py-3 px-2">
+    <h1 class="h1 text-center">Silence SpeedUp</h1>
+    <p class="text-center text-muted">
+        Copyright (C) 2025 Vincenzo Padula
+    </p>
 
-    <div class="presentation">
-        <img src="../../icons/icon.svg" alt="Icona app">
-        <div>
-            <p>
-                Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
-                This is an electron-based app.
-            </p>
-            <p>Copyright (C) 2025 Vincenzo Padula</p>
-        </div>
+    <div class="clearfix">
+        <img id="logo" src="../../icons/icon.svg" alt="App icon" class="float-start">
+        <p>
+            Speed-up your videos by speeding-up (or removing) silences, using FFmpeg.
+            This is an electron-based app.
+        </p>
     </div>
 
-    <p>
-        This program comes with <b>absolutely no warranty</b>;
-        for details view license.
-    </p>
-    <p>
-        This is free software, and you are welcome to redistribute it
-        under certain conditions; for details view license.
-    </p>
-
-    <h2>How to use</h2>
+    <h2 class="h2 text-center">How to use</h2>
     <p>
         Import your videos, choose the program settings and press <b>Start</b>.
         The app shows you the progress status, which consists of 3 steps:
@@ -47,7 +43,7 @@
         parts.
     </p>
 
-    <h3>Silence detect</h3>
+    <h3 class="h4">Silence detect</h3>
     <p>
         These settings change the way FFmpeg detect silences. You can set:
     <ul>
@@ -80,13 +76,13 @@
     </ul>
     </p>
 
-    <h3>Filter</h3>
+    <h3 class="h4">Filter</h3>
     <p>
         With these settings you can change the speed of spoken/silence parts of
         the video, and also set silence parts to be video-only.
     </p>
 
-    <h3>Export</h3>
+    <h3 class="h4">Export</h3>
     <p>
         Choose the format (extension) of your video (default is set to keep the
         same extension as the input file). Other settings include
@@ -107,13 +103,22 @@
         <a href="https://github.com/padvincenzo/silence-speedup#readme" target="_blank">GitHub page</a>.
     </p>
 
-    <h2>Credits</h2>
+    <h2 class="h2 text-center">Credits</h2>
 
-    <h3>FFmpeg</h3>
+    <p>
+        This program comes with <b>absolutely no warranty</b>;
+        for details view license.
+    </p>
+    <p>
+        This is free software, and you are welcome to redistribute it
+        under certain conditions; for details view license.
+    </p>
+
+    <h3 class="h4">FFmpeg</h3>
 
     <div id="ffmpeg-info"></div>
 
-    <h3>Icons</h3>
+    <h3 class="h4">Icons</h3>
 
     <p>
         Icons from <a href="http://www.onlinewebfonts.com/icon" target="_blank">Icon Fonts</a>
@@ -134,7 +139,7 @@
     <ul>
         <li>
             <a href="https://www.flaticon.com/free-icon/add-to-folder_101222" target="_blank">Add To Folder</a>
-            di <a href="https://www.flaticon.com/authors/roundicons-freebies" target="_blank">Roundicons Freebies</a>
+            by <a href="https://www.flaticon.com/authors/roundicons-freebies" target="_blank">Roundicons Freebies</a>
         </li>
     </ul>
 
@@ -162,8 +167,6 @@
     </ul>
 
     <p>* All icons are remixed</p>
-
-    <br>
 </body>
 
 </html>

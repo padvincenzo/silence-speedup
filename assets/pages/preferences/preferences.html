@@ -6,35 +6,39 @@
 
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self';" />
+
+    <!-- Dependencies -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="preferences.css" />
     <script src="preferences.js"></script>
 </head>
 
-<body>
-    <br>
+<body class="mx-2 my-3">
 
-    <div>
-        <label for="export">Export path</label>
-        <div class="input">
-            <input type="text" name="export" id="export" value="">
-            <button id="exportChoose" title="Browse">...</button>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">Export path</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="export" id="export" placeholder="Export path"
+                aria-label="Export path" aria-describedby="export-browse">
+            <button class="btn btn-outline-secondary" type="button" id="export-browse">...</button>
         </div>
     </div>
 
-    <div>
-        <label for="ffmpeg">FFmpeg path</label>
-        <div class="input">
-            <input type="text" name="ffmpeg" id="ffmpeg" value="">
-            <button id="ffmpegChoose" title="Browse">...</button>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">FFmpeg path</label>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" name="ffmpeg" id="ffmpeg" placeholder="FFmpeg path"
+                aria-label="FFmpeg path" aria-describedby="ffmpeg-browse">
+            <button class="btn btn-outline-secondary" type="button" id="ffmpeg-browse">...</button>
         </div>
     </div>
 
-    <br>
-
-    <div id="buttons">
-        <button id="save">Save</button>
-        <button id="reset">Reset</button>
+    <div class="text-center">
+        <button type="button" class="btn btn-primary w-25" id="save">Save</button>
+        <button type="button" class="btn btn-secondary w-25" id="reset">Reset</button>
     </div>
 
 </body>
