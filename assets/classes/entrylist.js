@@ -9,48 +9,54 @@
  */
 
 module.exports = class EntryList {
-    static list = {}
-    static canImport = true
+    static list = {};
+    static canImport = true;
 
     static import(urls) {
-        if (urls == undefined || urls == null)
-            return 0
+        if (urls == undefined || urls == null) {
+            return 0;
+        }
 
-        if (!EntryList.canImport)
-            return 0
+        console.log(urls);
 
-        let len = urls.length
-        if (len == 0)
-            return 0
+        if (!EntryList.canImport) {
+            return 0;
+        }
 
-        let c = 0
+        let len = urls.length;
+        if (len == 0) {
+            return 0;
+        }
+
+        let c = 0;
 
         for (var i = 0; i < len; i++) {
-            let url = urls[i].toString()
-            let name = Entry.getNameFromUrl(url)
-            let extension = Entry.getExtensionFromName(name)
+            let url = urls[i].toString();
+
+            let name = Entry.getNameFromUrl(url);
+            let extension = Entry.getExtensionFromName(name);
             if (Entry.isExtensionValid(extension)) {
                 if (EntryList.list.hasOwnProperty(name)) {
-                    Shell.log(`Cannot load ${name}: file name already exists.`)
+                    Shell.log(`Cannot load ${name}: file name already exists.`);
                 } else {
-                    var entry = new Entry(url, name, extension)
-                    EntryList.list[name] = entry
-                    c++
+                    var entry = new Entry(url, name, extension);
+                    EntryList.list[name] = entry;
+                    c++;
                 }
             }
         }
 
-        return c
+        return c;
     }
 
     static remove(name) {
-        var entry = EntryList.list[name]
-        Interface.entryList.removeChild(entry.ref)
-        // Shell.log(`File ${entry.name} removed.`)
-        delete EntryList.list[name]
+        var entry = EntryList.list[name];
+        Interface.entryList.removeChild(entry.ref);
+        // Shell.log(`File ${entry.name} removed.`);
+        delete EntryList.list[name];
     }
 
     static get values() {
-        return Object.values(EntryList.list)
+        return Object.values(EntryList.list);
     }
 }

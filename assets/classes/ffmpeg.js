@@ -173,4 +173,4 @@ module.exports = class FFmpeg {
             }
         });
     }
-}
+};

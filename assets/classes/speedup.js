@@ -472,5 +472,4 @@ module.exports = class SpeedUp {
             SpeedUp.reportError("Error during concatenation.", data.entry);
         });
     }
-
-}
+};

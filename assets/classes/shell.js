@@ -9,36 +9,36 @@
  */
 
 module.exports = class Shell {
-    static shell
+    static shell;
 
     static load() {
-        Shell.shell = document.getElementById("shell")
+        Shell.shell = document.getElementById("shell");
 
         ipcRenderer.on("cleanShell", (event) => {
-            Shell.shell.innerHTML = ""
-        })
+            Shell.shell.innerHTML = "";
+        });
+    }
+
+    static print(msg, level) {
+        let now = new Date();
+        let line = document.createElement("div");
+        line.setAttribute("class", level);
+        line.innerHTML = `[${now.toLocaleString()}] ${msg}`;
+        Shell.shell.appendChild(line);
+
+        // Follow the log.
+        Shell.shell.scrollTop = Shell.shell.scrollHeight;
     }
 
     static log(msg) {
-        let newDiv = document.createElement("div")
-        newDiv.appendChild(document.createTextNode(msg))
-        Shell.shell.appendChild(newDiv)
-        Shell.shell.scrollTop = Shell.shell.scrollHeight
+        Shell.print(msg, "");
     }
 
     static err(msg) {
-        let newDiv = document.createElement("div")
-        newDiv.appendChild(document.createTextNode(msg))
-        newDiv.setAttribute("class", "error")
-        Shell.shell.appendChild(newDiv)
-        Shell.shell.scrollTop = Shell.shell.scrollHeight
+        Shell.print(msg, "error");
     }
 
     static warn(msg) {
-        let newDiv = document.createElement("div")
-        newDiv.appendChild(document.createTextNode(msg))
-        newDiv.setAttribute("class", "warning")
-        Shell.shell.appendChild(newDiv)
-        Shell.shell.scrollTop = Shell.shell.scrollHeight
+        Shell.print(msg, "warning");
     }
 }
