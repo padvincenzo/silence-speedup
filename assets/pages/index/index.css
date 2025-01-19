@@ -92,3 +92,7 @@
   overflow-y: auto;
   font-size: 0.8em;
 }
+
+#shell div {
+  padding: 1px 4px;
+}

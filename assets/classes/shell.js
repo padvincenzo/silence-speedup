@@ -28,7 +28,7 @@ module.exports = class Shell {
     static print(message, level) {
         let now = new Date();
         let line = document.createElement("div");
-        line.setAttribute("class", "py-1 " + level);
+        line.setAttribute("class", level);
         line.innerHTML = `[${now.toLocaleString()}] ${message}`;
         Shell.shell.appendChild(line);
 
