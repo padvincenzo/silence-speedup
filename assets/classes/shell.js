@@ -22,7 +22,7 @@ module.exports = class Shell {
     static print(msg, level) {
         let now = new Date();
         let line = document.createElement("div");
-        line.setAttribute("class", level);
+        line.setAttribute("class", "pb-1 " + level);
         line.innerHTML = `[${now.toLocaleString()}] ${msg}`;
         Shell.shell.appendChild(line);
 
@@ -31,14 +31,14 @@ module.exports = class Shell {
     }
 
     static log(msg) {
-        Shell.print(msg, "");
+        Shell.print(msg, "text-light");
     }
 
     static err(msg) {
-        Shell.print(msg, "error");
+        Shell.print(msg, "bg-danger text-light");
     }
 
     static warn(msg) {
-        Shell.print(msg, "warning");
+        Shell.print(msg, "bg-warning text-dark");
     }
 }

@@ -19,46 +19,6 @@
   --transition: 0.2s;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background-color: var(--c-light);
-  color: var(--c-dark)
-}
-
-button {
-  width: 46px;
-  height: 46px;
-  border-radius: 5px;
-  border: 1px solid var(--c-dark);
-  cursor: pointer;
-  color: var(--c-dark);
-  background-color: #0000;
-  background-size: 30px 30px !important;
-  background-position: 8px 8px !important;
-  -webkit-transition: var(--transition);
-  -webkit-app-region: no-drag;
-  flex: none;
-}
-
-button:hover,
-button:focus,
-button:active {
-  background-color: #666 !important;
-  -webkit-transition: var(--transition);
-  outline: none;
-}
-
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-button:disabled:hover {
-  background-color: inherit !important;
-}
-
 a,
 a:focus,
 .link,
@@ -87,5 +47,4 @@ a:focus,
     --c-dark: #ccc;
     --c-light: #333;
   }
-
 }

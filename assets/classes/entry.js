@@ -29,27 +29,28 @@ module.exports = class Entry {
         this.#extension = extension;
         this.#outputExtension = extension;
 
-        this.#ref = document.createElement("div");
-        this.#ref.setAttribute("class", "entry");
+        this.#ref = document.createElement("tr");
         this.#ref.setAttribute("title", url);
 
-        var text = document.createElement("div");
-        text.setAttribute("class", "entryName");
-        text.appendChild(document.createTextNode(this.#name));
+        var text = document.createElement("td");
+        text.innerText = this.#name;
         this.#ref.appendChild(text);
 
-        this.#status = document.createElement("div");
-        this.#status.setAttribute("class", "status");
+        this.#status = document.createElement("td");
         this.#status.innerHTML = "Loading...";
         this.#ref.appendChild(this.#status);
 
-        this.#removeBtn = document.createElement("div");
-        this.#removeBtn.setAttribute("class", "remove");
-        this.#removeBtn.appendChild(document.createTextNode("×"));
+        var actions = document.createElement("td");
+
+        this.#removeBtn = document.createElement("button");
+        this.#removeBtn.setAttribute("class", "btn btn-danger");
+        this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
         });
-        this.#ref.appendChild(this.#removeBtn);
+        actions.appendChild(this.#removeBtn)
+
+        this.#ref.appendChild(actions);
 
         FFmpeg.getVideoDuration(this);
 

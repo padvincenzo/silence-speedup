@@ -25,11 +25,12 @@ module.exports = class FFmpeg {
     static timeRegExp = new RegExp(/(\d+):(\d+):(\d+)\.(\d+)/);
 
     static load() {
-        FFmpeg.progressBar = document.getElementById("ffmpegProgressBar");
-        FFmpeg.progress = document.getElementById("ffmpegProgress");
-        FFmpeg.time = document.getElementById("ffmpegProgressTime");
-        FFmpeg.speed = document.getElementById("ffmpegProgressSpeed");
-        FFmpeg.percentage = document.getElementById("ffmpegPercentage");
+        //  style="width: 25%;" aria-valuenow="25"
+        FFmpeg.progressBar = document.getElementById("ffmpeg-progress");
+        FFmpeg.progress = document.getElementById("ffmpeg-status");
+        FFmpeg.time = document.getElementById("ffmpeg-status-time");
+        FFmpeg.speed = document.getElementById("ffmpeg-status-speed");
+        FFmpeg.percentage = document.getElementById("ffmpeg-status-percentage");
 
         FFmpeg.updateCommand();
     }
@@ -143,6 +144,7 @@ module.exports = class FFmpeg {
 
         var percentage = ((FFmpeg.getSecondsFromTime(progress[1]) + parseFloat(offsetCurrentTime)) / duration * 100);
         FFmpeg.progressBar.style.width = percentage + "%";
+        FFmpeg.progressBar.setAttribute("aria-valuemin", percentage);
         FFmpeg.percentage.innerHTML = percentage.toFixed(2) + " %";
         ipcRenderer.send("progressUpdate", "progressBar", percentage);
     }

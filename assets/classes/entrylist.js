@@ -8,6 +8,8 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+const { entryListTable } = require("./interface");
+
 module.exports = class EntryList {
     static list = {};
     static canImport = true;
@@ -29,6 +31,10 @@ module.exports = class EntryList {
         }
 
         let c = 0;
+
+        // Hide the welcome message and display the entry table.
+        Interface.entryMessage.classList.add("d-none");
+        Interface.entryListTable.classList.remove("d-none");
 
         for (var i = 0; i < len; i++) {
             let url = urls[i].toString();

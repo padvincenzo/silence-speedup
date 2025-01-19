@@ -12,11 +12,11 @@ module.exports = class Interface {
     static dropZone;
     static gui;
 
+    static entryMessage;
+    static entryListTable;
     static entryList;
     static addFiles;
     static addFolder;
-    static preferences;
-    static about;
 
     static start;
     static stop;
@@ -29,8 +29,10 @@ module.exports = class Interface {
     static muteAudio;
     static silenceSpeed;
     static silenceSpeedValue;
+    static silenceSpeedTag;
     static playbackSpeed;
     static playbackSpeedValue;
+    static playbackSpeedTag;
     static videoExtension;
 
     static crf;
@@ -40,33 +42,25 @@ module.exports = class Interface {
     static tune;
 
     static load() {
-        Interface.dropZone = document.getElementById("dropZone");
+        Interface.dropZone = document.getElementById("drop-zone");
         Interface.gui = document.getElementById("gui");
 
-        Interface.entryList = document.getElementById("entryList");
+        Interface.entryMessage = document.getElementById("entry-message");
+        Interface.entryListTable = document.getElementById("entry-list-table");
+        Interface.entryList = document.getElementById("entry-list");
 
-        Interface.addFiles = document.getElementById("addFiles");
+        Interface.addFiles = document.getElementById("add-files");
         Interface.addFiles.addEventListener("click", (event) => {
             ipcRenderer.send("selectFiles");
         });
 
-        Interface.addFolder = document.getElementById("addFolder");
+        Interface.addFolder = document.getElementById("add-folder");
         Interface.addFolder.addEventListener("click", (event) => {
             ipcRenderer.send("selectFolder");
         });
 
-        Interface.preferences = document.getElementById("preferences");
-        Interface.preferences.addEventListener("click", (event) => {
-            ipcRenderer.send("showPreferences");
-        });
-
-        Interface.about = document.getElementById("about");
-        Interface.about.addEventListener("click", (event) => {
-            ipcRenderer.send("showAbout");
-        });
-
-        Interface.start = document.getElementById("start");
-        Interface.stop = document.getElementById("stop");
+        Interface.start = document.getElementById("button-start");
+        Interface.stop = document.getElementById("button-stop");
 
         Interface.start.addEventListener("click", (event) => {
             SpeedUp.start();
@@ -76,55 +70,59 @@ module.exports = class Interface {
             SpeedUp.interrupt();
         });
 
-        Interface.progressMode = document.getElementById("progressMode");
+        Interface.progressMode = document.getElementById("button-progress-mode");
         Interface.progressMode.addEventListener("click", (event) => {
             ipcRenderer.send("switchToProgressMode");
         });
 
         Interface.threshold = document.getElementById("threshold");
-        Interface.thresholdValue = document.getElementById("thresholdValue");
+        Interface.thresholdValue = document.getElementById("threshold-value");
         Interface.threshold.addEventListener("input", (event) => {
             Interface.thresholdValue.innerHTML = Config.data.thresholds[Interface.threshold.value].text;
         });
 
-        Interface.silenceMinimumDuration = document.getElementById("silenceMinimumDuration");
-        Interface.silenceMinimumDurationValue = document.getElementById("silenceMinimumDurationValue");
+        Interface.silenceMinimumDuration = document.getElementById("silence-minimum-duration");
+        Interface.silenceMinimumDurationValue = document.getElementById("silence-minimum-duration-value");
         Interface.silenceMinimumDuration.addEventListener("input", (event) => {
             Interface.silenceMinimumDurationValue.innerHTML = parseFloat(Interface.silenceMinimumDuration.value).toFixed(2) + "s";
         });
 
-        Interface.silenceMargin = document.getElementById("silenceMargin");
-        Interface.silenceMarginValue = document.getElementById("silenceMarginValue");
+        Interface.silenceMargin = document.getElementById("silence-margin");
+        Interface.silenceMarginValue = document.getElementById("silence-margin-value");
         Interface.silenceMargin.addEventListener("input", (event) => {
             Interface.silenceMarginValue.innerHTML = parseFloat(Interface.silenceMargin.value).toFixed(2) + "s";
         });
 
-        Interface.muteAudio = document.getElementById("muteAudio");
-        Interface.silenceSpeed = document.getElementById("silenceSpeed");
-        Interface.silenceSpeedValue = document.getElementById("silenceSpeedValue");
+        Interface.muteAudio = document.getElementById("mute-audio");
+        Interface.silenceSpeed = document.getElementById("silence-speed");
+        Interface.silenceSpeedValue = document.getElementById("silence-speed-value");
+        Interface.silenceSpeedTag = document.getElementById("silence-speed-tag");
         Interface.silenceSpeed.addEventListener("input", (event) => {
             Interface.silenceSpeedValue.innerHTML = Config.data.speeds[Interface.silenceSpeed.value].text;
+            Interface.silenceSpeedTag.innerHTML = Config.data.speeds[Interface.silenceSpeed.value].text;
             Interface.muteAudio.disabled = (Interface.silenceSpeed.value == Config.data.speeds.length - 1);
         });
 
-        Interface.playbackSpeed = document.getElementById("playbackSpeed");
-        Interface.playbackSpeedValue = document.getElementById("playbackSpeedValue");
+        Interface.playbackSpeed = document.getElementById("playback-speed");
+        Interface.playbackSpeedValue = document.getElementById("playback-speed-value");
+        Interface.playbackSpeedTag = document.getElementById("playback-speed-tag");
         Interface.playbackSpeed.addEventListener("input", (event) => {
             Interface.playbackSpeedValue.innerHTML = Config.data.speeds[Interface.playbackSpeed.value].text;
+            Interface.playbackSpeedTag.innerHTML = Config.data.speeds[Interface.playbackSpeed.value].text;
         });
 
-        Interface.videoExtension = document.getElementById("videoExtension");
+        Interface.videoExtension = document.getElementById("video-extension");
 
         Interface.fps = document.getElementById("fps");
         Interface.preset = document.getElementById("preset");
 
         Interface.crf = document.getElementById("crf");
-        Interface.crfValue = document.getElementById("crfValue");
+        Interface.crfValue = document.getElementById("crf-value");
         Interface.crf.addEventListener("input", (event) => {
             Interface.crfValue.innerHTML = Interface.crf.value;
         });
 
-        Interface.audioRate = document.getElementById("audioRate");
+        Interface.audioRate = document.getElementById("audio-rate");
         Interface.tune = document.getElementById("tune");
 
         Interface.update();
@@ -217,11 +215,13 @@ module.exports = class Interface {
         Interface.silenceSpeed.setAttribute("max", parseInt(Config.data.speeds.length - 1));
         Interface.silenceSpeed.value = parseInt(Config.data.initialSilenceSpeed);
         Interface.silenceSpeedValue.innerHTML = Config.data.speeds[Config.data.initialSilenceSpeed].text;
+        Interface.silenceSpeedTag.innerHTML = Config.data.speeds[Config.data.initialSilenceSpeed].text;
         Interface.muteAudio.disabled = (Config.data.initialSilenceSpeed == Config.data.speeds.length - 1);
 
         Interface.playbackSpeed.setAttribute("max", Config.data.speeds.length - 2);
         Interface.playbackSpeed.value = Config.data.initialPlaybackSpeed;
         Interface.playbackSpeedValue.innerHTML = Config.data.speeds[Config.data.initialPlaybackSpeed].text;
+        Interface.playbackSpeedTag.innerHTML = Config.data.speeds[Config.data.initialPlaybackSpeed].text;
 
         let options = "";
         Config.data.formats.forEach((format, i) => {
@@ -307,20 +307,18 @@ module.exports = class Interface {
 
     static viewStart() {
         Interface.unlock();
-        Interface.start.style.display = "inline-block";
-        Interface.stop.style.display = "none";
+        Interface.start.disabled = false;
+        Interface.stop.disabled = true;
         Interface.progressMode.disabled = true;
-        Interface.preferences.disabled = false;
 
         ipcRenderer.send("menuEnabler", "viewStart");
     }
 
     static viewStop() {
         Interface.lock();
-        Interface.start.style.display = "none";
-        Interface.stop.style.display = "inline-block";
+        Interface.start.disabled = true;
+        Interface.stop.disabled = false;
         Interface.progressMode.disabled = false;
-        Interface.preferences.disabled = true;
 
         ipcRenderer.send("menuEnabler", "viewStop");
     }

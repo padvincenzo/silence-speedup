@@ -120,7 +120,7 @@ module.exports = class SpeedUp {
         SpeedUp.silenceMargin = parseFloat(Interface.silenceMargin.value);
         SpeedUp.silenceSpeed = Config.data.speeds[Interface.silenceSpeed.value].text;
         SpeedUp.dropAudio = (SpeedUp.silenceSpeed == "remove");
-        SpeedUp.muteAudio = (SpeedUp.dropAudio ? false : muteAudio.checked);
+        SpeedUp.muteAudio = (SpeedUp.dropAudio ? false : Interface.muteAudio.checked);
         SpeedUp.playbackSpeed = Config.data.speeds[Interface.playbackSpeed.value].text;
         SpeedUp.videoExtension = Interface.videoExtension.value;
 
@@ -208,7 +208,7 @@ module.exports = class SpeedUp {
         var len = entries.length;
 
         if (len == 0) {
-            Shell.log("No video queued.");
+            Shell.warn("No video queued.");
             Interface.viewStart();
             return;
         }

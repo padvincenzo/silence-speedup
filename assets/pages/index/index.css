@@ -8,65 +8,36 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-#dropZone {
-  width: -webkit-fill-available;
-  height: -webkit-fill-available;
-  position: fixed;
-  top: 0;
-  left: 0;
+#drop-zone {
+  width: 100vw;
+  height: 100vh;
   background-color: var(--c-light);
   box-shadow: none;
   -webkit-transition: var(--transition);
-  text-align: center;
   line-height: 100vh;
   font-size: 8vw;
 }
 
-#gui {
-  width: -webkit-fill-available;
-  height: -webkit-fill-available;
-  background-color: var(--c-light);
-  margin-bottom: 228px;
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  -webkit-transition: var(--transition);
+.gui-controls {
+  overflow-y: auto;
+  font-size: 0.8em;
+}
+
+.gui-controls .form-select {
+  font-size: 0.8em;
+}
+
+#settings-modal .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 #entryList {
-  width: 100%;
-  height: -webkit-fill-available;
-  margin: 0 10px 1px 10px;
-  overflow-y: auto;
-  padding: 5px 0;
-}
-
-#entryList:empty {
-  text-align: center;
-  margin: 1em;
-}
-
-#entryList:empty::before {
-  content: "Import a video and press Start to speedup/remove its silences.";
-  color: var(--c-dark);
-}
-
-#menu {
-  width: 200px;
-  text-align: center;
-  padding: 5px;
-  flex: none;
   overflow-y: auto;
 }
 
 .entry {
-  font-size: 1em;
-  line-height: 2em;
-  padding: 3px 0 3px 8px;
   color: var(--c-dark);
-  display: flex;
-  width: -webkit-fill-available;
 }
 
 .entry.highlight {
@@ -81,168 +52,13 @@
   color: darkgreen;
 }
 
-.entry:hover {
-  background-color: #0001;
-}
-
-.entryName {
-  width: -webkit-fill-available;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.remove,
-.progress {
-  margin: 0 5px;
-  flex: none;
-}
-
-.progress {
-  width: 180px;
-}
-
-.remove {
-  font-family: monospace;
-  width: 1em;
-  height: 1em;
-  border-radius: 2px;
-  text-align: center;
-  font-size: 2em;
-  line-height: 1em;
-  margin: 3px 5px;
-}
-
 .remove:hover {
   background-color: var(--c-3);
   cursor: pointer;
 }
 
-.buttons {
-  display: flex;
-  flex-direction: column;
-  margin: 10px 5px;
-}
-
-.buttons button {
-  margin-bottom: 10px;
-  width: 56px;
-  height: 56px;
-  background-size: 40px 40px !important;
-  background-position: 8px 8px !important;
-}
-
-/* #entryList .buttons button {
-  width: 130px;
-  padding-left: 46px;
-  text-align: left;
-  margin-left: 5px;
-} */
-
-button#addFiles {
-  background: url(../../../assets/icons/add_video.svg) no-repeat;
-}
-
-button#addFolder {
-  background: url(../../../assets/icons/add_folder.svg) no-repeat;
-}
-
-button#preferences {
-  background: url(../../../assets/icons/settings.svg) no-repeat;
-}
-
-button#about {
-  background: url(../../../assets/icons/info.svg) no-repeat;
-  margin-bottom: 30px;
-}
-
-button#start {
-  background: url(../../../assets/icons/start.svg) no-repeat;
-}
-
-button#stop {
-  background: url(../../../assets/icons/stop.svg) no-repeat;
-  display: none;
-}
-
-/* button#start, button#stop {
-  width: 120px;
-  padding-left: 46px;
-  text-align: left;
-} */
-
-button#progressMode {
-  background: url(../../../assets/icons/minimize.svg) no-repeat;
-}
-
-#videoSettings {
-  font-size: 14px;
-}
-
-.setting {
-  border: 1px solid var(--c-1);
-  border-radius: 5px;
-  padding: 6px;
-  margin: 12px 0 25px 0;
-  text-align: left;
-}
-
-.setting:last-child {
-  margin-bottom: 12px;
-}
-
-.setting::before {
-  position: relative;
-  top: -14px;
-  background-color: var(--c-light);
-  padding: 2px 5px;
-  color: var(--c-dark);
-  font-variant: small-caps;
-}
-
-#silenceDetectSettings::before {
-  content: "Silence detect settings"
-}
-
-#filterSettings::before {
-  content: "Filter settings"
-}
-
-#exportSettings::before {
-  content: "Export settings"
-}
-
-.setting div {
-  margin: 10px 0;
-}
-
-.setting div:first-child {
-  margin-top: -8px;
-}
-
-.setting .setting-select {
-  display: flex;
-}
-
-.setting .setting-select label {
-  flex: none;
-  margin-right: 5px;
-}
-
-.setting .setting-select select {
-  width: 100%;
-  color: var(--c-dark);
-  background-color: transparent;
-  border: 0px solid var(--c-dark);
-  border-bottom-width: 1px;
-  text-align-last: right;
-  padding-right: 6px;
-}
-
-.setting .setting-select option {
-  color: var(--c-dark);
-  background-color: var(--c-light);
+.w-40 {
+  width: 40% !important;
 }
 
 .slider {
@@ -254,7 +70,6 @@ button#progressMode {
   outline: none;
   opacity: 0.7;
   -webkit-transition: var(--transition);
-  margin-bottom: 15px;
 }
 
 .slider:hover,
@@ -281,121 +96,42 @@ button#progressMode {
   opacity: 1;
 }
 
-#ffmpegProgressBar {
+#ffmpeg-progress {
   background-color: var(--c-5);
-  width: 0px;
+  width: 0%;
   -webkit-transition: var(--transition);
   -webkit-transition-timing-function: ease-out;
 }
 
-#ffmpegProgress {
-  background-color: rgba(170, 170, 170, 0.5);
-  color: var(--c-dark);
-  width: -webkit-fill-available;
+#ffmpeg-status {
   display: flex;
 }
 
-#ffmpegProgressBar,
-#ffmpegProgress {
-  position: fixed;
-  bottom: 206px;
-  left: 0;
-  height: 22px;
-  line-height: 22px;
-  font-size: 13px;
+#gui-progress .progress,
+#ffmpeg-progress,
+#ffmpeg-status {
+  height: 2em;
+  line-height: 2em;
+  font-size: 1em;
   font-family: monospace;
 }
 
-#ffmpegProgress div {
+#ffmpeg-status div {
   padding: 0 5px;
 }
 
-#ffmpegProgress div:nth-child(even) {
+#ffmpeg-status div:nth-child(even) {
   text-align: left;
   width: 100%;
 }
 
-#ffmpegProgress div:nth-child(odd) {
+#ffmpeg-status div:nth-child(odd) {
   text-align: right;
   flex: none;
 }
 
 #shell {
-  background-color: var(--c-3);
-  padding: 3px;
-  color: var(--c-light);
-  font-family: monospace;
-  font-size: 1rem;
-  line-height: 1.3rem;
-  height: 200px;
-  width: -webkit-fill-available;
+  max-height: 200px;
   overflow-y: auto;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-}
-
-#shell div {
-  display: block;
-}
-
-#shell div.error {
-  color: #C00;
-}
-
-#shell div.warning {
-  color: orange;
-}
-
-#shell .error::selection {
-  background-color: #C00;
-  color: #FFF;
-}
-
-#shell .warning::selection {
-  background-color: orange;
-  color: #FFF;
-}
-
-@media (prefers-color-scheme: dark) {
-  .entry:hover {
-    background-color: #FFF1;
-  }
-
-  button#addFiles {
-    background: url(../../../assets/icons/add_video_dark.svg) no-repeat;
-  }
-
-  button#addFolder {
-    background: url(../../../assets/icons/add_folder_dark.svg) no-repeat;
-  }
-
-  button#preferences {
-    background: url(../../../assets/icons/settings_dark.svg) no-repeat;
-  }
-
-  button#about {
-    background: url(../../../assets/icons/info_dark.svg) no-repeat;
-  }
-
-  button#start {
-    background: url(../../../assets/icons/start_dark.svg) no-repeat;
-  }
-
-  button#stop {
-    background: url(../../../assets/icons/stop_dark.svg) no-repeat;
-  }
-
-  button#progressMode {
-    background: url(../../../assets/icons/minimize_dark.svg) no-repeat;
-  }
-
-  #ffmpegProgress {
-    background-color: #0003;
-  }
-
-  #shell {
-    background-color: #222;
-    color: var(--c-1);
-  }
+  font-size: 0.8em;
 }
