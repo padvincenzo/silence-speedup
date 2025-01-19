@@ -11,6 +11,9 @@
     <link rel="stylesheet" type="text/css" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules\font-awesome\css\font-awesome.min.css" />
+
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="preferences.css" />
     <script src="preferences.js"></script>
@@ -23,7 +26,9 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" name="export" id="export" placeholder="Export path"
                 aria-label="Export path" aria-describedby="export-browse">
-            <button class="btn btn-outline-secondary" type="button" id="export-browse">...</button>
+            <button class="btn btn-outline-secondary" type="button" id="export-browse">
+                <i class="fa fa-folder-open-o"></i>
+            </button>
         </div>
     </div>
 
@@ -32,7 +37,9 @@
         <div class="input-group mb-3">
             <input type="text" class="form-control" name="ffmpeg" id="ffmpeg" placeholder="FFmpeg path"
                 aria-label="FFmpeg path" aria-describedby="ffmpeg-browse">
-            <button class="btn btn-outline-secondary" type="button" id="ffmpeg-browse">...</button>
+            <button class="btn btn-outline-secondary" type="button" id="ffmpeg-browse">
+                <i class="fa fa-folder-open-o"></i>
+            </button>
         </div>
     </div>
 
