@@ -19,26 +19,30 @@ module.exports = class Shell {
         });
     }
 
-    static print(msg, level) {
+    static print(message, level) {
         let now = new Date();
         let line = document.createElement("div");
-        line.setAttribute("class", "pb-1 " + level);
-        line.innerHTML = `[${now.toLocaleString()}] ${msg}`;
+        line.setAttribute("class", "py-1 " + level);
+        line.innerHTML = `[${now.toLocaleString()}] ${message}`;
         Shell.shell.appendChild(line);
 
         // Follow the log.
         Shell.shell.scrollTop = Shell.shell.scrollHeight;
     }
 
-    static log(msg) {
-        Shell.print(msg, "text-light");
+    static log(message) {
+        Shell.print(message, "text-light");
     }
 
-    static err(msg) {
-        Shell.print(msg, "bg-danger text-light");
+    static err(message) {
+        Shell.print(message, "bg-danger text-light");
     }
 
-    static warn(msg) {
-        Shell.print(msg, "bg-warning text-dark");
+    static warn(message) {
+        Shell.print(message, "bg-warning text-dark");
+    }
+
+    static success(message) {
+        Shell.print(message, "bg-success text-light");
     }
 }

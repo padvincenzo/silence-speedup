@@ -37,13 +37,13 @@ module.exports = class Entry {
         this.#ref.appendChild(text);
 
         this.#status = document.createElement("td");
-        this.#status.innerHTML = "Loading...";
+        this.#status.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>";
         this.#ref.appendChild(this.#status);
 
         var actions = document.createElement("td");
 
         this.#removeBtn = document.createElement("button");
-        this.#removeBtn.setAttribute("class", "btn btn-danger");
+        this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm");
         this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
@@ -124,19 +124,19 @@ module.exports = class Entry {
     prepare() {
         this.status = "Queued";
         this.#removeBtn.style.display = "none";
-        this.#ref.setAttribute("class", "entry");
+        this.#ref.setAttribute("class", "");
 
         this.#silenceTS = { start: [], end: [] };
     }
 
     highlight() {
-        this.#ref.setAttribute("class", "entry highlight");
+        this.#ref.setAttribute("class", "");
         Shell.log(`Started working on ${this.#name}.`);
         ipcRenderer.send("progressUpdate", "name", this.#name);
     }
 
     gotError(err) {
-        this.#ref.setAttribute("class", "entry error");
+        this.#ref.setAttribute("class", "bg-warning text-dark");
         this.#status.innerHTML = err;
         this.#removeBtn.style.display = "inline-block";
     }
@@ -174,9 +174,9 @@ module.exports = class Entry {
     }
 
     finished() {
-        this.#ref.setAttribute("class", "entry finished");
+        this.#ref.setAttribute("class", "bg-success text-light");
         this.status = "Completed";
-        Shell.log(`${this.#outputName} completed.`);
+        Shell.success(`${this.#outputName} completed.`);
         this.#removeBtn.style.display = "inline-block";
     }
 
