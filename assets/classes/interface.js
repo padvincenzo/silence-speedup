@@ -128,28 +128,28 @@ module.exports = class Interface {
         Interface.update();
 
         document.body.ondragover = () => {
-            Interface.gui.style.opacity = "0.2";
-            Interface.dropZone.innerHTML = EntryList.canImport ? "Drop videos here" : "∅";
-            Interface.dropZone.style.boxShadow = "inset 0px 0px 30px var(--c-1)";
+            Interface.dropZone.classList.add("drop-active");
+            if (EntryList.canImport) {
+                Interface.dropZone.classList.remove("drop-not-allowed");
+            } else {
+                Interface.dropZone.classList.add("drop-not-allowed");
+            }
             return false;
         };
 
         document.body.ondragleave = () => {
-            Interface.gui.style.opacity = "1";
-            Interface.dropZone.style.boxShadow = "none";
+            Interface.dropZone.classList.remove("drop-active");
             return false;
         };
 
         document.body.ondragend = () => {
-            Interface.gui.style.opacity = "1";
-            Interface.dropZone.style.boxShadow = "none";
+            Interface.dropZone.classList.remove("drop-active");
             return false;
         };
 
         document.body.ondrop = (event) => {
             event.preventDefault();
-            Interface.gui.style.opacity = "1";
-            Interface.dropZone.style.boxShadow = "none";
+            Interface.dropZone.classList.remove("drop-active");
 
             if (EntryList.canImport) {
                 let files = Object.values(event.dataTransfer.files);

@@ -21,263 +21,283 @@
 
 <body class="w-100 bg-light">
 
-    <div id="drop-zone" class="d-none position-fixed top-0 start-0 text-center">
-        Drop videos here
-    </div>
-
-    <div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settings-modal-label" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="settings-modal-label"><i class="fa fa-sliders mx-2"></i> Settings</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6 class="mt-1 mb-3"><i class="fa fa-bolt mx-1"></i> Basic settings</h6>
-                    <div class="px-2">
-                        <div class="row mb-3">
-                            <label for="silence-speed" class="col-sm-4 col-form-label">
-                                Silence speed
-                            </label>
-                            <div class="col-sm-8">
-                                <div class="input-group mb-3">
-                                    <div class="form-control d-flex align-items-center">
-                                        <input type="range" min="0" class="slider" id="silence-speed"
-                                            name="silence-speed" aria-label="Silence speed"
-                                            aria-describedby="silence-speed-value">
-                                    </div>
-                                    <div class="input-group-text d-block text-center w-40" id="silence-speed-value">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="playback-speed" class="col-sm-4 col-form-label">
-                                Playback speed
-                            </label>
-                            <div class="col-sm-8">
-                                <div class="input-group mb-3">
-                                    <div class="form-control d-flex align-items-center">
-                                        <input type="range" min="0" class="slider" id="playback-speed"
-                                            name="playback-speed" aria-label="Playback speed"
-                                            aria-describedby="playback-speed-value">
-                                    </div>
-                                    <div class="input-group-text d-block text-center w-40" id="playback-speed-value">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label class="col-sm-4 col-form-label form-check-label" for="mute-audio">Mute
-                                silences</label>
-                            <div class="col-sm-8">
-                                <input class="form-check-input" type="checkbox" id="mute-audio" name="mute-audio">
-                            </div>
-                        </div>
-                    </div>
-
-                    <h6 class="mt-4 mb-3"><i class="fa fa-music mx-1"></i> Silence settings</h6>
-                    <div class="px-2">
-                        <div class="row mb-3">
-                            <label for="threshold" class="col-sm-4 col-form-label">
-                                Background noise
-                            </label>
-                            <div class="col-sm-8">
-                                <div class="input-group mb-3">
-                                    <div class="form-control d-flex align-items-center">
-                                        <input type="range" class="slider" min="0" id="threshold" name="threshold"
-                                            aria-label="Background noise threshold" aria-describedby="threshold-value">
-                                    </div>
-                                    <div class="input-group-text d-block text-center w-40" id="threshold-value"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="silence-minimum-duration" class="col-sm-4 col-form-label">
-                                Silence min duration
-                            </label>
-                            <div class="col-sm-8">
-                                <div class="input-group mb-3">
-                                    <div class="form-control d-flex align-items-center">
-                                        <input type="range" class="slider" id="silence-minimum-duration"
-                                            name="silence-minimum-duration" aria-label="Silence minimum duration"
-                                            aria-describedby="silence-minimum-duration-value">
-                                    </div>
-                                    <div class="input-group-text d-block text-center w-40"
-                                        id="silence-minimum-duration-value">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="silence-margin" class="col-sm-4 col-form-label">
-                            Silence margin
-                        </label>
-                        <div class="col-sm-8">
-                            <div class="input-group mb-3">
-                                <div class="form-control d-flex align-items-center">
-                                    <input type="range" class="slider" id="silence-margin" name="silence-margin"
-                                        aria-label="Silence margin" aria-describedby="silence-margin-value">
-                                </div>
-                                <div class="input-group-text d-block text-center w-40" id="silence-margin-value"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h6 class="mt-4 mb-3"><i class="fa fa-wrench mx-1"></i> Advanced settings</h6>
-                    <div class="px-2">
-                        <div class="row mb-3">
-                            <label for="crf" class="col-sm-4 col-form-label">
-                                CRF
-                            </label>
-                            <div class="col-sm-8">
-                                <div class="input-group mb-3">
-                                    <div class="form-control d-flex align-items-center">
-                                        <input type="range" class="slider" id="crf" name="crf" min="0" max="51"
-                                            value="22" aria-label="CRF" aria-describedby="crf-value">
-                                    </div>
-                                    <div class="input-group-text d-block text-center w-40" id="crf-value"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="fps" class="col-sm-4 col-form-label">
-                                FPS
-                            </label>
-                            <div class="col-sm-8">
-                                <select class="form-select" id="fps" name="fps"></select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="preset" class="col-sm-4 col-form-label">
-                                Preset
-                            </label>
-                            <div class="col-sm-8">
-                                <select class="form-select" id="preset" name="preset"></select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="audio-rate" class="col-sm-4 col-form-label">
-                                Audio rate
-                            </label>
-                            <div class="col-sm-8">
-                                <select class="form-select" id="audio-rate" name="audio-rate"></select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="tune" class="col-sm-4 col-form-label">
-                                Tune
-                            </label>
-                            <div class="col-sm-8">
-                                <select class="form-select" id="tune" name="tune"></select>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="video-extension" class="col-sm-4 col-form-label">
-                                Video format
-                            </label>
-                            <div class="col-sm-8">
-                                <select class="form-select" id="video-extension" name="video-extension"></select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <div id="gui">
+        <div id="drop-zone" class="text-center">
+            <div class="drop-allowed m-auto">
+                <div class="alert alert-info m-5">
+                    <i class="fa fa-folder-open"></i>
+                    Drop videos here
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="gui-controls btn-toolbar w-100 p-2 sticky-top d-flex justify-content-between bg-light" role="toolbar"
-        aria-label="Actions">
-        <div class="btn-group" role="group" aria-label="Import actions">
-            <button type="button" class="btn btn-primary" id="add-files" title="Add video(s)" aria-label="Add video(s)">
-                <i class="fa fa-film mx-1"></i>
-                Add video(s)
-            </button>
-            <button type="button" class="btn btn-outline-primary" id="add-folder" title="Add folder"
-                aria-label="Add folder">
-                <i class="fa fa-folder-open mx-1"></i>
-            </button>
-        </div>
-
-        <div class="btn-group" role="group" aria-label="Idle actions">
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                data-bs-target="#settings-modal" title="Customize settings" aria-label="Customize settings">
-                <i class="fa fa-sliders mx-1"></i>
-                <sup id="silence-speed-tag">8x</sup>/<sub id="playback-speed-tag">1x</sub>
-            </button>
-            <button type="button" class="btn btn-success" id="button-start" title="Start" aria-label="Start">
-                <i class="fa fa-play mx-1"></i>
-                Start
-            </button>
-            <button type="button" class="btn btn-outline-success" id="button-progress-mode"
-                title="Switch to progress mode" aria-label="Switch to progress mode">
-                <i class="fa fa-window-minimize mx-1"></i>
-            </button>
-        </div>
-
-        <div class="btn-group" role="group" aria-label="Running actions">
-            <button type="button" class="btn btn-danger" id="button-stop" title="Stop" aria-label="Stop">
-                <i class="fa fa-stop mx-1"></i>
-                Stop
-            </button>
-        </div>
-    </div>
-
-    <div class="gui-entries container-fluid position-relative pt-1">
-        <div id="entry-message" class="alert alert-info m-5 d-flex align-items-center" role="alert">
-            <i class="fa fa-info-circle fs-2 mx-2"></i>
-            <div class="mx-2">
-                Import some videos, choose the configuration and then press <kbd>Start</kbd> to speedup/remove
-                their silences.
-            </div>
-        </div>
-
-        <table id="entry-list-table" class="table table-hover align-middle d-none">
-            <thead>
-                <tr>
-                    <th scope="col">File</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="entry-list"></tbody>
-        </table>
-    </div>
-
-    <div class="fixed-bottom w-100">
-        <div id="gui-progress" class="position-relative w-100">
-            <div class="progress rounded-0">
-                <div id="ffmpeg-progress" class="progress-bar rounded-0" role="progressbar" aria-valuemin="0"
-                    aria-valuemax="100">
-                </div>
-            </div>
-            <div id="ffmpeg-status"
-                class="m-0 position-absolute d-flex justify-content-between top-0 start-0 w-100 px-1">
-                <div class="flex-shrink-0 px-1 ">
-                    <button type="button" id="shell-toggle" class="btn btn-sm btn-dark py-0 px-1" title="Toggle logs"
-                        aria-label="Toggle logs">
-                        <i class="fa fa-terminal"></i>
-                    </button>
-                </div>
-                <div class="px-1 flex-grow-1">
-                    <span>Time</span>
-                    <span id="ffmpeg-status-time" class="px-1">--:--:--.--</span>
-                </div>
-                <div class="px-1 flex-grow-1">
-                    <span>Speed</span>
-                    <span id="ffmpeg-status-speed" class="px-1">-</span>
-                </div>
-                <div id="ffmpeg-status-percentage" class="flex-shrink-0 px-1">
-                    -.-- %
+            <div class="drop-not-allowed m-auto">
+                <div class="alert alert-danger m-5">
+                    <i class="fa fa-ban"></i>
+                    Cannot import videos right now
                 </div>
             </div>
         </div>
 
-        <code id="shell" class="d-block p-0 m-0 w-100 bg-dark text-light d-none"></code>
+        <div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settings-modal-label"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="settings-modal-label"><i class="fa fa-sliders mx-2"></i> Settings
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-1 mb-3"><i class="fa fa-bolt mx-1"></i> Basic settings</h6>
+                        <div class="px-2">
+                            <div class="row mb-3">
+                                <label for="silence-speed" class="col-sm-4 col-form-label">
+                                    Silence speed
+                                </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group mb-3">
+                                        <div class="form-control d-flex align-items-center">
+                                            <input type="range" min="0" class="slider" id="silence-speed"
+                                                name="silence-speed" aria-label="Silence speed"
+                                                aria-describedby="silence-speed-value">
+                                        </div>
+                                        <div class="input-group-text d-block text-center w-40" id="silence-speed-value">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="playback-speed" class="col-sm-4 col-form-label">
+                                    Playback speed
+                                </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group mb-3">
+                                        <div class="form-control d-flex align-items-center">
+                                            <input type="range" min="0" class="slider" id="playback-speed"
+                                                name="playback-speed" aria-label="Playback speed"
+                                                aria-describedby="playback-speed-value">
+                                        </div>
+                                        <div class="input-group-text d-block text-center w-40"
+                                            id="playback-speed-value">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-4 col-form-label form-check-label" for="mute-audio">Mute
+                                    silences</label>
+                                <div class="col-sm-8">
+                                    <input class="form-check-input" type="checkbox" id="mute-audio" name="mute-audio">
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4 mb-3"><i class="fa fa-music mx-1"></i> Silence settings</h6>
+                        <div class="px-2">
+                            <div class="row mb-3">
+                                <label for="threshold" class="col-sm-4 col-form-label">
+                                    Background noise
+                                </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group mb-3">
+                                        <div class="form-control d-flex align-items-center">
+                                            <input type="range" class="slider" min="0" id="threshold" name="threshold"
+                                                aria-label="Background noise threshold"
+                                                aria-describedby="threshold-value">
+                                        </div>
+                                        <div class="input-group-text d-block text-center w-40" id="threshold-value">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="silence-minimum-duration" class="col-sm-4 col-form-label">
+                                    Silence min duration
+                                </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group mb-3">
+                                        <div class="form-control d-flex align-items-center">
+                                            <input type="range" class="slider" id="silence-minimum-duration"
+                                                name="silence-minimum-duration" aria-label="Silence minimum duration"
+                                                aria-describedby="silence-minimum-duration-value">
+                                        </div>
+                                        <div class="input-group-text d-block text-center w-40"
+                                            id="silence-minimum-duration-value">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="silence-margin" class="col-sm-4 col-form-label">
+                                Silence margin
+                            </label>
+                            <div class="col-sm-8">
+                                <div class="input-group mb-3">
+                                    <div class="form-control d-flex align-items-center">
+                                        <input type="range" class="slider" id="silence-margin" name="silence-margin"
+                                            aria-label="Silence margin" aria-describedby="silence-margin-value">
+                                    </div>
+                                    <div class="input-group-text d-block text-center w-40" id="silence-margin-value">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="mt-4 mb-3"><i class="fa fa-wrench mx-1"></i> Advanced settings</h6>
+                        <div class="px-2">
+                            <div class="row mb-3">
+                                <label for="crf" class="col-sm-4 col-form-label">
+                                    CRF
+                                </label>
+                                <div class="col-sm-8">
+                                    <div class="input-group mb-3">
+                                        <div class="form-control d-flex align-items-center">
+                                            <input type="range" class="slider" id="crf" name="crf" min="0" max="51"
+                                                value="22" aria-label="CRF" aria-describedby="crf-value">
+                                        </div>
+                                        <div class="input-group-text d-block text-center w-40" id="crf-value"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="fps" class="col-sm-4 col-form-label">
+                                    FPS
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="fps" name="fps"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="preset" class="col-sm-4 col-form-label">
+                                    Preset
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="preset" name="preset"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="audio-rate" class="col-sm-4 col-form-label">
+                                    Audio rate
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="audio-rate" name="audio-rate"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="tune" class="col-sm-4 col-form-label">
+                                    Tune
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="tune" name="tune"></select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="video-extension" class="col-sm-4 col-form-label">
+                                    Video format
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-select" id="video-extension" name="video-extension"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gui-controls btn-toolbar w-100 p-2 sticky-top d-flex justify-content-between bg-light"
+            role="toolbar" aria-label="Actions">
+            <div class="btn-group" role="group" aria-label="Import actions">
+                <button type="button" class="btn btn-primary" id="add-files" title="Add video(s)"
+                    aria-label="Add video(s)">
+                    <i class="fa fa-film mx-1"></i>
+                    Add video(s)
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="add-folder" title="Add folder"
+                    aria-label="Add folder">
+                    <i class="fa fa-folder-open mx-1"></i>
+                </button>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Idle actions">
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#settings-modal" title="Customize settings" aria-label="Customize settings">
+                    <i class="fa fa-sliders mx-1"></i>
+                    <sup id="silence-speed-tag">8x</sup>/<sub id="playback-speed-tag">1x</sub>
+                </button>
+                <button type="button" class="btn btn-success" id="button-start" title="Start" aria-label="Start">
+                    <i class="fa fa-play mx-1"></i>
+                    Start
+                </button>
+                <button type="button" class="btn btn-outline-success" id="button-progress-mode"
+                    title="Switch to progress mode" aria-label="Switch to progress mode">
+                    <i class="fa fa-window-minimize mx-1"></i>
+                </button>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="Running actions">
+                <button type="button" class="btn btn-danger" id="button-stop" title="Stop" aria-label="Stop">
+                    <i class="fa fa-stop mx-1"></i>
+                    Stop
+                </button>
+            </div>
+        </div>
+
+        <div class="gui-entries container-fluid position-relative pt-1">
+            <div id="entry-message" class="alert alert-info m-5 d-flex align-items-center" role="alert">
+                <i class="fa fa-info-circle fs-2 mx-2"></i>
+                <div class="mx-2">
+                    Import some videos, choose the configuration and then press <kbd>Start</kbd> to speedup/remove
+                    their silences.
+                </div>
+            </div>
+
+            <table id="entry-list-table" class="table table-hover align-middle d-none">
+                <thead>
+                    <tr>
+                        <th scope="col">File</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="entry-list"></tbody>
+            </table>
+        </div>
+
+        <div class="fixed-bottom w-100">
+            <div id="gui-progress" class="position-relative w-100">
+                <div class="progress rounded-0">
+                    <div id="ffmpeg-progress" class="progress-bar rounded-0" role="progressbar" aria-valuemin="0"
+                        aria-valuemax="100">
+                    </div>
+                </div>
+                <div id="ffmpeg-status"
+                    class="m-0 position-absolute d-flex justify-content-between top-0 start-0 w-100 px-1">
+                    <div class="flex-shrink-0 px-1 ">
+                        <button type="button" id="shell-toggle" class="btn btn-sm btn-dark py-0 px-1"
+                            title="Toggle logs" aria-label="Toggle logs">
+                            <i class="fa fa-terminal"></i>
+                        </button>
+                    </div>
+                    <div class="px-1 flex-grow-1">
+                        <span>Time</span>
+                        <span id="ffmpeg-status-time" class="px-1">--:--:--.--</span>
+                    </div>
+                    <div class="px-1 flex-grow-1">
+                        <span>Speed</span>
+                        <span id="ffmpeg-status-speed" class="px-1">-</span>
+                    </div>
+                    <div id="ffmpeg-status-percentage" class="flex-shrink-0 px-1">
+                        -.-- %
+                    </div>
+                </div>
+            </div>
+
+            <code id="shell" class="d-block p-0 m-0 w-100 bg-dark text-light d-none"></code>
+        </div>
     </div>
 
 </body>

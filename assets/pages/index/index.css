@@ -9,13 +9,44 @@
  */
 
 #drop-zone {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: var(--c-light);
-  box-shadow: none;
+  background-color: #fffd;
   -webkit-transition: var(--transition);
-  line-height: 100vh;
-  font-size: 8vw;
+  font-size: 1.5em;
+  z-index: -1;
+  visibility: hidden;
+}
+
+#drop-zone.drop-active {
+  z-index: 1031;
+  visibility: visible;
+  align-content: center;
+  box-shadow: inset 0px 0px 30px var(--c-1);
+  backdrop-filter: blur(2px);
+}
+
+#drop-zone div {
+  z-index: -1;
+}
+
+#drop-zone .drop-allowed {
+  display: block;
+}
+
+#drop-zone .drop-not-allowed {
+  display: none;
+}
+
+#drop-zone.drop-not-allowed .drop-allowed {
+  display: none;
+}
+
+#drop-zone.drop-not-allowed .drop-not-allowed {
+  display: block;
 }
 
 .gui-controls {
