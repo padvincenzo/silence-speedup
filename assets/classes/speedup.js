@@ -287,7 +287,7 @@ module.exports = class SpeedUp {
     }
 
     static end() {
-        Shell.log("All done.");
+        Shell.success("All done.");
         FFmpeg.update(null);
 
         Interface.setProgressBar(1);
