@@ -11,19 +11,32 @@
     <link rel="stylesheet" type="text/css" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
     <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules\font-awesome\css\font-awesome.min.css" />
+
     <link rel="stylesheet" type="text/css" href="../common.css" />
     <link rel="stylesheet" type="text/css" href="progress.css" />
     <script src="progress.js"></script>
 </head>
 
-<body>
-    <div id="progressBar" class="progress"></div>
-    <div id="data">
-        <div id="completed"></div>
-        <div id="total"></div>
-        <div id="currentVideo"></div>
-        <div id="currentStatus"></div>
-        <button id="defaultMode" title="Back to window mode"></button>
+<body class="bg-light text-dark">
+    <div class="progress-wrapper d-flex">
+        <div class="progress-info flex-grow-1 d-flex position-relative">
+            <div class="progress-data d-flex w-100 px-3">
+                <div class="flex-shrink-0">
+                    <span id="count-completed"></span>
+                    /
+                    <span id="count-total"></span>
+                </div>
+                <div id="current-video" class="w-100 flex-grow-1"></div>
+                <div id="current-status" class="flex-shrink-0"></div>
+            </div>
+            <div id="progress-bar" class="progress position-absolute top-0"></div>
+        </div>
+        <button type="button" id="default-mode" class="btn btn-secondary rounded-0 flex-shrink-0"
+            title="Back to window mode">
+            <i class="fa fa-external-link fa-rotate-270"></i>
+        </button>
     </div>
 </body>
 

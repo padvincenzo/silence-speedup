@@ -17,19 +17,19 @@ let currentStatus;
 let progressBar;
 
 window.onload = () => {
-    total = document.getElementById("total");
-    completed = document.getElementById("completed");
-    currentVideo = document.getElementById("currentVideo");
-    currentStatus = document.getElementById("currentStatus");
-    progressBar = document.getElementById("progressBar");
+    total = document.getElementById("count-total");
+    completed = document.getElementById("count-completed");
+    currentVideo = document.getElementById("current-video");
+    currentStatus = document.getElementById("current-status");
+    progressBar = document.getElementById("progress-bar");
 
-    document.getElementById("defaultMode").addEventListener("click", (event) => {
+    document.getElementById("default-mode").addEventListener("click", (event) => {
         ipcRenderer.send("switchToDefaultMode");
     });
 };
 
 ipcRenderer.on("total", (event, value) => {
-    total.innerHTML = "/" + value;
+    total.innerHTML = value;
 });
 
 ipcRenderer.on("completed", (event, value) => {
