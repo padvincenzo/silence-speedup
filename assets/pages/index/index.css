@@ -19,42 +19,13 @@
 }
 
 .gui-controls {
-  overflow-y: auto;
-  font-size: 0.8em;
-}
-
-.gui-controls .form-select {
-  font-size: 0.8em;
+  box-shadow: 0 4px 30px #0002;
+  gap: 5px;
 }
 
 #settings-modal .modal-body {
   max-height: 70vh;
   overflow-y: auto;
-}
-
-#entryList {
-  overflow-y: auto;
-}
-
-.entry {
-  color: var(--c-dark);
-}
-
-.entry.highlight {
-  color: var(--c-1);
-}
-
-.entry.error {
-  color: darkred;
-}
-
-.entry.finished {
-  color: darkgreen;
-}
-
-.remove:hover {
-  background-color: var(--c-3);
-  cursor: pointer;
 }
 
 .w-40 {
@@ -96,15 +67,15 @@
   opacity: 1;
 }
 
+.gui-entries {
+  padding-bottom: 15em;
+}
+
 #ffmpeg-progress {
   background-color: var(--c-5);
   width: 0%;
   -webkit-transition: var(--transition);
   -webkit-transition-timing-function: ease-out;
-}
-
-#ffmpeg-status {
-  display: flex;
 }
 
 #gui-progress .progress,
@@ -116,22 +87,8 @@
   font-family: monospace;
 }
 
-#ffmpeg-status div {
-  padding: 0 5px;
-}
-
-#ffmpeg-status div:nth-child(even) {
-  text-align: left;
-  width: 100%;
-}
-
-#ffmpeg-status div:nth-child(odd) {
-  text-align: right;
-  flex: none;
-}
-
 #shell {
-  max-height: 200px;
+  height: 15em;
   overflow-y: auto;
   font-size: 0.8em;
 }

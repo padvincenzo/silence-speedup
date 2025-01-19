@@ -190,8 +190,9 @@
         </div>
     </div>
 
-    <div class="btn-toolbar w-100 p-2 sticky-top d-flex justify-content-between" role="toolbar" aria-label="Actions">
-        <div class="btn-group me-2 mb-2" role="group" aria-label="Import actions">
+    <div class="gui-controls btn-toolbar w-100 p-2 sticky-top d-flex justify-content-between bg-light" role="toolbar"
+        aria-label="Actions">
+        <div class="btn-group" role="group" aria-label="Import actions">
             <button type="button" class="btn btn-primary" id="add-files" title="Add video(s)">
                 <i class="fa fa-film mx-1"></i>
                 Add video(s)
@@ -201,7 +202,7 @@
             </button>
         </div>
 
-        <div class="btn-group me-2 mb-2" role="group" aria-label="Idle actions">
+        <div class="btn-group" role="group" aria-label="Idle actions">
             <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                 data-bs-target="#settings-modal" title="Customize settings">
                 <i class="fa fa-sliders mx-1"></i>
@@ -217,7 +218,7 @@
             </button>
         </div>
 
-        <div class="btn-group me-2 mb-2" role="group" aria-label="Running actions">
+        <div class="btn-group" role="group" aria-label="Running actions">
             <button type="button" class="btn btn-danger" id="button-stop" title="Stop">
                 <i class="fa fa-stop mx-1"></i>
                 Stop
@@ -225,7 +226,7 @@
         </div>
     </div>
 
-    <div class="gui-entries container-fluid position-relative">
+    <div class="gui-entries container-fluid position-relative pt-1">
         <div id="entry-message" class="alert alert-info m-5 d-flex align-items-center" role="alert">
             <i class="fa fa-info-circle fs-2 mx-2"></i>
             <div class="mx-2">
@@ -234,7 +235,7 @@
             </div>
         </div>
 
-        <table id="entry-list-table" class="table table-hover align-middle bg-light d-none">
+        <table id="entry-list-table" class="table table-hover align-middle d-none">
             <thead>
                 <tr>
                     <th scope="col">File</th>
@@ -253,18 +254,28 @@
                     aria-valuemax="100">
                 </div>
             </div>
-            <div id="ffmpeg-status" class="m-0 position-absolute top-0 start-0 w-100">
-                <div>Time</div>
-                <div id="ffmpeg-status-time">--:--:--.--</div>
-                <div>Speed</div>
-                <div id="ffmpeg-status-speed">-</div>
-                <div id="ffmpeg-status-percentage">-.-- %</div>
+            <div id="ffmpeg-status"
+                class="m-0 position-absolute d-flex justify-content-between top-0 start-0 w-100 px-1">
+                <div class="px-1">
+                    <button id="shell-toggle" class="btn btn-sm btn-dark">
+                        <i class="fa fa-terminal"></i>
+                    </button>
+                </div>
+                <div class="px-1">
+                    <span>Time</span>
+                    <span id="ffmpeg-status-time" class="px-1">--:--:--.--</span>
+                </div>
+                <div class="px-1">
+                    <span>Speed</span>
+                    <span id="ffmpeg-status-speed" class="px-1">-</span>
+                </div>
+                <div id="ffmpeg-status-percentage" class="px-1">
+                    -.-- %
+                </div>
             </div>
         </div>
 
-        <div id="gui-shell" class="p-0 m-0 w-100 bg-dark text-light">
-            <code id="shell" class="d-block p-0 m-0 w-100"></code>
-        </div>
+        <code id="shell" class="d-block p-0 m-0 w-100 bg-dark text-light d-none"></code>
     </div>
 
 </body>

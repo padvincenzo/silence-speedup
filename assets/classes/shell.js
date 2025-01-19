@@ -10,9 +10,15 @@
 
 module.exports = class Shell {
     static shell;
+    static shellToggle;
 
     static load() {
         Shell.shell = document.getElementById("shell");
+        Shell.shellToggle = document.getElementById("shell-toggle");
+
+        Shell.shellToggle.addEventListener("click", () => {
+            Shell.shell.classList.toggle("d-none");
+        });
 
         ipcRenderer.on("cleanShell", (event) => {
             Shell.shell.innerHTML = "";
