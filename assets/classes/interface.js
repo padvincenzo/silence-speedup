@@ -137,17 +137,17 @@ module.exports = class Interface {
             return false;
         };
 
-        document.body.ondragleave = () => {
+        Interface.dropZone.ondragleave = () => {
             Interface.dropZone.classList.remove("drop-active");
             return false;
         };
 
-        document.body.ondragend = () => {
+        Interface.dropZone.ondragend = () => {
             Interface.dropZone.classList.remove("drop-active");
             return false;
         };
 
-        document.body.ondrop = (event) => {
+        Interface.dropZone.ondrop = (event) => {
             event.preventDefault();
             Interface.dropZone.classList.remove("drop-active");
 
