@@ -8,7 +8,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const { ipcRenderer, shell } = require("electron");
+const { ipcRenderer, shell, contextBridge, webUtils } = require("electron");
 const { spawn, spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");

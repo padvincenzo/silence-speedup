@@ -127,38 +127,41 @@ module.exports = class Interface {
 
         Interface.update();
 
-        document.body.ondragover = () => {
+        document.addEventListener("dragover", (event) => {
+            event.preventDefault();
             Interface.dropZone.classList.add("drop-active");
             if (EntryList.canImport) {
                 Interface.dropZone.classList.remove("drop-not-allowed");
             } else {
                 Interface.dropZone.classList.add("drop-not-allowed");
             }
-            return false;
-        };
+        }, false);
 
-        Interface.dropZone.ondragleave = () => {
-            Interface.dropZone.classList.remove("drop-active");
-            return false;
-        };
-
-        Interface.dropZone.ondragend = () => {
-            Interface.dropZone.classList.remove("drop-active");
-            return false;
-        };
-
-        Interface.dropZone.ondrop = (event) => {
+        Interface.dropZone.addEventListener("dragleave", (event) => {
             event.preventDefault();
+            Interface.dropZone.classList.remove("drop-active");
+            return false;
+        });
+
+        Interface.dropZone.addEventListener("dragend", (event) => {
+            event.preventDefault();
+            Interface.dropZone.classList.remove("drop-active");
+            return false;
+        });
+
+        Interface.dropZone.addEventListener("drop", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             Interface.dropZone.classList.remove("drop-active");
 
             if (EntryList.canImport) {
                 let files = Object.values(event.dataTransfer.files);
-                let urls = files.map(file => file.path).filter(Boolean);
+                let urls = files.map(file => webUtils.getPathForFile(file)).filter(Boolean);
                 EntryList.import(urls);
             }
 
             return false;
-        };
+        });
 
         ipcRenderer.on("selectedFiles", (event, fileNames) => {
             if (fileNames == undefined) {
