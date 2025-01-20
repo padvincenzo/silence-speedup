@@ -8,6 +8,10 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+body {
+  overflow-x: hidden;
+}
+
 #drop-zone {
   position: absolute;
   top: 0;
@@ -51,11 +55,6 @@
 .gui-controls {
   box-shadow: 0 4px 30px #0002;
   gap: 5px;
-}
-
-#settings-modal .modal-body {
-  max-height: 70vh;
-  overflow-y: auto;
 }
 
 .w-40 {

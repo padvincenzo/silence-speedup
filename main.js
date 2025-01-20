@@ -35,10 +35,10 @@ function createWindows() {
     win = new BrowserWindow({
         title: "Silence SpeedUp",
         icon: icon,
-        width: 750,
-        height: 900,
+        width: 650,
+        height: 800,
         minWidth: 600,
-        minHeight: 750,
+        minHeight: 450,
         show: false,
         webPreferences: {
             nodeIntegration: true,
