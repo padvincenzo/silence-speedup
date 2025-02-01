@@ -197,14 +197,13 @@ module.exports = class SpeedUp {
         console.log("Options", SpeedUp.exportOptions);
     }
 
-    static async start() {
+    static async start(entries, detectOnly = false) {
         SpeedUp.interrupted = false;
         Interface.viewStop();
 
         SpeedUp.setOptions();
         SpeedUp.setFilters();
 
-        var entries = EntryList.values;
         var len = entries.length;
 
         if (len == 0) {
@@ -230,7 +229,7 @@ module.exports = class SpeedUp {
             Interface.setProgressBar(i / len);
             ipcRenderer.send("progressUpdate", "completed", i);
 
-            await SpeedUp.process(entries[i]);
+            await SpeedUp.process(entries[i], detectOnly);
 
             SpeedUp.currentEntry = null;
         }
@@ -242,7 +241,7 @@ module.exports = class SpeedUp {
         SpeedUp.end();
     }
 
-    static async process(entry) {
+    static async process(entry, detectOnly = false) {
         let error = false;
         entry.highlight();
 
@@ -251,7 +250,7 @@ module.exports = class SpeedUp {
             return;
         }
 
-        if (!entry.hasSilences()) {
+        if (!entry.hasSilences() || detectOnly) {
             entry.finished();
             return;
         }
@@ -361,7 +360,7 @@ module.exports = class SpeedUp {
 
         var counter = {
             count: 0,
-            name: function (extension) {
+            name: function(extension) {
                 let number = this.count.toString().padStart(6, "0");
                 this.count += 1;
                 let name = `f_${number}.${extension}`;

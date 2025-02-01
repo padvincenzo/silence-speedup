@@ -46,6 +46,7 @@
     "feed-read": "0.0.1",
     "font-awesome": "^4.7.0",
     "fs-extra": "^11.3.0",
-    "hosted-git-info": "^8.0.2"
+    "hosted-git-info": "^8.0.2",
+    "video.js": "^8.21.0"
   }
 }

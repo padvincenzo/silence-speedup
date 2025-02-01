@@ -19,6 +19,7 @@ module.exports = class Entry {
     #ref = null;
     #status = null;
     #removeBtn = null;
+    #demoBtn = null;
 
     #silenceTS = { start: [], end: [] };
 
@@ -43,12 +44,23 @@ module.exports = class Entry {
         var actions = document.createElement("td");
 
         this.#removeBtn = document.createElement("button");
-        this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm");
+        this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm me-1");
         this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
         });
-        actions.appendChild(this.#removeBtn)
+        actions.appendChild(this.#removeBtn);
+
+        this.#demoBtn = document.createElement("button");
+        this.#demoBtn.setAttribute("class", "btn btn-outline-success btn-sm me-1");
+        this.#demoBtn.innerHTML = "<i class='fa fa-search'></i>";
+        this.#demoBtn.addEventListener("click", (event) => {
+            // EntryList.remove(this.#name);
+            SpeedUp.start([this], true).then(() => {
+                ipcRenderer.send("demo", { file: this.#url, silences: this.#silenceTS, setting: { silenceMargin: SpeedUp.silenceMargin, silenceSpeed: SpeedUp.silenceSpeed, playbackSpeed: SpeedUp.playbackSpeed } });
+            });
+        });
+        actions.appendChild(this.#demoBtn);
 
         this.#ref.appendChild(actions);
 

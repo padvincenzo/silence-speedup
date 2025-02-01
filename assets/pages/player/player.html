@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Silence SpeedUp Player</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/font-awesome/css/font-awesome.min.css" />
+
+    <!-- VideoJS -->
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/video.js/dist/video-js.min.css" />
+    <script src="../../../node_modules/video.js/dist/video.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="./plugins/vjs-notifier/vjs-notifier.js"></script>
+    <link href="./plugins/vjs-notifier/vjs-notifier.css" rel="stylesheet">
+    <script src="./plugins/vjs-silences/vjs-silences.js"></script>
+    <link href="./plugins/vjs-silences/vjs-silences.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../common.css" />
+    <link rel="stylesheet" type="text/css" href="player.css" />
+    <script src="player.js"></script>
+</head>
+
+<body class="bg-light text-dark">
+    <div id="my-p-wrapper">
+        <video id="my-player" disableRemotePlayback class="video-js"></video>
+    </div>
+</body>
+
+</html>

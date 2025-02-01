@@ -470,5 +470,29 @@ ipcMain.on("quit", (event) => {
 });
 
 nativeTheme.on("updated", (event) => {
+});
 
-})
+ipcMain.on("demo", (event, data) => {
+    let player = new BrowserWindow({
+        parent: win,
+        title: "Silence SpeedUp Player",
+        width: 800,
+        height: 600,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            webSecurity: false
+        }
+    });
+
+    player.menuBarVisible = false;
+    player.loadFile("assets/pages/player/player.html");
+
+    player.once("ready-to-show", () => {
+        player.send("init", data);
+        player.show();
+
+        player.webContents.openDevTools();
+    });
+});
