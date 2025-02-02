@@ -474,8 +474,8 @@ nativeTheme.on("updated", (event) => {
 
 ipcMain.on("demo", (event, data) => {
     let player = new BrowserWindow({
-        parent: win,
         title: "Silence SpeedUp Player",
+        icon: icon,
         width: 800,
         height: 600,
         show: false,
