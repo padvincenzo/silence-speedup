@@ -9,13 +9,21 @@
  */
 
 body {
+  margin: 0;
+  padding: 0;
   overflow: hidden;
+  background-color: #000;
 }
 
 #my-p-wrapper {
-  display: flex;
-  align-items: center;
+  margin: 0;
+  padding: 0;
+  display: block;
   height: 100vh;
   width: 100vw;
   background-color: #000;
+}
+
+video:focus {
+  outline: none;
 }

@@ -34,7 +34,6 @@ class Player {
             preload: "auto",
             playbackRates: ["0.5", "0.6", "0.7", "0.8", "0.9", "1", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "2", "2.2", "2.5", "2.8", "3"],
             rewind: true,
-            inactivityTimeout: 4000,
             plugins: {
                 notifier: {
                     defaultTimeout: 1500
@@ -44,15 +43,11 @@ class Player {
                     normalRate: normalRate,
                     displayRealRemainingTime: true,
                     onSkip: (newTime) => {
-                        // Player.notify(secondsToTime(newTime));
+                        Player.notify(secondsToTime(newTime));
                     }
                 }
             }
         });
-        Player.wrapper = Player.player.el();
-        Player.video = Player.wrapper.querySelector("video");
-
-        Player.wrapper.parentNode.style.position = "relative";
 
         Player.initWrapperFunctions();
         Player.initShortcuts();
@@ -94,23 +89,8 @@ class Player {
 
     static initShortcuts() {
         document.body.addEventListener("keyup", (e) => {
-            if (Message.isBusy()) {
-                if (e.code == "Escape") {
-                    e.preventDefault();
-                    Message.close();
-                }
-                return;
-            }
-
-            if (Player.isSelectingArea()) {
-                if (e.code == "Escape") {
-                    e.preventDefault();
-                    Player.cancelSelection();
-                }
-                return;
-            }
-
             if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") {
+                // Ignore shortcuts when typing.
                 return;
             }
 
@@ -159,7 +139,8 @@ class Player {
         });
 
         document.body.addEventListener("keydown", (e) => {
-            if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA" || Message.isBusy() || Player.isSelectingArea()) {
+            if (e.target.tagName == "INPUT" || e.target.tagName == "TEXTAREA") {
+                // Ignore shortcuts when typing.
                 return;
             }
 
