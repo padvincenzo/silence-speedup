@@ -57,7 +57,19 @@ module.exports = class Entry {
         this.#demoBtn.addEventListener("click", (event) => {
             // EntryList.remove(this.#name);
             SpeedUp.start([this], true).then(() => {
-                ipcRenderer.send("demo", { file: this.#url, silences: this.#silenceTS, setting: { silenceMargin: SpeedUp.silenceMargin, silenceSpeed: SpeedUp.silenceSpeed, playbackSpeed: SpeedUp.playbackSpeed } });
+                ipcRenderer.send(
+                    "demo",
+                    {
+                        filepath: this.#url,
+                        filename: this.#name,
+                        silences: this.#silenceTS,
+                        setting: {
+                            silenceMargin: SpeedUp.silenceMargin,
+                            silenceSpeed: SpeedUp.silenceSpeed,
+                            playbackSpeed: SpeedUp.playbackSpeed
+                        }
+                    }
+                );
             });
         });
         actions.appendChild(this.#demoBtn);

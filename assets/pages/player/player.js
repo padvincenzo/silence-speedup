@@ -11,9 +11,10 @@
 const { ipcRenderer } = require("electron");
 
 ipcRenderer.on("init", (event, data) => {
-    console.log(data);
+    // console.log(data);
+    document.title += " | " + data.filename;
     Player.init(data.setting.silenceSpeed.replace("x", ""), data.setting.playbackSpeed.replace("x", ""));
-    Player.load({ url: data.file, playbackRate: data.setting.playbackSpeed.replace("x", ""), silences: data.silences, margin: data.setting.silenceMargin }, false);
+    Player.load({ url: data.filepath, playbackRate: data.setting.playbackSpeed.replace("x", ""), silences: data.silences, margin: data.setting.silenceMargin }, false);
 });
 
 class Player {
