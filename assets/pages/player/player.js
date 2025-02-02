@@ -27,7 +27,7 @@ class Player {
         Player.maxPlaybackRate = 3;   // Highest playbackRate
 
         Player.player = videojs("my-player", {
-            fluid: true,
+            fill: true,
             controls: true,
             autoplay: false,
             preload: "auto",

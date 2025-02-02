@@ -493,6 +493,6 @@ ipcMain.on("demo", (event, data) => {
         player.send("init", data);
         player.show();
 
-        player.webContents.openDevTools();
+        // player.webContents.openDevTools();
     });
 });
