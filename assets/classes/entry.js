@@ -31,10 +31,10 @@ module.exports = class Entry {
         this.#outputExtension = extension;
 
         this.#ref = document.createElement("tr");
-        this.#ref.setAttribute("title", url);
 
         var text = document.createElement("td");
         text.innerText = this.#name;
+        text.setAttribute("title", url);
         this.#ref.appendChild(text);
 
         this.#status = document.createElement("td");
@@ -46,6 +46,7 @@ module.exports = class Entry {
         this.#removeBtn = document.createElement("button");
         this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm me-1");
         this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
+        this.#removeBtn.title = "Remove this video from the list";
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
         });
@@ -54,6 +55,7 @@ module.exports = class Entry {
         this.#demoBtn = document.createElement("button");
         this.#demoBtn.setAttribute("class", "btn btn-outline-success btn-sm me-1");
         this.#demoBtn.innerHTML = "<i class='fa fa-search'></i>";
+        this.#demoBtn.title = "Play a demo of the video";
         this.#demoBtn.addEventListener("click", (event) => {
             // EntryList.remove(this.#name);
             SpeedUp.start([this], true).then(() => {
