@@ -54,7 +54,7 @@ module.exports = class Entry {
 
         this.#demoBtn = document.createElement("button");
         this.#demoBtn.setAttribute("class", "btn btn-outline-success btn-sm me-1");
-        this.#demoBtn.innerHTML = "<i class='fa fa-search'></i>";
+        this.#demoBtn.innerHTML = "<i class='fa fa-headphones'></i>";
         this.#demoBtn.title = "Play a demo of the video";
         this.#demoBtn.addEventListener("click", (event) => {
             // EntryList.remove(this.#name);
