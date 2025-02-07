@@ -59,12 +59,18 @@ module.exports = class Entry {
         this.#demoBtn.addEventListener("click", (event) => {
             // EntryList.remove(this.#name);
             SpeedUp.start([this], true).then(() => {
+                let silences = this.#silenceTS.start.map((start, i) => {
+                    return {
+                        t_start: start,
+                        t_end: this.#silenceTS.end[i],
+                    };
+                });
                 ipcRenderer.send(
                     "demo",
                     {
                         filepath: this.#url,
                         filename: this.#name,
-                        silences: this.#silenceTS,
+                        silences: silences,
                         setting: {
                             silenceMargin: SpeedUp.silenceMargin,
                             silenceSpeed: SpeedUp.silenceSpeed,
