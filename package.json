@@ -8,7 +8,7 @@
     "start": "electron .",
     "package": "electron-packager . Silence-SpeedUp --icon=assets/icons/icon.png --out=build --overwrite --prune=true",
     "package-win": "electron-packager . Silence-SpeedUp --platform=win32 --arch=x64 --icon=assets/icons/icon.ico --out=build --overwrite",
-    "package-mac": "electron-packager . Silence-SpeedUp --platform=darwin --arch=x64 --icon=assets/icons/icon.png --out=build --overwrite",
+    "package-mac": "electron-packager . Silence-SpeedUp --platform=darwin --arch=x64 --icon=assets/icons/icon.icns --out=build --overwrite",
     "package-linux": "electron-packager . Silence-SpeedUp --platform=linux --arch=x64 --icon=assets/icons/icon.png --out=build --overwrite"
   },
   "author": {
