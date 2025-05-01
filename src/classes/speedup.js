@@ -360,7 +360,7 @@ module.exports = class SpeedUp {
 
         var counter = {
             count: 0,
-            name: function(extension) {
+            name: function (extension) {
                 let number = this.count.toString().padStart(6, "0");
                 this.count += 1;
                 let name = `f_${number}.${extension}`;
