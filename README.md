@@ -1,6 +1,6 @@
 # Silence Speedup
 
-![Logo](icon.png)
+![Logo](assets/icons/icon.png)
 
 **Silence Speedup** is a desktop application built with [Electron](https://www.electronjs.org/)
 that analyzes videos or audio files to detect silent sections and either speed them up or
