@@ -44,9 +44,9 @@ Consider contributing tests if you’re interested in helping with automation.
 ```bash
 silence-speedup/
 ├── main.js              # Electron main process
+├── locales/             # Translations
 ├── src/
 |   |── classes/         # App classes
-|   |── menu/            # App menu structure
 |   |── renderer/        # Frontend (UI) files
 ├── assets/              # Icons and screenshots
 ├── docs/                # Documentation
