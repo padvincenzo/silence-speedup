@@ -35,10 +35,12 @@ module.exports = class Entry {
         var text = document.createElement("td");
         text.innerText = this.#name;
         text.setAttribute("title", url);
+        text.classList.add("text-start");
         this.#ref.appendChild(text);
 
         this.#status = document.createElement("td");
         this.#status.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>";
+        this.#status.classList.add("text-start");
         this.#ref.appendChild(this.#status);
 
         var actions = document.createElement("td");
