@@ -46,7 +46,7 @@ function createWindows() {
         }
     });
 
-    win.loadFile("assets/pages/index/index.html");
+    win.loadFile("src/renderer/index/index.html");
 
     win.once("ready-to-show", () => {
         win.show();
@@ -69,7 +69,7 @@ function createWindows() {
 
     about.menuBarVisible = false;
     about.excludedFromShownWindowsMenu = true;
-    about.loadFile("assets/pages/about/about.html");
+    about.loadFile("src/renderer/about/about.html");
 
     about.webContents.on("new-window", (event, url) => {
         event.preventDefault();
@@ -124,7 +124,7 @@ function createWindows() {
     });
 
     progress.menuBarVisible = false;
-    progress.loadFile("assets/pages/progress/progress.html");
+    progress.loadFile("src/renderer/progress/progress.html");
 
     progress.on("close", (event) => {
         event.preventDefault();
@@ -146,7 +146,7 @@ function createWindows() {
 
     update.menuBarVisible = false;
     update.excludedFromShownWindowsMenu = true;
-    update.loadFile("assets/pages/update/update.html");
+    update.loadFile("src/renderer/update/update.html");
 
     update.webContents.on("new-window", (event, url) => {
         event.preventDefault();
@@ -173,13 +173,13 @@ function createWindows() {
 }
 
 function setupMenu(lang) {
-    langPath = path.join(__dirname, "assets", "menu", `lang_${lang}.js`);
+    langPath = path.join(__dirname, "src", "menu", `lang_${lang}.js`);
     if (!fs.existsSync(langPath)) {
-        langPath = path.join(__dirname, "assets", "menu", "lang_EN.js");
+        langPath = path.join(__dirname, "src", "menu", "lang_EN.js");
     }
 
     langLabels = require(langPath);
-    template = require(path.join(__dirname, "assets", "menu", "template.js"))(langLabels, version);
+    template = require(path.join(__dirname, "src", "menu", "template.js"))(langLabels, version);
     menu = Menu.buildFromTemplate(template);
 
     // Check current settings
@@ -320,7 +320,7 @@ function showPreferences() {
 
     preferences.menuBarVisible = false;
     preferences.excludedFromShownWindowsMenu = true;
-    preferences.loadFile("assets/pages/preferences/preferences.html");
+    preferences.loadFile("src/renderer/preferences/preferences.html");
 
     preferences.once("ready-to-show", () => {
         preferences.show();
@@ -487,7 +487,7 @@ ipcMain.on("demo", (event, data) => {
     });
 
     player.menuBarVisible = false;
-    player.loadFile("assets/pages/player/player.html");
+    player.loadFile("src/renderer/player/player.html");
 
     player.once("ready-to-show", () => {
         player.send("init", data);

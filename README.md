@@ -1,119 +1,83 @@
 # Silence Speedup
-Speed-up your videos speeding-up (or removing) silences, using FFmpeg.
+
+**Silence Speedup** is a desktop application built with [Electron](https://www.electronjs.org/)
+that analyzes videos or audio files to detect silent sections and either speed them up or
+remove them entirely.
+Powered by [FFmpeg](https://ffmpeg.org/), it helps you reduce unnecessary pauses and make your
+content more concise.
+
+Ideal for lectures, interviews, podcasts, or tutorials — especially when the speaker pauses
+frequently or speaks slowly.
 
 ![Homescreen](assets/screenshots/homescreen.png)
 
-*Read this in other languages: [English](README.md), [Italian](README.it.md).*
+> Also available in: [Italiano](docs/README.it.md)
 
-## Table of Contents
-  - [Getting started](#getting-started)
-    - [Download](#download)
-  - [How to use](#how-to-use)
-    - [Silence detect](#silence-detect)
-    - [Filter](#filter)
-    - [Export](#export)
-  - [Requirements](#requirements)
-  - [Compiling](#compiling)
-  - [How it works](#how-it-works)
-    - [Note](#note)
-  - [Contributing](#contributing)
-  - [Credits](#credits)
+---
 
-## Getting started
-This program, built with Electron, makes use of FFmpeg in order to speed up (or skip) parts of the video that are with no sound.
+## 📦 Download
 
-It is really helpful for video lessons, where the professor takes long time for writing something on the board, makes lots of pauses, or just speaks slowly. With this program you can skip this boring parts and save time.
+Latest release: **v1.2.5**
 
-Of course this program is not perfect, and you might have to practice a bit with it.
+- [Windows (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-win32-x64.zip)
+- [macOS (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-darwin-x64.zip)
+- [Linux (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-linux-x64.zip)
 
-### Download
-* [Windows](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-win32-x64.zip) (129 MB)
-* [MacOS](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-darwin-x64.zip) (261 MB)
-* [Linux](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-linux-x64.zip) (124 MB)
+---
 
-## How to use
-Import your videos, choose the [program settings](#program-settings) and press ``Start``. The app shows you the progress status, which consists of 3 steps: ``Detecting silences``, ``Exporting`` and ``Concatenating``.
+## 🚀 Getting Started
 
-Not all videos are with the same audio volume, and you may want to choose which silences should be treaten as that. So, here we have the configurable parts.
+1. Launch the application
+2. Import your video or audio file
+3. Adjust silence detection, playback speed and other settings (optional)
+4. Click **Start**
 
-### Silence detect
-These settings change the way FFmpeg detect silences. You can set:
+The app will detect silence, process each section, and generate a shortened version of your file.
 
-* The background noise of the video (`Low` for a silent room with a microphone, `Mid` for the average noisy room, `High` for a noisy room).
+> For detailed instructions, see [`docs/usage.md`](docs/usage.md)
 
-  _Note: if your are new, try a video with defaults settings and see the result._
+---
 
-* How many seconds the smallest silence lasts (this value prevent brief pauses to be treaten as silences).
+## ✨ Key Features
 
-* How many seconds of silences should not be treaten as silences.
+- 🎙️ **Custom silence detection** — adjust noise sensitivity, min silence length, and margin
+- ⏩ **Silence skipping or speeding** — choose how silent parts are handled
+- 🎛️ **Advanced export settings** — frame rate, codec presets, audio format
+- 💻 **Cross-platform** — works on Windows, macOS, and Linux
+- ⚡ **Fast processing** — powered by efficient FFmpeg commands
 
-  _Explaination: without a minimum time of margin, spoken words might merge and the result would be an incomprehensible speech._
+---
 
-### Filter
-With these settings you can change the speed of spoken/silence parts of the video, and also set silence parts to be video-only.
+## 🛠 Requirements
 
-### Export
-Choose the format (extension) of your video (default is set to keep the same extension as the input file). Other settings include [`fps` (frame per second)](https://trac.ffmpeg.org/wiki/ChangingFrameRate), `cfr` and `preset` (these are settings for the [video codec `h264`](https://trac.ffmpeg.org/wiki/Encode/H.264)). The codec used for audio is `aac`.
+- **No installation required** for pre-built versions
+- To run from source:
+  - [Node.js](https://nodejs.org/)
+  - FFmpeg (included in packaged releases)
 
-Note: the default path of the videos (as well as temporary files) is set to `<your home path>/speededup/`. If you want to change it, press the settings button or go to `File -> Settings`.
+> For development and build instructions, see [`docs/development.md`](docs/development.md)
 
-## Compiling
-This program does not need to be installed to run, as I packaged it with [``electron-packager``](https://electron.github.io/electron-packager/master/). But, if you want to compile and run this program by yourself from the source code, then:
+---
 
-```
-$ git clone https://github.com/padvincenzo/silence-speedup
-$ cd silence-speedup
-$ npm install
-$ npm start
-```
+## 🤝 Contributing
 
-If you also want to embed the FFmpeg binaries, [here is explained how to](https://github.com/padvincenzo/silence-speedup/discussions/6).
+You're welcome to contribute by:
+- Reporting issues or bugs
+- Translating the app or documentation
+- Suggesting improvements
+- Implementing new features
+- Sharing the project with others
 
-Note: if you wish to run this program from source files then you also need to install [NodeJS](https://nodejs.org/en/).
+---
 
-## How it works
-For each video, this program will:
+## 📜 Credits
 
-1.  Run ffmpeg with ``silencedetect`` filter, in order to get the list of silences' start/end timestamps.
+This software uses [FFmpeg](https://ffmpeg.org/) under the **GPLv3** license.  
+The graphical interface is built using [Electron](https://www.electronjs.org/).
 
-```
-<ffmpeg bin> -hide_banner -vn \
-  -ss 0.00 -i <Input file> \
-  -af silencedetect=n=<threshold>:d=<duration> \
-  -f null -
-```
+---
 
-2.  Using that list, split the original video in a tmp folder, applying a speed filter, if any.
-
-```
-<ffmpeg bin> -hide_banner -loglevel warning -stats \
-  -ss <Start time> -to <End time> -i <Input file> \
-  -filter_complex "[0:v]<setpts filter>[v];[0:a]<atempo filter>[a]" \
-  -map [v] -map [a] <Output fragment>
-```
-
-3.  Concatenate all the fragments generated before.
-
-```
-<ffmpeg bin> -hide_banner -loglevel warning -stats \
-  -f concat -safe 0 \
-  -i <Fragment list file> \
-  -c copy \
-  -map v -map a <Output file> -y
-```
-
-### Note
-At the end of execution, the program does not automatically clean the tmp folder.
-
-## Contributing
-Anyone can contribute to this project, in many ways:
-* Sharing the project;
-* Translating this project in other languages;
-* Finding and report/fix bugs;
-* Suggesting new ideas;
-* Implementing new functionalities.
-
-For any doubt or perplexity we can [discuss here](https://github.com/padvincenzo/silence-speedup/discussions).
-
-## Credits
-This software uses binaries of the FFmpeg project, which I do not own, under the GPLv3.
+## 📚 Additional documentation:
+- [Usage Guide](docs/usage.md)
+- [Development Guide](docs/development.md)
+- [FFmpeg Technical Details](docs/ffmpeg-details.md)
