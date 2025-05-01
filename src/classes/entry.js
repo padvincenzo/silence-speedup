@@ -19,6 +19,7 @@ module.exports = class Entry {
     #ref = null;
     #status = null;
     #removeBtn = null;
+    #demoBtn = null;
 
     #silenceTS = { start: [], end: [] };
 
@@ -30,25 +31,58 @@ module.exports = class Entry {
         this.#outputExtension = extension;
 
         this.#ref = document.createElement("tr");
-        this.#ref.setAttribute("title", url);
 
         var text = document.createElement("td");
         text.innerText = this.#name;
+        text.setAttribute("title", url);
+        text.classList.add("text-start");
         this.#ref.appendChild(text);
 
         this.#status = document.createElement("td");
         this.#status.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>";
+        this.#status.classList.add("text-start");
         this.#ref.appendChild(this.#status);
 
         var actions = document.createElement("td");
 
         this.#removeBtn = document.createElement("button");
-        this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm");
+        this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm me-1");
         this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
+        this.#removeBtn.title = "Remove this video from the list";
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
         });
-        actions.appendChild(this.#removeBtn)
+        actions.appendChild(this.#removeBtn);
+
+        this.#demoBtn = document.createElement("button");
+        this.#demoBtn.setAttribute("class", "btn btn-outline-success btn-sm me-1");
+        this.#demoBtn.innerHTML = "<i class='fa fa-headphones'></i>";
+        this.#demoBtn.title = "Play a demo of the video";
+        this.#demoBtn.addEventListener("click", (event) => {
+            // EntryList.remove(this.#name);
+            SpeedUp.start([this], true).then(() => {
+                let silences = this.#silenceTS.start.map((start, i) => {
+                    return {
+                        t_start: start,
+                        t_end: this.#silenceTS.end[i],
+                    };
+                });
+                ipcRenderer.send(
+                    "demo",
+                    {
+                        filepath: this.#url,
+                        filename: this.#name,
+                        silences: silences,
+                        setting: {
+                            silenceMargin: SpeedUp.silenceMargin,
+                            silenceSpeed: SpeedUp.silenceSpeed,
+                            playbackSpeed: SpeedUp.playbackSpeed
+                        }
+                    }
+                );
+            });
+        });
+        actions.appendChild(this.#demoBtn);
 
         this.#ref.appendChild(actions);
 
@@ -124,6 +158,7 @@ module.exports = class Entry {
     prepare() {
         this.status = "Queued";
         this.#removeBtn.style.display = "none";
+        this.#demoBtn.style.display = "none";
         this.#ref.setAttribute("class", "");
 
         this.#silenceTS = { start: [], end: [] };
@@ -139,6 +174,7 @@ module.exports = class Entry {
         this.#ref.setAttribute("class", "bg-warning text-dark");
         this.#status.innerHTML = err;
         this.#removeBtn.style.display = "inline-block";
+        this.#demoBtn.style.display = "inline-block";
     }
 
     appendTS(i, ts, offset) {
@@ -178,6 +214,7 @@ module.exports = class Entry {
         this.status = "Completed";
         Shell.success(`${this.#outputName} completed.`);
         this.#removeBtn.style.display = "inline-block";
+        this.#demoBtn.style.display = "inline-block";
     }
 
     static getNameFromUrl(url) {

@@ -63,7 +63,7 @@ module.exports = class Interface {
         Interface.stop = document.getElementById("button-stop");
 
         Interface.start.addEventListener("click", (event) => {
-            SpeedUp.start();
+            SpeedUp.start(EntryList.values, false);
         });
 
         Interface.stop.addEventListener("click", (event) => {
@@ -185,7 +185,7 @@ module.exports = class Interface {
         });
 
         ipcRenderer.on("start", (event) => {
-            SpeedUp.start();
+            SpeedUp.start(EntryList.values, false);
         });
 
         ipcRenderer.on("stop", (event) => {

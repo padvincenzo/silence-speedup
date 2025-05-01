@@ -1,7 +1,7 @@
 {
   "name": "silence-speedup",
   "productName": "Silence SpeedUp",
-  "version": "1.2.5",
+  "version": "2.0.0",
   "description": "Speed-up your videos speeding-up (or removing) silences, using FFmpeg. This is an electron-based app.",
   "main": "main.js",
   "scripts": {
@@ -46,6 +46,8 @@
     "feed-read": "0.0.1",
     "font-awesome": "^4.7.0",
     "fs-extra": "^11.3.0",
-    "hosted-git-info": "^8.0.2"
+    "hosted-git-info": "^8.0.2",
+    "video.js": "^8.21.0",
+    "videojs-silence-speedup": "^1.1.8"
   }
 }
