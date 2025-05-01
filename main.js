@@ -13,12 +13,14 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 const feed = require("feed-read");
+const i18next = require("i18next");
+const Backend = require("i18next-fs-backend");
+const { t } = require("i18next");
 
 const version = app.getVersion();
 const icon = path.join(__dirname, "icon.png");
 
 // App Menu
-let template;
 let menu;
 let menuStatus = "viewStart";
 
@@ -172,42 +174,191 @@ function createWindows() {
     });
 }
 
-function setupMenu(lang) {
-    langPath = path.join(__dirname, "src", "menu", `lang_${lang}.js`);
-    if (!fs.existsSync(langPath)) {
-        langPath = path.join(__dirname, "src", "menu", "lang_EN.js");
-    }
+function setupMenu() {
+    let template = [
+        {
+            id: "file",
+            label: t("menu.file"),
+            submenu: [
+                {
+                    id: "openFile",
+                    label: t("menu.openFile"),
+                    accelerator: "CmdOrCtrl+O",
+                    click: (item, focusedWindow) => { openFile(); }
+                },
+                {
+                    id: "openFolder",
+                    label: t("menu.openFolder"),
+                    accelerator: "Shift+CmdOrCtrl+O",
+                    click: (item, focusedWindow) => { openFolder(); }
+                },
+                { type: "separator" },
+                {
+                    id: "preferences",
+                    label: t("menu.preferences"),
+                    click: (item, focusedWindow) => { showPreferences(); }
+                },
+                { type: "separator" },
+                {
+                    id: "restart",
+                    label: t("menu.restart"),
+                    accelerator: "CmdOrCtrl+R",
+                    click: (item, focusedWindow) => { reload(); }
+                },
+                {
+                    id: "quit",
+                    label: t("menu.quit"),
+                    accelerator: "CmdOrCtrl+Q",
+                    click: (item, focusedWindow) => { win.send("stopAndExit"); }
+                }
+            ]
+        },
+        {
+            id: "media",
+            label: t("menu.media"),
+            submenu: [
+                {
+                    id: "start",
+                    label: t("menu.start"),
+                    click: (item, focusedWindow) => { win.send("start"); }
+                },
+                {
+                    id: "stop",
+                    label: t("menu.stop"),
+                    accelerator: "CmdOrCtrl+D",
+                    enabled: false,
+                    click: (item, focusedWindow) => { win.send("stop"); }
+                }
+            ]
+        },
+        {
+            id: "view",
+            label: t("menu.view"),
+            submenu: [
+                {
+                    id: "progress",
+                    label: t("menu.progress"),
+                    enabled: false,
+                    click: (item, focusedWindow) => { switchToProgressMode(); }
+                },
+                { type: "separator" },
+                {
+                    id: "theme",
+                    label: t("menu.theme"),
+                    submenu: [
+                        {
+                            id: "lightMode",
+                            label: t("menu.lightMode"),
+                            type: "radio",
+                            click: (item, focusedWindow) => { setTheme("light"); }
+                        },
+                        {
+                            id: "darkMode",
+                            label: t("menu.darkMode"),
+                            type: "radio",
+                            click: (item, focusedWindow) => { setTheme("dark"); }
+                        }
+                    ]
+                },
+                {
+                    id: "language",
+                    label: t("menu.language"),
+                    submenu: [
+                        {
+                            id: "lang.en",
+                            label: "English",
+                            type: "radio",
+                            checked: i18next.language === "en",
+                            click: (item, focusedWindow) => { changeLanguage("en"); }
+                        },
+                        {
+                            id: "lang.it",
+                            label: "Italiano",
+                            type: "radio",
+                            checked: i18next.language === "it",
+                            click: (item, focusedWindow) => { changeLanguage("it"); }
+                        }
+                    ]
+                },
+                { type: "separator" },
+                {
+                    id: "cleanShell",
+                    label: t("menu.cleanShell"),
+                    click: (item, focusedWindow) => { win.send("cleanShell"); }
+                },
+                {
+                    id: "toggleDevTools",
+                    label: t("menu.toggleDevTools"),
+                    accelerator: (() => {
+                        return (process.platform === "darwin") ? "Alt+Command+I" : "Ctrl+Shift+I"
+                    })(),
+                    click: async (item, focusedWindow) => { win.toggleDevTools(); }
+                }
+            ]
+        },
+        {
+            id: "help",
+            label: t("menu.help"),
+            role: "help",
+            submenu: [
+                {
+                    id: "version",
+                    label: t("menu.version") + " " + version,
+                    enabled: false
+                },
+                {
+                    id: "update",
+                    label: t("menu.update"),
+                    visible: false,
+                    click: async (item, focusedWindow) => { update.show(); }
+                },
+                { type: "separator" },
+                {
+                    id: "about",
+                    label: t("menu.about"),
+                    click: async (item, focusedWindow) => { showAbout(); }
+                },
+                {
+                    id: "license",
+                    label: t("menu.license"),
+                    click: async (item, focusedWindow) => { showLicense(); }
+                },
+                { type: "separator" },
+                {
+                    id: "issue",
+                    label: t("menu.issue"),
+                    click: async (item, focusedWindow) => { shell.openExternal("https://github.com/padvincenzo/silence-speedup/issues"); }
+                },
+                {
+                    id: "ref",
+                    label: t("menu.ref"),
+                    submenu:
+                        [
+                            {
+                                id: "sourceCode",
+                                label: t("menu.sourceCode"),
+                                click: async (item, focusedWindow) => { shell.openExternal("https://github.com/padvincenzo/silence-speedup"); }
+                            },
+                            {
+                                id: "ffmpeg",
+                                label: t("menu.ffmpeg"),
+                                click: async (item, focusedWindow) => { shell.openExternal("https://ffmpeg.org/"); }
+                            },
+                            {
+                                id: "electron",
+                                label: t("menu.electron"),
+                                click: async (item, focusedWindow) => { shell.openExternal("https://www.electronjs.org/"); }
+                            }
+                        ]
+                }
+            ]
+        }
+    ];
 
-    langLabels = require(langPath);
-    template = require(path.join(__dirname, "src", "menu", "template.js"))(langLabels, version);
     menu = Menu.buildFromTemplate(template);
 
     // Check current settings
     setTheme();
-    menu.getMenuItemById(`lang_${lang}`).checked = true;
-
-    // Set click functions
-    menu.getMenuItemById("openFile").click = (item, focusedWindow) => { openFile(); };
-    menu.getMenuItemById("openFolder").click = (item, focusedWindow) => { openFolder(); };
-    menu.getMenuItemById("preferences").click = () => { showPreferences(); };
-    menu.getMenuItemById("restart").click = () => { reload(); };
-    menu.getMenuItemById("quit").click = (item, focusedWindow) => { win.send("stopAndExit"); };
-    menu.getMenuItemById("start").click = () => { win.send("start"); };
-    menu.getMenuItemById("stop").click = () => { win.send("stop"); };
-    menu.getMenuItemById("progress").click = () => { switchToProgressMode(); };
-    menu.getMenuItemById("lightMode").click = () => { setTheme("light"); };
-    menu.getMenuItemById("darkMode").click = () => { setTheme("dark"); };
-    menu.getMenuItemById("lang_EN").click = () => { setupMenu("EN"); };
-    menu.getMenuItemById("lang_IT").click = () => { setupMenu("IT"); };
-    menu.getMenuItemById("cleanShell").click = () => { win.send("cleanShell"); };
-    menu.getMenuItemById("toggleDevTools").click = async () => { win.toggleDevTools(); };
-    menu.getMenuItemById("update").click = async () => { update.show(); };
-    menu.getMenuItemById("about").click = async () => { showAbout(); };
-    menu.getMenuItemById("license").click = async () => { showLicense(); };
-    menu.getMenuItemById("issue").click = async () => { shell.openExternal("https://github.com/padvincenzo/silence-speedup/issues"); };
-    menu.getMenuItemById("sourceCode").click = async () => { shell.openExternal("https://github.com/padvincenzo/silence-speedup"); };
-    menu.getMenuItemById("ffmpeg").click = async () => { shell.openExternal("https://ffmpeg.org/"); };
-    menu.getMenuItemById("electron").click = async () => { shell.openExternal("https://www.electronjs.org/"); };
 
     menuEnabler();
 
@@ -248,10 +399,19 @@ function setTheme(theme = null) {
     }
 }
 
-function loadApp() {
-    let locale = app.getLocale();
-    let initialLang = (locale == "it" || locale == "it-IT") ? "IT" : "EN";
-    setupMenu(initialLang);
+async function loadApp() {
+    await i18next
+        .use(Backend)
+        .init({
+            backend: {
+                loadPath: path.join(__dirname, "locales/{{lng}}/translation.json")
+            },
+            lng: app.getLocale(), // localStorage.getItem("language") || app.getLocale(),
+            fallbackLng: "en",
+            preload: ["en", "it"]
+        });
+
+    setupMenu();
     createWindows();
     checkUpdates();
 }
@@ -262,6 +422,12 @@ function reload() {
     about.reload();
     progress.reload();
     checkUpdates();
+}
+
+async function changeLanguage(lang) {
+    await i18next.changeLanguage(lang);
+    // localStorage.setItem("language", lang);
+    setupMenu();
 }
 
 // This method will be called when Electron has finished
