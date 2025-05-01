@@ -156,6 +156,7 @@ module.exports = class Entry {
     prepare() {
         this.status = "Queued";
         this.#removeBtn.style.display = "none";
+        this.#demoBtn.style.display = "none";
         this.#ref.setAttribute("class", "");
 
         this.#silenceTS = { start: [], end: [] };
@@ -171,6 +172,7 @@ module.exports = class Entry {
         this.#ref.setAttribute("class", "bg-warning text-dark");
         this.#status.innerHTML = err;
         this.#removeBtn.style.display = "inline-block";
+        this.#demoBtn.style.display = "inline-block";
     }
 
     appendTS(i, ts, offset) {
@@ -210,6 +212,7 @@ module.exports = class Entry {
         this.status = "Completed";
         Shell.success(`${this.#outputName} completed.`);
         this.#removeBtn.style.display = "inline-block";
+        this.#demoBtn.style.display = "inline-block";
     }
 
     static getNameFromUrl(url) {
