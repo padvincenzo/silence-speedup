@@ -16,7 +16,7 @@ frequently or speaks slowly.
 
 ## 📦 Download
 
-Latest release: **v1.2.5**
+Latest release: **v2.0.0**
 
 - [Windows (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v2.0.0/Silence-SpeedUp-win32-x64.zip)
 - [macOS (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v2.0.0/Silence-SpeedUp-darwin-x64.zip)
