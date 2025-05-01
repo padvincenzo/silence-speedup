@@ -11,8 +11,6 @@ frequently or speaks slowly.
 
 ![Homescreen](assets/screenshots/homescreen.png)
 
-> Also available in: [Italiano](docs/README.it.md)
-
 ---
 
 ## 📦 Download
