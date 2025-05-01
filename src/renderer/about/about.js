@@ -34,7 +34,7 @@ function updateTexts() {
         case "darwin":
         case "win32":
         case "linux":
-            readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
+            readmePath = path.join(__dirname, "../../../assets/ffmpeg", "readme.html");
             fs.readFile(readmePath, { encoding: "utf-8" }, (err, data) => {
                 if (err) {
                     div.innerHTML = t("ffmpeg.errorReadme");

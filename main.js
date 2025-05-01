@@ -18,7 +18,7 @@ const Backend = require("i18next-fs-backend");
 const { t } = require("i18next");
 
 const version = app.getVersion();
-const icon = path.join(__dirname, "icon.png");
+const icon = path.join(__dirname, "assets/icons/icon.png");
 
 // App Menu
 let menu;
