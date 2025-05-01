@@ -46,7 +46,6 @@ silence-speedup/
 ├── main.js              # Electron main process
 ├── src/
 |   |── classes/         # App classes
-|   |── menu/            # App menu structure
 |   |── renderer/        # Frontend (UI) files
 ├── assets/              # Icons and screenshots
 ├── docs/                # Documentation
