@@ -12,6 +12,7 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const { initI18n, i18next, t } = require("../../i18n");
 
 const configPath = path.join(__dirname, "..", "..", "..", "config.json");
 const configPathDefaults = path.join(__dirname, "..", "..", "..", "config.json.example");
@@ -20,7 +21,12 @@ const defaultFFmpegPath = path.join(__dirname, "..", "..", "ffmpeg", (os.type() 
 
 let data;
 
-window.onload = () => {
+ipcRenderer.on("languageChanged", async (event, lang) => {
+    await i18next.changeLanguage(lang);
+    updateTexts();
+});
+
+window.onload = async () => {
     if (!fs.existsSync(configPath)) {
         // Copy initial configuration.
         fs.copyFileSync(configPathDefaults, configPath);
@@ -56,6 +62,11 @@ window.onload = () => {
         getData();
         saveData();
     });
+
+    const { language } = ipcRenderer.sendSync("getInitialData");
+    await initI18n(language);
+
+    updateTexts();
 };
 
 function setData() {
@@ -88,4 +99,11 @@ function saveData() {
     fs.writeFileSync(configPath,
         JSON.stringify(data, null, "\t"),
         { encoding: "utf-8" });
+}
+
+function updateTexts() {
+    const elements = document.querySelectorAll("span[class^='i18n']");
+    elements.forEach(el => {
+        el.innerHTML = t(el.className.replace("i18n-", "").replace("-", "."));
+    });
 }
