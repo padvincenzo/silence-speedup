@@ -11,7 +11,6 @@ frequently or speaks slowly.
 
 ![Homescreen](assets/screenshots/homescreen.png)
 
----
 
 ## 📦 Download
 
@@ -21,7 +20,6 @@ Latest release: **v1.2.5**
 - [macOS (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-darwin-x64.zip)
 - [Linux (x64)](https://github.com/padvincenzo/silence-speedup/releases/download/v1.2.5/Silence-SpeedUp-v1.2.5-linux-x64.zip)
 
----
 
 ## 🚀 Getting Started
 
@@ -34,7 +32,6 @@ The app will detect silence, process each section, and generate a shortened vers
 
 > For detailed instructions, see [`docs/usage.md`](docs/usage.md)
 
----
 
 ## ✨ Key Features
 
@@ -44,7 +41,6 @@ The app will detect silence, process each section, and generate a shortened vers
 - 💻 **Cross-platform** — works on Windows, macOS, and Linux
 - ⚡ **Fast processing** — powered by efficient FFmpeg commands
 
----
 
 ## 🛠 Requirements
 
@@ -55,7 +51,6 @@ The app will detect silence, process each section, and generate a shortened vers
 
 > For development and build instructions, see [`docs/development.md`](docs/development.md)
 
----
 
 ## 🤝 Contributing
 
@@ -65,15 +60,14 @@ You're welcome to contribute by:
 - Suggesting improvements
 - Implementing new features
 - Sharing the project with others
+- [Buying me a coffe](https://paypal.me/VincenzoPadula)
 
----
 
 ## 📜 Credits
 
 This software uses [FFmpeg](https://ffmpeg.org/) under the **GPLv3** license.  
 The graphical interface is built using [Electron](https://www.electronjs.org/).
 
----
 
 ## 📚 Additional documentation:
 - [Usage Guide](docs/usage.md)
