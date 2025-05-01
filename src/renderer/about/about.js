@@ -47,4 +47,9 @@ function updateTexts() {
         default:
             div.innerHTML = t("ffmpeg.missing");
     }
+
+    const elements = document.querySelectorAll("[class^='i18n']");
+    elements.forEach(el => {
+        el.innerHTML = t(el.className.replace("i18n-", "").replace("-", "."));
+    });
 }

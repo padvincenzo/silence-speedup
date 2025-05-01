@@ -23,102 +23,28 @@
     </p>
 
     <div class="clearfix">
-        <img id="logo" src="../../icons/icon.svg" alt="App icon" class="float-start">
-        <p>
-            Speed-up your videos by speeding-up (or removing) silences, using FFmpeg.
-            This is an electron-based app.
-        </p>
+        <img id="logo" src="../../../assets/icons/icon.svg" alt="App icon" class="float-start">
+        <p class="i18n-help-intro"></p>
     </div>
 
-    <h2 class="h2 text-center">How to use</h2>
     <p>
-        Import your videos, choose the program settings and press <b>Start</b>.
-        The app shows you the progress status, which consists of 3 steps:
-        <i>Detecting silences</i>, <i>Exporting</i> and <i>Concatenating</i>.
+        <span class="i18n-help-readme"></span>
+        <a href="https://github.com/padvincenzo/silence-speedup#readme" target="_blank">GitHub</a>
     </p>
 
-    <p>
-        Not all videos are with the same audio volume, and you may want to choose
-        which silences should be treaten as that. So, here we have the configurable
-        parts.
-    </p>
+    <h2 class="h2 text-center">
+        <span class="i18n-help-credits"></span>
+    </h2>
 
-    <h3 class="h4">Silence detect</h3>
-    <p>
-        These settings change the way FFmpeg detect silences. You can set:
-    <ul>
-        <li>
-            <p>
-                The background noise of the video (<code>Low</code> for a silent
-                room with a microphone, <code>Mid</code> for the average noisy room,
-                <code>High</code> for a noisy room).
-            </p>
-            <p><i>
-                    Note: if your are new, try a video with defaults settings and
-                    see the result.
-                </i></p>
-        </li>
-        <li>
-            <p>
-                How many seconds the smallest silence lasts (this value prevent
-                brief pauses to be treaten as silences).
-            </p>
-        </li>
-        <li>
-            <p>
-                How many seconds of silences should not be treaten as silences.
-            </p>
-            <p><i>
-                    Explaination: without a minimum time of margin, spoken words might
-                    merge and the result would be an incomprehensible speech.
-                </i></p>
-        </li>
-    </ul>
-    </p>
-
-    <h3 class="h4">Filter</h3>
-    <p>
-        With these settings you can change the speed of spoken/silence parts of
-        the video, and also set silence parts to be video-only.
-    </p>
-
-    <h3 class="h4">Export</h3>
-    <p>
-        Choose the format (extension) of your video (default is set to keep the
-        same extension as the input file). Other settings include
-        <a href="https://trac.ffmpeg.org/wiki/ChangingFrameRate"><code>FPS</code> (frame per second)</a>,
-        <code>CFR</code> and <code>preset</code> (these are settings for the
-        <a href="https://trac.ffmpeg.org/wiki/Encode/H.264">video codec <code>h264</code></a>).
-        The codec used for audio is <code>aac</code>.
-    </p>
-
-    <p><i>
-            Note: the default path of the videos (as well as temporary files) is set
-            to <code>your_home/speededup/</code>. If you want to change it,
-            press the settings button or go to <code>File->Settings</code>.
-        </i></p>
-
-    <p>
-        For more info you can visit the
-        <a href="https://github.com/padvincenzo/silence-speedup#readme" target="_blank">GitHub page</a>.
-    </p>
-
-    <h2 class="h2 text-center">Credits</h2>
-
-    <p>
-        This program comes with <b>absolutely no warranty</b>;
-        for details view license.
-    </p>
-    <p>
-        This is free software, and you are welcome to redistribute it
-        under certain conditions; for details view license.
-    </p>
+    <p class="i18n-help-license"></p>
 
     <h3 class="h4">FFmpeg</h3>
 
     <div id="ffmpeg-info"></div>
 
-    <h3 class="h4">Icons</h3>
+    <h3 class="h4">
+        <span class="i18n-help-icons"></span>
+    </h3>
 
     <p>
         Icons from <a href="https://creazilla.com/" target="_blank">creazilla.com</a>
