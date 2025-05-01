@@ -35,6 +35,7 @@
   "log.stopping": "Stopping...",
   "menu.about": "About",
   "menu.cleanShell": "Clean shell",
+  "menu.donate": "Buy me a coffe",
   "menu.electron": "Electron",
   "menu.ffmpeg": "FFmpeg",
   "menu.file": "File",

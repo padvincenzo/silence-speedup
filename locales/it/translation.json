@@ -35,6 +35,7 @@
   "log.stopping": "Interrompendo...",
   "menu.about": "Informazioni",
   "menu.cleanShell": "Svuota shell",
+  "menu.donate": "Offrimi un caffé",
   "menu.electron": "Electron",
   "menu.ffmpeg": "FFmpeg",
   "menu.file": "&File",

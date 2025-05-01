@@ -323,6 +323,11 @@ function setupMenu() {
                     label: t("menu.license"),
                     click: async (item, focusedWindow) => { showLicense(); }
                 },
+                {
+                    id: "donate",
+                    label: t("menu.donate"),
+                    click: async (item, focusedWindow) => { shell.openExternal("https://paypal.me/VincenzoPadula"); }
+                },
                 { type: "separator" },
                 {
                     id: "issue",
