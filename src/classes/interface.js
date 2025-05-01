@@ -169,7 +169,7 @@ module.exports = class Interface {
             }
 
             let c = EntryList.import(fileNames);
-            Shell.log(`Files added: ${c}`);
+            Shell.log(t("log.filesAdded", { count: c }));
         });
 
         ipcRenderer.on("selectedFolder", (event, folder) => {
@@ -181,7 +181,7 @@ module.exports = class Interface {
             var urls = list.map(name => path.join(folder[0], name));
 
             let c = EntryList.import(urls);
-            Shell.log(`Files added: ${c}`);
+            Shell.log(t("log.filesAdded", { count: c }));
         });
 
         ipcRenderer.on("start", (event) => {
@@ -195,6 +195,15 @@ module.exports = class Interface {
         ipcRenderer.on("stopAndExit", (event) => {
             SpeedUp.interrupt();
             ipcRenderer.send("quit");
+        });
+
+        Interface.updateTexts();
+    }
+
+    static updateTexts() {
+        const elements = document.querySelectorAll("span[class^='i18n']");
+        elements.forEach(el => {
+            el.innerHTML = t(el.className.replace("i18n-", "").replace("-", "."));
         });
     }
 

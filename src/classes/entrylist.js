@@ -43,7 +43,7 @@ module.exports = class EntryList {
             let extension = Entry.getExtensionFromName(name);
             if (Entry.isExtensionValid(extension)) {
                 if (EntryList.list.hasOwnProperty(name)) {
-                    Shell.log(`Cannot load ${name}: file name already exists.`);
+                    Shell.log(t("log.alreadyExists", { name: name }));
                 } else {
                     var entry = new Entry(url, name, extension);
                     EntryList.list[name] = entry;

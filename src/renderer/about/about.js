@@ -12,21 +12,39 @@ const { ipcRenderer } = require("electron");
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
+const { initI18n, i18next, t } = require("../../i18n");
 
-window.onload = () => {
-    let div = document.getElementById("ffmpeg-info");
+window.onload = async () => {
+    const { language } = ipcRenderer.sendSync("getInitialData");
+    await initI18n(language);
 
-    if (os.platform() == "darwin" || os.platform() == "win32" || os.platform() == "linux") {
-        readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
-        fs.readFile(readmePath, { encoding: 'utf-8' }, (err, data) => {
-            if (err) {
-                div.innerHTML = "Error reading readme file";
-            } else {
-                div.innerHTML = data.length == 0 ? "-" : data;
-            }
-        });
+    updateTexts();
+}
 
-    } else {
-        div.innerHTML = "FFmpeg not configured for this platform.";
+ipcRenderer.on("languageChanged", async (event, lang) => {
+    await i18next.changeLanguage(lang);
+    updateTexts();
+});
+
+function updateTexts() {
+    const div = document.getElementById("ffmpeg-info");
+    const platform = os.platform();
+
+    switch (platform) {
+        case "darwin":
+        case "win32":
+        case "linux":
+            readmePath = path.join(__dirname, "..", "..", "ffmpeg", "readme.html");
+            fs.readFile(readmePath, { encoding: "utf-8" }, (err, data) => {
+                if (err) {
+                    div.innerHTML = t("ffmpeg.errorReadme");
+                } else {
+                    div.innerHTML = data.length == 0 ? "-" : data;
+                }
+            });
+            break;
+
+        default:
+            div.innerHTML = t("ffmpeg.missing");
     }
 }

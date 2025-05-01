@@ -207,7 +207,7 @@ module.exports = class SpeedUp {
         var len = entries.length;
 
         if (len == 0) {
-            Shell.warn("No video queued.");
+            Shell.warn(t("log.queueEmpty"));
             Interface.viewStart();
             return;
         }
@@ -270,23 +270,23 @@ module.exports = class SpeedUp {
 
     static interrupt() {
 
-        Shell.err("Stopping...");
+        Shell.err(t("log.stopping"));
         SpeedUp.interrupted = true;
         FFmpeg.interrupt();
 
         if (SpeedUp.currentEntry != null) {
-            SpeedUp.currentEntry.gotError("Interrupted");
+            SpeedUp.currentEntry.gotError(t("status.interrupted"));
             SpeedUp.currentEntry = null;
         }
 
         ipcRenderer.send("progressUpdate", "name", "");
-        ipcRenderer.send("progressUpdate", "status", "Interrupted");
+        ipcRenderer.send("progressUpdate", "status", t("status.interrupted"));
 
         Interface.viewStart();
     }
 
     static end() {
-        Shell.success("All done.");
+        Shell.success(t("log.allDone"));
         FFmpeg.update(null);
 
         Interface.setProgressBar(1);
@@ -296,7 +296,7 @@ module.exports = class SpeedUp {
     }
 
     static reportError(msg, entry) {
-        entry.gotError("Failed");
+        entry.gotError(t("status.failed"));
         Shell.err(msg);
     }
 
@@ -305,8 +305,8 @@ module.exports = class SpeedUp {
             return;
         }
 
-        entry.status = "Detecting silences...";
-        Shell.log("Detecting silences...");
+        entry.status = t("status.analyzing");
+        Shell.log(t("status.analyzing"));
 
         SpeedUp.silenceDetectOptions[6] = entry.url;
 
@@ -323,17 +323,17 @@ module.exports = class SpeedUp {
             (data) => {
                 if (data.entry.tsCheck()) {
                     if (data.entry.hasSilences()) {
-                        Shell.log(`${data.entry.silencePercentage()} % of the video detected as silence.`);
+                        Shell.log(t("log.silencePercentage", { percentage: data.entry.silencePercentage() }));
                     } else {
-                        Shell.log("No silences detected, moving on to the next.");
+                        Shell.log(t("log.noSilenceDetected"));
                     }
                     return;
                 }
 
-                SpeedUp.reportError("Data error: indexes do not match.", data.entry);
+                SpeedUp.reportError(t("log.dataError"), data.entry);
             },
             (data) => {
-                SpeedUp.reportError("Sorry, no fragments found. Moving on to the next.", data.entry);
+                SpeedUp.reportError(t("log.skipNoSilences"), data.entry);
             })
     }
 
@@ -344,8 +344,8 @@ module.exports = class SpeedUp {
 
         SpeedUp.exportOptions.playback.options[11] = SpeedUp.exportOptions.silence.options[11] = entry.url;
 
-        entry.status = "Exporting...";
-        Shell.log("Exporting...");
+        entry.status = t("status.exporting");
+        Shell.log(t("status.exporting"));
 
         SpeedUp.videoExtension = Interface.videoExtension.value == "keep"
             ? entry.extension
@@ -425,7 +425,7 @@ module.exports = class SpeedUp {
         SpeedUp.exportOptions.silence.options[SpeedUp.exportOptions.silence.index] = output;
 
         let error = await FFmpeg.run(SpeedUp.exportOptions.silence.options, { entry: entry, startTS: startTS, endTS: endTS }, null, null, (data) => {
-            Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error.`);
+            Shell.warn(t("log.fragmentError", { start: data.startTS, end: data.endTS }));
         });
 
         return error;
@@ -446,7 +446,7 @@ module.exports = class SpeedUp {
         SpeedUp.exportOptions.playback.options[SpeedUp.exportOptions.playback.index] = output;
 
         let error = await FFmpeg.run(SpeedUp.exportOptions.playback.options, { entry: entry, startTS: startTS, endTS: endTS }, null, null, (data) => {
-            Shell.warn(`Fragment [${data.startTS} - ${data.endTS} got filtering error.`);
+            Shell.warn(t("log.fragmentError", { start: data.startTS, end: data.endTS }));
         });
 
         return error;
@@ -462,13 +462,13 @@ module.exports = class SpeedUp {
             return true;
         }
 
-        entry.status = "Concatenating...";
-        Shell.log("Concatenating...");
+        entry.status = t("status.concatenating");
+        Shell.log(t("status.concatenating"));
 
         SpeedUp.concatOptions[SpeedUp.concatOptions.length - 1] = path.join(Config.data.exportPath, entry.outputName);
 
         return await FFmpeg.run(SpeedUp.concatOptions, { entry: entry }, null, null, (data) => {
-            SpeedUp.reportError("Error during concatenation.", data.entry);
+            SpeedUp.reportError(t("log.concatenationError"), data.entry);
         });
     }
 };

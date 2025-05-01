@@ -219,12 +219,12 @@ function setupMenu() {
             submenu: [
                 {
                     id: "start",
-                    label: t("menu.start"),
+                    label: t("process.start"),
                     click: (item, focusedWindow) => { win.send("start"); }
                 },
                 {
                     id: "stop",
-                    label: t("menu.stop"),
+                    label: t("process.stop"),
                     accelerator: "CmdOrCtrl+D",
                     enabled: false,
                     click: (item, focusedWindow) => { win.send("stop"); }
@@ -244,17 +244,17 @@ function setupMenu() {
                 { type: "separator" },
                 {
                     id: "theme",
-                    label: t("menu.theme"),
+                    label: t("ui.theme"),
                     submenu: [
                         {
                             id: "lightMode",
-                            label: t("menu.lightMode"),
+                            label: t("ui.lightMode"),
                             type: "radio",
                             click: (item, focusedWindow) => { setTheme("light"); }
                         },
                         {
                             id: "darkMode",
-                            label: t("menu.darkMode"),
+                            label: t("ui.darkMode"),
                             type: "radio",
                             click: (item, focusedWindow) => { setTheme("dark"); }
                         }
@@ -262,7 +262,7 @@ function setupMenu() {
                 },
                 {
                     id: "language",
-                    label: t("menu.language"),
+                    label: t("ui.language"),
                     submenu: [
                         {
                             id: "lang.en",
@@ -303,7 +303,7 @@ function setupMenu() {
             submenu: [
                 {
                     id: "version",
-                    label: t("menu.version") + " " + version,
+                    label: t("menu.version", { version: version }),
                     enabled: false
                 },
                 {
@@ -331,7 +331,7 @@ function setupMenu() {
                 },
                 {
                     id: "ref",
-                    label: t("menu.ref"),
+                    label: t("menu.references"),
                     submenu:
                         [
                             {
@@ -427,6 +427,14 @@ function reload() {
 async function changeLanguage(lang) {
     await i18next.changeLanguage(lang);
     // localStorage.setItem("language", lang);
+
+    win?.webContents.send("languageChanged", lang);
+    about?.webContents.send("languageChanged", lang);
+    progress?.webContents.send("languageChanged", lang);
+    license?.webContents.send("languageChanged", lang);
+    preferences?.webContents.send("languageChanged", lang);
+    update?.webContents.send("languageChanged", lang);
+
     setupMenu();
 }
 
@@ -497,20 +505,24 @@ function showPreferences() {
     });
 }
 
+ipcMain.on("getInitialData", (event) => {
+    event.returnValue = { language: i18next.language };
+});
+
 ipcMain.on("showPreferences", (event) => {
     showPreferences();
 });
 
 ipcMain.on("exportChoose", (event) => {
     event.returnValue = dialog.showOpenDialogSync(preferences, {
-        title: "Select where to export videos",
+        title: t("preference.chooseExportDir"),
         properties: ["openDirectory", "createDirectory"]
     });
 });
 
 ipcMain.on("ffmpegChoose", (event) => {
     event.returnValue = dialog.showOpenDialogSync(preferences, {
-        title: "Select ffmpeg executable",
+        title: t("preference.chooseFFmpegPath"),
         properties: ['openFile']
     });
 });
@@ -522,7 +534,7 @@ ipcMain.on("preferencesUpdate", (event, data) => {
 
 function openFile() {
     fileNames = dialog.showOpenDialogSync(win, {
-        title: "Select one or more videos",
+        title: t("file.openFile"),
         filters: [
             { name: "Video", extensions: ["avi", "flv", "mkv", "mov", "mp4", "webm", "wmv"] }
         ],
@@ -538,7 +550,7 @@ ipcMain.on("selectFiles", (event) => {
 
 function openFolder() {
     folder = dialog.showOpenDialogSync(win, {
-        title: "Select a folder",
+        title: t("file.openDir"),
         properties: ["openDirectory"]
     });
 
@@ -625,7 +637,7 @@ ipcMain.on("setProgressBar", (event, value) => {
 
     // Send notification on complete
     if (value == 1) {
-        new Notification({ title: "Silence SpeedUp", body: "All videos have been speeded up" }).show();
+        new Notification({ title: t("app.title"), body: t("process.completed") }).show();
     }
 });
 
@@ -640,7 +652,7 @@ nativeTheme.on("updated", (event) => {
 
 ipcMain.on("demo", (event, data) => {
     let player = new BrowserWindow({
-        title: "Silence SpeedUp Player",
+        title: t("player.title"),
         icon: icon,
         width: 800,
         height: 600,
@@ -658,7 +670,5 @@ ipcMain.on("demo", (event, data) => {
     player.once("ready-to-show", () => {
         player.send("init", data);
         player.show();
-
-        // player.webContents.openDevTools();
     });
 });

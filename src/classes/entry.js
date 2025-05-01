@@ -39,7 +39,7 @@ module.exports = class Entry {
         this.#ref.appendChild(text);
 
         this.#status = document.createElement("td");
-        this.#status.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>";
+        this.#status.innerHTML = "<div class='spinner-border spinner-border-sm' role='status'><span class='visually-hidden'>" + t("status.loading") + "</span></div>";
         this.#status.classList.add("text-start");
         this.#ref.appendChild(this.#status);
 
@@ -48,7 +48,7 @@ module.exports = class Entry {
         this.#removeBtn = document.createElement("button");
         this.#removeBtn.setAttribute("class", "btn btn-outline-danger btn-sm me-1");
         this.#removeBtn.innerHTML = "<i class='fa fa-trash'></i>";
-        this.#removeBtn.title = "Remove this video from the list";
+        this.#removeBtn.title = t("file.remove");
         this.#removeBtn.addEventListener("click", (event) => {
             EntryList.remove(this.#name);
         });
@@ -57,9 +57,8 @@ module.exports = class Entry {
         this.#demoBtn = document.createElement("button");
         this.#demoBtn.setAttribute("class", "btn btn-outline-success btn-sm me-1");
         this.#demoBtn.innerHTML = "<i class='fa fa-headphones'></i>";
-        this.#demoBtn.title = "Play a demo of the video";
+        this.#demoBtn.title = t("file.demo");
         this.#demoBtn.addEventListener("click", (event) => {
-            // EntryList.remove(this.#name);
             SpeedUp.start([this], true).then(() => {
                 let silences = this.#silenceTS.start.map((start, i) => {
                     return {
@@ -129,7 +128,7 @@ module.exports = class Entry {
 
     set duration(duration) {
         if (duration == null) {
-            this.status = "Loaded";
+            this.status = t("status.loaded", { duration: "?" });
             return;
         }
 
@@ -139,7 +138,7 @@ module.exports = class Entry {
 
         this.#duration = duration;
         this.#seconds = FFmpeg.getSecondsFromTime(duration);
-        this.status = "Loaded [" + this.#duration + "]";
+        this.status = t("status.loaded", { duration: this.#duration });
     }
 
     get duration() {
@@ -156,7 +155,7 @@ module.exports = class Entry {
     }
 
     prepare() {
-        this.status = "Queued";
+        this.status = t("status.queued");
         this.#removeBtn.style.display = "none";
         this.#demoBtn.style.display = "none";
         this.#ref.setAttribute("class", "");
@@ -166,7 +165,7 @@ module.exports = class Entry {
 
     highlight() {
         this.#ref.setAttribute("class", "");
-        Shell.log(`Started working on ${this.#name}.`);
+        Shell.log(t("log.started", { name: this.#name }));
         ipcRenderer.send("progressUpdate", "name", this.#name);
     }
 
@@ -211,8 +210,8 @@ module.exports = class Entry {
 
     finished() {
         this.#ref.setAttribute("class", "bg-success text-light");
-        this.status = "Completed";
-        Shell.success(`${this.#outputName} completed.`);
+        this.status = t("status.completed");
+        Shell.success(t("log.completed", { name: this.#outputName }));
         this.#removeBtn.style.display = "inline-block";
         this.#demoBtn.style.display = "inline-block";
     }

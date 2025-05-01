@@ -13,6 +13,7 @@ const { spawn, spawnSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
+const { initI18n, i18next, t } = require("../../i18n");
 const Shell = require("../../classes/shell.js");
 const Interface = require("../../classes/interface.js");
 const Config = require("../../classes/config.js");
@@ -21,7 +22,9 @@ const EntryList = require("../../classes/entrylist.js");
 const Entry = require("../../classes/entry.js");
 const SpeedUp = require("../../classes/speedup.js");
 
-window.onload = () => {
+window.onload = async () => {
+    const { language } = ipcRenderer.sendSync("getInitialData");
+    await initI18n(language);
     Config.load();
     Shell.load();
     Interface.load();
@@ -32,4 +35,9 @@ ipcRenderer.on("preferencesUpdate", (event, data) => {
     Config.update(data);
     Interface.update();
     FFmpeg.updateCommand();
+});
+
+ipcRenderer.on("languageChanged", async (event, lang) => {
+    await i18next.changeLanguage(lang);
+    Interface.updateTexts();
 });

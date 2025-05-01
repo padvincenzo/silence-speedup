@@ -40,7 +40,7 @@ module.exports = class FFmpeg {
         if (Config.data.ffmpegPath == "") {
             if (!fs.existsSync(Config.data.ffmpegPath)) {
                 Interface.lock();
-                Shell.warn("Please go to File->Preferences and set the path for ffmpeg.");
+                Shell.warn(t("ffmpeg.needConfiguration"));
             } else {
                 FFmpeg.command = Config.data.ffmpegPath;
             }
@@ -51,7 +51,7 @@ module.exports = class FFmpeg {
 
     static async run(args, data, onstderr, ifGood, ifBad) {
         if (FFmpeg.spawn != null) {
-            Shell.log("FFmpeg is still running; cannot run another process.");
+            Shell.log(t("ffmpeg.alreadyRunning"));
             SpeedUp.interrupted = true;
             return;
         }
@@ -170,8 +170,8 @@ module.exports = class FFmpeg {
 
         test.on("exit", (code) => {
             if (code != 0 || entry.duration == null) {
-                entry.status = "Error occurred";
-                Shell.log(`Got error while detecting duration of ${entry.name}.`);
+                entry.status = t("status.error");
+                Shell.log(t("ffmpeg.silencedetectError", { name: entry.name }));
             }
         });
     }

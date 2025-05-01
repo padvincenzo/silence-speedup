@@ -25,7 +25,7 @@ module.exports = class Config {
             fs.copyFileSync(Config.configPathDefaults, Config.configPath);
         }
 
-        let json = fs.readFileSync(Config.configPath, { encoding: 'utf-8' });
+        let json = fs.readFileSync(Config.configPath, { encoding: "utf-8" });
         Config.data = JSON.parse(json);
 
         if (Config.data.exportPath == "") {
