@@ -42,7 +42,7 @@
     "electron-packager": "^17.1.2"
   },
   "dependencies": {
-    "@xmldom/xmldom": "^0.9.6",
+    "@xmldom/xmldom": "^0.9.9",
     "agentkeepalive": "^4.6.0",
     "bootstrap": "^5.3.3",
     "decompress-zip": "^0.3.3",
