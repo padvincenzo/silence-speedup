@@ -53,7 +53,7 @@
     "hosted-git-info": "^8.0.2",
     "i18next": "^25.0.2",
     "i18next-browser-languagedetector": "^8.1.0",
-    "i18next-fs-backend": "^2.6.4",
+    "i18next-fs-backend": "^2.6.6",
     "video.js": "^8.21.0",
     "videojs-silence-speedup": "^1.1.8"
   }
