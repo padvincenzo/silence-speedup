@@ -1,7 +1,7 @@
 {
   "name": "silence-speedup",
   "productName": "Silence SpeedUp",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Speed-up your videos speeding-up (or removing) silences, using FFmpeg. This is an electron-based app.",
   "main": "main.js",
   "scripts": {
@@ -38,23 +38,18 @@
     "silences"
   ],
   "devDependencies": {
-    "electron": "^39.8.10",
-    "electron-packager": "^17.1.2"
+    "@electron/packager": "^20.3.0",
+    "electron": "^44.3.0"
   },
   "dependencies": {
-    "@xmldom/xmldom": "^0.9.12",
-    "agentkeepalive": "^4.6.0",
-    "bootstrap": "^5.3.3",
-    "decompress-zip": "^0.3.3",
-    "electron-download-manager": "^2.1.2",
-    "feed-read": "0.0.1",
+    "bootstrap": "^5.3.8",
     "font-awesome": "^4.7.0",
-    "fs-extra": "^11.3.0",
-    "hosted-git-info": "^8.0.2",
-    "i18next": "^25.0.2",
-    "i18next-browser-languagedetector": "^8.1.0",
-    "i18next-fs-backend": "^2.6.6",
-    "video.js": "^8.21.0",
+    "i18next": "^26.4.2",
+    "i18next-fs-backend": "^2.6.8",
+    "video.js": "^8.24.0",
     "videojs-silence-speedup": "^1.1.8"
+  },
+  "overrides": {
+    "videojs": "npm:video.js@^8.24.0"
   }
 }
