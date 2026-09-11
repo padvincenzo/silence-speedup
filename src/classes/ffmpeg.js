@@ -63,7 +63,12 @@ module.exports = class FFmpeg {
             if (onstderr != null) {
                 onstderr(str, data);
             }
-            FFmpeg.update(str.toString(), data.entry.seconds, data.startTS == null ? 0 : data.startTS);
+            FFmpeg.update(
+                str.toString(),
+                data.entry.seconds,
+                data.startTS == null ? 0 : data.startTS,
+                data.factor == null ? 1 : data.factor
+            );
         }
 
         // Wait until spawn has exited
@@ -112,7 +117,15 @@ module.exports = class FFmpeg {
         return hours + ":" + minutes + ":" + seconds;
     }
 
-    static update(str, duration = null, offsetCurrentTime = "0") {
+    /**
+     * Refreshes the progress readout from one line of FFmpeg's output.
+     *
+     * [factor] is how much faster than real time the fragment being encoded
+     * plays. FFmpeg reports the position it has reached in its *output*, so a
+     * ten-second silence at 8x only ever reports 1.25 seconds: without scaling
+     * it back up, the bar crawled through exactly the parts that were quickest.
+     */
+    static update(str, duration = null, offsetCurrentTime = "0", factor = 1) {
         if (str == null) {
             FFmpeg.time.innerHTML = "--:--:--.--";
             FFmpeg.speed.innerHTML = "-";
@@ -134,15 +147,16 @@ module.exports = class FFmpeg {
             return;
         }
 
-        let time = (offsetCurrentTime == "0")
-            ? progress[1]
-            : FFmpeg.getTimeFromSeconds(parseFloat(offsetCurrentTime) + FFmpeg.getSecondsFromTime(progress[1]));
-        FFmpeg.time.innerHTML = time;
+        // Where this fragment has reached, in the source file's own timeline.
+        let sourceSeconds = parseFloat(offsetCurrentTime)
+            + FFmpeg.getSecondsFromTime(progress[1]) * factor;
+
+        FFmpeg.time.innerHTML = FFmpeg.getTimeFromSeconds(sourceSeconds);
         if (progress[2] != "0x") {
             FFmpeg.speed.innerHTML = progress[2];
         }
 
-        var percentage = ((FFmpeg.getSecondsFromTime(progress[1]) + parseFloat(offsetCurrentTime)) / duration * 100);
+        var percentage = (sourceSeconds / duration * 100);
         FFmpeg.progressBar.style.width = percentage + "%";
         FFmpeg.progressBar.setAttribute("aria-valuemin", percentage);
         FFmpeg.percentage.innerHTML = percentage.toFixed(2) + " %";

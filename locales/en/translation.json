@@ -27,6 +27,7 @@
   "log.dataError": "Data error: indexes do not match.",
   "log.filesAdded": "Files added: {{count}}",
   "log.fragmentError": "Fragment [{{start}} - {{end}}] got filtering error.",
+  "log.fragmentsKept": "Fragments left in {{path}} for inspection.",
   "log.noSilenceDetected": "No silences detected, moving on to the next.",
   "log.queueEmpty": "No video queued.",
   "log.silencePercentage": "{{percentage}} % of the video detected as silence.",

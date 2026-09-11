@@ -176,12 +176,48 @@ module.exports = class Entry {
         this.#demoBtn.style.display = "inline-block";
     }
 
+    /**
+     * Records one silence boundary, trimmed by the margin.
+     *
+     * The margin moves a start later and an end earlier, so that a little
+     * audio is kept on each side of the silence and words are not clipped.
+     * It applies to every boundary: this used to skip the first entry of each
+     * list, and since starts[0] and ends[0] belong to the same silence, the
+     * first pause in every file came out a margin too wide at both ends.
+     */
     appendTS(i, ts, offset) {
-        let len = this.#silenceTS[i].push(ts);
-        if (len > 1) {
-            offset = parseFloat(offset) * ((i == "start") ? 1 : -1);
-            this.#silenceTS[i][len - 1] = (parseFloat(ts) + offset).toFixed(7);
+        let shift = parseFloat(offset) * ((i == "start") ? 1 : -1);
+        let value = parseFloat(ts) + shift;
+
+        // The margin must never push a boundary outside the media.
+        if (!(value > 0)) {
+            value = 0;
         }
+        if (this.#seconds != null && value > this.#seconds) {
+            value = this.#seconds;
+        }
+
+        this.#silenceTS[i].push(value.toFixed(7));
+    }
+
+    /**
+     * Closes a silence that runs to the end of the file.
+     *
+     * A final silence_start with no matching silence_end used to fail the
+     * whole file as a data error. Current FFmpeg closes the last silence at
+     * EOF on its own, so this is a guard rather than an everyday path, but
+     * the end of the media is the answer whenever it is not.
+     */
+    closeTrailingSilence(offset) {
+        if (this.#silenceTS.start.length != this.#silenceTS.end.length + 1) {
+            return false;
+        }
+        if (this.#seconds == null) {
+            return false;
+        }
+
+        this.appendTS("end", this.#seconds, offset);
+        return true;
     }
 
     tsCheck() {

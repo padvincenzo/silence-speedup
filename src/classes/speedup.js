@@ -35,14 +35,34 @@ module.exports = class SpeedUp {
     static playbackSpeed;
     static videoExtension;
 
+    // How much faster than real time each kind of fragment plays. Used to turn
+    // the position FFmpeg reports in its *output* back into a position in the
+    // source file, so the progress bar does not crawl through sped-up silences.
+    static silenceFactor = 1;
+    static playbackFactor = 1;
+
+    // Directory holding this entry's fragments, and the concat list inside it.
+    static runPath = null;
+    static runListPath = null;
+    static runCounter = 0;
+
     static silenceDetectOptions = [
-        "-hide_banner",   // Prevent ffmpeg initial banner                  [ 0]
-        "-dn", "-vn",     // Discard data and video                         [ 1,  2]
-        "-ss", "0.00",    // Start from 0                                   [ 3,  4]
-        "-i", null,       // Input file                                     [ 5,  6]
-        "-af", null,      // Silencedetect filter                           [ 7,  8]
-        "-f", "null",     // Output format: null (no output)                [ 9, 10]
-        "-"               // Dummy output filename                          [11]
+        "-hide_banner",     // Prevent ffmpeg initial banner                  [ 0]
+        "-dn", "-vn",       // Discard data and video                         [ 1,  2]
+        "-ss", "0.00",      // Start from 0                                   [ 3,  4]
+        "-i", null,         // Input file                                     [ 5,  6]
+        "-af", null,        // Silencedetect filter                           [ 7,  8]
+        // Detect on the first audio track, explicitly.
+        //
+        // Without this the track is whatever FFmpeg's default stream
+        // selection lands on, and that is a heuristic that has weighed
+        // channel count in the past. On a multi-track recording the first
+        // track is the voice and the rest is game or system audio, and only
+        // the voice should decide where the cuts go — so say which one rather
+        // than depend on the build of FFmpeg that happens to be installed.
+        "-map", "0:a:0",    // Detect on the first audio track                [ 9, 10]
+        "-f", "null",       // Output format: null (no output)                [11, 12]
+        "-"                 // Dummy output filename                          [13]
     ];
 
     static exportOptions = {
@@ -124,13 +144,25 @@ module.exports = class SpeedUp {
         SpeedUp.playbackSpeed = Config.data.speeds[Interface.playbackSpeed.value].text;
         SpeedUp.videoExtension = Interface.videoExtension.value;
 
+        SpeedUp.silenceFactor = SpeedUp.speedFactor(SpeedUp.silenceSpeed);
+        SpeedUp.playbackFactor = SpeedUp.speedFactor(SpeedUp.playbackSpeed);
+
         SpeedUp.silenceDetectOptions[8] = `silencedetect=n=${SpeedUp.threshold}:d=${SpeedUp.silenceMinimumDuration + 2 * SpeedUp.silenceMargin}`;
 
         SpeedUp.exportOptions.silence.options[25] = SpeedUp.exportOptions.playback.options[25] = Interface.preset.value;
         SpeedUp.exportOptions.silence.options[27] = SpeedUp.exportOptions.playback.options[27] = Interface.crf.value;
 
         // SpeedUp.concatOptions[8] = Interface.fps.value;
-        SpeedUp.concatOptions[14] = Config.fragmentListPath;
+    }
+
+    /**
+     * The numeric rate behind a speed label such as "8x".
+     *
+     * "1x" and "remove" have no rate of their own and answer 1.
+     */
+    static speedFactor(text) {
+        let value = parseFloat(text);
+        return (Number.isFinite(value) && value > 0) ? value : 1;
     }
 
     static setFilters() {
@@ -138,6 +170,17 @@ module.exports = class SpeedUp {
         SpeedUp.exportOptions.silence.options.splice(32);
         SpeedUp.exportOptions.playback.options.splice(32);
         SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.playback.index = 32;
+
+        // Take the same streams the detection pass looked at, explicitly, so
+        // the cuts and the audio they are cut from can never come from
+        // different tracks. The trailing "?" keeps a file with no video — or
+        // no audio — from failing outright.
+        SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
+            "-map", "0:v:0?", "-map", "0:a:0?"
+        );
+        SpeedUp.exportOptions.playback.index = SpeedUp.exportOptions.playback.options.push(
+            "-map", "0:v:0?", "-map", "0:a:0?"
+        );
 
         if (!SpeedUp.dropAudio) {
 
@@ -153,6 +196,13 @@ module.exports = class SpeedUp {
                 );
             }
 
+            // Muting adds volume=0 to the tempo chain, it does not replace it.
+            //
+            // This used to pass "volume=enable=0" *instead of* atempo. That
+            // muted nothing — enable is a timeline option and enable=0 turns
+            // the filter off — and losing atempo left the audio at its full
+            // length while the video was compressed, so with fragments joined
+            // by stream copy everything after them drifted out of sync.
             if (SpeedUp.silenceSpeed == "1x") {
                 SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
                     "-vf", `fps=${Interface.fps.value}`
@@ -160,13 +210,15 @@ module.exports = class SpeedUp {
 
                 if (SpeedUp.muteAudio) {
                     SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
-                        "-af", "volume=enable=0"
+                        "-af", "volume=0"
                     );
                 }
             } else {
+                let silenceAudio = Config.data.speeds[Interface.silenceSpeed.value].audio;
+
                 SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
                     "-vf", `${Config.data.speeds[Interface.silenceSpeed.value].video},fps=${Interface.fps.value}`,
-                    "-af", SpeedUp.muteAudio ? "volume=enable=0" : Config.data.speeds[Interface.silenceSpeed.value].audio
+                    "-af", SpeedUp.muteAudio ? `${silenceAudio},volume=0` : silenceAudio
                 );
             }
         }
@@ -255,17 +307,23 @@ module.exports = class SpeedUp {
             return;
         }
 
-        error = await SpeedUp.exportFragments(entry);
-        if (SpeedUp.interrupted || error) {
-            return;
-        }
+        let completed = false;
+        try {
+            error = await SpeedUp.exportFragments(entry);
+            if (SpeedUp.interrupted || error) {
+                return;
+            }
 
-        error = await SpeedUp.concatFragments(entry);
-        if (SpeedUp.interrupted || error) {
-            return;
-        }
+            error = await SpeedUp.concatFragments(entry);
+            if (SpeedUp.interrupted || error) {
+                return;
+            }
 
-        entry.finished();
+            entry.finished();
+            completed = true;
+        } finally {
+            SpeedUp.cleanupRun(completed);
+        }
     }
 
     static interrupt() {
@@ -321,6 +379,11 @@ module.exports = class SpeedUp {
                 }
             },
             (data) => {
+                // A recording that fades out into silence ends without a
+                // closing boundary. Close it at the end of the media rather
+                // than failing the whole file over it.
+                data.entry.closeTrailingSilence(SpeedUp.silenceMargin);
+
                 if (data.entry.tsCheck()) {
                     if (data.entry.hasSilences()) {
                         Shell.log(t("log.silencePercentage", { percentage: data.entry.silencePercentage() }));
@@ -350,7 +413,16 @@ module.exports = class SpeedUp {
         SpeedUp.videoExtension = Interface.videoExtension.value == "keep"
             ? entry.extension
             : Interface.videoExtension.value;
-        SpeedUp.stream = fs.createWriteStream(Config.fragmentListPath, { flags: 'w' });
+
+        // Each entry gets a directory of its own. The fragments used to share
+        // one folder under the export path and were never cleaned up, so two
+        // runs interrupted at the wrong moment could mix their pieces.
+        SpeedUp.runCounter += 1;
+        SpeedUp.runPath = path.join(Config.tmpPath, `run_${Date.now()}_${SpeedUp.runCounter}`);
+        fs.mkdirSync(SpeedUp.runPath, { recursive: true });
+
+        SpeedUp.runListPath = path.join(SpeedUp.runPath, "list.txt");
+        SpeedUp.stream = fs.createWriteStream(SpeedUp.runListPath, { flags: 'w' });
 
         let sf = entry.silenceTS;
         let n = sf.start.length - 1;
@@ -364,10 +436,8 @@ module.exports = class SpeedUp {
                 let number = this.count.toString().padStart(6, "0");
                 this.count += 1;
                 let name = `f_${number}.${extension}`;
-                let fragmentPath = path.join(Config.tmpPath, name);
-                if (fs.existsSync(fragmentPath)) {
-                    fs.unlinkSync(fragmentPath);
-                }
+                // The directory is new, so nothing can be in the way.
+                let fragmentPath = path.join(SpeedUp.runPath, name);
                 SpeedUp.stream.write(`file '${fragmentPath}'\n`);
                 return fragmentPath;
             }
@@ -424,7 +494,7 @@ module.exports = class SpeedUp {
         let output = counter.name(entry.outputExtension);
         SpeedUp.exportOptions.silence.options[SpeedUp.exportOptions.silence.index] = output;
 
-        let error = await FFmpeg.run(SpeedUp.exportOptions.silence.options, { entry: entry, startTS: startTS, endTS: endTS }, null, null, (data) => {
+        let error = await FFmpeg.run(SpeedUp.exportOptions.silence.options, { entry: entry, startTS: startTS, endTS: endTS, factor: SpeedUp.silenceFactor }, null, null, (data) => {
             Shell.warn(t("log.fragmentError", { start: data.startTS, end: data.endTS }));
         });
 
@@ -445,7 +515,7 @@ module.exports = class SpeedUp {
         let output = counter.name(entry.outputExtension);
         SpeedUp.exportOptions.playback.options[SpeedUp.exportOptions.playback.index] = output;
 
-        let error = await FFmpeg.run(SpeedUp.exportOptions.playback.options, { entry: entry, startTS: startTS, endTS: endTS }, null, null, (data) => {
+        let error = await FFmpeg.run(SpeedUp.exportOptions.playback.options, { entry: entry, startTS: startTS, endTS: endTS, factor: SpeedUp.playbackFactor }, null, null, (data) => {
             Shell.warn(t("log.fragmentError", { start: data.startTS, end: data.endTS }));
         });
 
@@ -453,10 +523,7 @@ module.exports = class SpeedUp {
     }
 
     static async concatFragments(entry) {
-        if (SpeedUp.stream != null) {
-            SpeedUp.stream.end();
-            SpeedUp.stream = null;
-        }
+        SpeedUp.closeStream();
 
         if (SpeedUp.interrupted) {
             return true;
@@ -465,10 +532,85 @@ module.exports = class SpeedUp {
         entry.status = t("status.concatenating");
         Shell.log(t("status.concatenating"));
 
-        SpeedUp.concatOptions[SpeedUp.concatOptions.length - 1] = path.join(Config.data.exportPath, entry.outputName);
+        SpeedUp.concatOptions[14] = SpeedUp.runListPath;
+        SpeedUp.concatOptions[SpeedUp.concatOptions.length - 1] = SpeedUp.resolveOutputPath(
+            Config.data.exportPath, entry.outputName, entry.url
+        );
 
         return await FFmpeg.run(SpeedUp.concatOptions, { entry: entry }, null, null, (data) => {
             SpeedUp.reportError(t("log.concatenationError"), data.entry);
         });
+    }
+
+    /**
+     * Picks a file name nothing is using yet.
+     *
+     * This used to write straight over whatever was already there: with the
+     * format left on "keep" and an export directory that happened to be the
+     * folder the video came from, a run overwrote its own source.
+     */
+    static resolveOutputPath(directory, fileName, sourcePath) {
+        let parsed = path.parse(fileName);
+        let candidate = path.join(directory, fileName);
+
+        for (let suffix = 1; SpeedUp.pathTaken(candidate, sourcePath); suffix++) {
+            candidate = path.join(directory, `${parsed.name} (${suffix})${parsed.ext}`);
+        }
+
+        return candidate;
+    }
+
+    static pathTaken(candidate, sourcePath) {
+        return fs.existsSync(candidate) || SpeedUp.samePath(candidate, sourcePath);
+    }
+
+    /**
+     * Compares two paths, case-insensitively where the platform is.
+     */
+    static samePath(a, b) {
+        let left = path.resolve(a);
+        let right = path.resolve(b);
+
+        if (process.platform == "win32") {
+            return left.toLowerCase() == right.toLowerCase();
+        }
+
+        return left == right;
+    }
+
+    static closeStream() {
+        if (SpeedUp.stream != null) {
+            SpeedUp.stream.end();
+            SpeedUp.stream = null;
+        }
+    }
+
+    /**
+     * Removes this entry's fragments once they are safely concatenated.
+     *
+     * Kept when anything went wrong: they are usually the only evidence of
+     * which part of the file FFmpeg choked on, so the log says where they are.
+     */
+    static cleanupRun(succeeded) {
+        SpeedUp.closeStream();
+
+        let runPath = SpeedUp.runPath;
+        SpeedUp.runPath = null;
+        SpeedUp.runListPath = null;
+
+        if (runPath == null || !fs.existsSync(runPath)) {
+            return;
+        }
+
+        if (!succeeded) {
+            Shell.log(t("log.fragmentsKept", { path: runPath }));
+            return;
+        }
+
+        try {
+            fs.rmSync(runPath, { recursive: true, force: true });
+        } catch (err) {
+            Shell.warn(t("log.fragmentsKept", { path: runPath }));
+        }
     }
 };

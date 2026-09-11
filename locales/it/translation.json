@@ -27,6 +27,7 @@
   "log.dataError": "Errore nei dati: gli indici non corrispondono.",
   "log.filesAdded": "File aggiunti: {{count}}",
   "log.fragmentError": "Errore durante l'elaborazione del frammento [{{start}} - {{end}}].",
+  "log.fragmentsKept": "Frammenti lasciati in {{path}} per un controllo.",
   "log.noSilenceDetected": "Nessun silenzio trovato. Passando al video successivo.",
   "log.queueEmpty": "Nessun video in coda.",
   "log.silencePercentage": "{{percentage}} % del video riconosciuto come silenzio.",

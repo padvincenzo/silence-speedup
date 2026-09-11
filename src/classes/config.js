@@ -14,8 +14,9 @@ module.exports = class Config {
 
     static defaultExportPath = path.join(os.homedir(), "speededup");
     static defaultFFmpegPath = path.join(__dirname, "../../assets/ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
+    // Fragments live in a per-run directory under here, each with its own
+    // concat list, so an interrupted run cannot leave pieces for the next one.
     static tmpPath = path.join(Config.defaultExportPath, "tmp");
-    static fragmentListPath = path.join(Config.tmpPath, "list.txt");
 
     static data = null;
 
