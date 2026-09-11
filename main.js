@@ -12,7 +12,7 @@ const { BrowserWindow, Menu, app, shell, dialog, ipcMain, nativeTheme, Notificat
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
-const feed = require("feed-read");
+const https = require("https");
 const i18next = require("i18next");
 const Backend = require("i18next-fs-backend");
 const { t } = require("i18next");
@@ -393,16 +393,69 @@ function compareVersions(a, b) {
     return 0;
 }
 
+const releasesUrl = "https://github.com/padvincenzo/silence-speedup/releases";
+const releasesFeedUrl = releasesUrl + ".atom";
+
+// Newest <entry> of an Atom feed, or null if it cannot be read. GitHub
+// redirects this URL, so redirects are followed.
+function fetchLatestRelease(url, callback, redirects = 0) {
+    const request = https.get(
+        url,
+        { headers: { "User-Agent": "silence-speedup", "Accept": "application/atom+xml" } },
+        (response) => {
+            const location = response.headers.location;
+            if (response.statusCode >= 300 && response.statusCode < 400 && location) {
+                response.resume();
+                return redirects < 3
+                    ? fetchLatestRelease(location, callback, redirects + 1)
+                    : callback(null);
+            }
+
+            if (response.statusCode != 200) {
+                response.resume();
+                return callback(null);
+            }
+
+            let body = "";
+            response.setEncoding("utf8");
+            response.on("data", (chunk) => { body += chunk; });
+            response.on("end", () => { callback(parseLatestRelease(body)); });
+        }
+    );
+
+    request.on("error", () => { callback(null); });
+    request.setTimeout(8000, () => { request.destroy(); });
+}
+
+function parseLatestRelease(xml) {
+    const entry = /<entry>([\s\S]*?)<\/entry>/.exec(xml);
+    if (entry == null) {
+        return null;
+    }
+
+    const title = /<title[^>]*>([\s\S]*?)<\/title>/.exec(entry[1]);
+    if (title == null) {
+        return null;
+    }
+
+    const link = /<link[^>]*href="([^"]+)"/.exec(entry[1]);
+    const content = /<content[^>]*>([\s\S]*?)<\/content>/.exec(entry[1]);
+
+    return {
+        title: title[1].trim(),
+        content: content == null ? "" : content[1],
+        link: link == null ? releasesUrl : link[1]
+    };
+}
+
 function checkUpdates() {
-    feed("https://github.com/padvincenzo/silence-speedup/releases.atom", (err, articles) => {
-        if (err) {
+    fetchLatestRelease(releasesFeedUrl, (release) => {
+        if (release == null || compareVersions(release.title, version) <= 0) {
             return;
         }
 
-        if (compareVersions(articles[0].title, version) > 0) {
-            update.send("data", articles[0].title, articles[0].content, articles[0].link);
-            menu.getMenuItemById("update").visible = true;
-        }
+        update.send("data", release.title, release.content, release.link);
+        menu.getMenuItemById("update").visible = true;
     });
 }
 
