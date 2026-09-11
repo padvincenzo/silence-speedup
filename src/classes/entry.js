@@ -176,12 +176,34 @@ module.exports = class Entry {
         this.#demoBtn.style.display = "inline-block";
     }
 
+    // Trims the boundary by the margin: a start moves later, an end earlier,
+    // so words either side of the silence are not clipped.
     appendTS(i, ts, offset) {
-        let len = this.#silenceTS[i].push(ts);
-        if (len > 1) {
-            offset = parseFloat(offset) * ((i == "start") ? 1 : -1);
-            this.#silenceTS[i][len - 1] = (parseFloat(ts) + offset).toFixed(7);
+        let shift = parseFloat(offset) * ((i == "start") ? 1 : -1);
+        let value = parseFloat(ts) + shift;
+
+        // The margin must not push a boundary outside the media.
+        if (!(value > 0)) {
+            value = 0;
         }
+        if (this.#seconds != null && value > this.#seconds) {
+            value = this.#seconds;
+        }
+
+        this.#silenceTS[i].push(value.toFixed(7));
+    }
+
+    // Closes a silence left open at EOF, rather than failing the file.
+    closeTrailingSilence(offset) {
+        if (this.#silenceTS.start.length != this.#silenceTS.end.length + 1) {
+            return false;
+        }
+        if (this.#seconds == null) {
+            return false;
+        }
+
+        this.appendTS("end", this.#seconds, offset);
+        return true;
     }
 
     tsCheck() {

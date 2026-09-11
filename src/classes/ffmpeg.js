@@ -63,7 +63,12 @@ module.exports = class FFmpeg {
             if (onstderr != null) {
                 onstderr(str, data);
             }
-            FFmpeg.update(str.toString(), data.entry.seconds, data.startTS == null ? 0 : data.startTS);
+            FFmpeg.update(
+                str.toString(),
+                data.entry.seconds,
+                data.startTS == null ? 0 : data.startTS,
+                data.factor == null ? 1 : data.factor
+            );
         }
 
         // Wait until spawn has exited
@@ -112,7 +117,9 @@ module.exports = class FFmpeg {
         return hours + ":" + minutes + ":" + seconds;
     }
 
-    static update(str, duration = null, offsetCurrentTime = "0") {
+    // factor scales FFmpeg's output position back onto the source timeline:
+    // a silence at 8x reports an eighth of the ground it actually covered.
+    static update(str, duration = null, offsetCurrentTime = "0", factor = 1) {
         if (str == null) {
             FFmpeg.time.innerHTML = "--:--:--.--";
             FFmpeg.speed.innerHTML = "-";
@@ -134,15 +141,15 @@ module.exports = class FFmpeg {
             return;
         }
 
-        let time = (offsetCurrentTime == "0")
-            ? progress[1]
-            : FFmpeg.getTimeFromSeconds(parseFloat(offsetCurrentTime) + FFmpeg.getSecondsFromTime(progress[1]));
-        FFmpeg.time.innerHTML = time;
+        let sourceSeconds = parseFloat(offsetCurrentTime)
+            + FFmpeg.getSecondsFromTime(progress[1]) * factor;
+
+        FFmpeg.time.innerHTML = FFmpeg.getTimeFromSeconds(sourceSeconds);
         if (progress[2] != "0x") {
             FFmpeg.speed.innerHTML = progress[2];
         }
 
-        var percentage = ((FFmpeg.getSecondsFromTime(progress[1]) + parseFloat(offsetCurrentTime)) / duration * 100);
+        var percentage = (sourceSeconds / duration * 100);
         FFmpeg.progressBar.style.width = percentage + "%";
         FFmpeg.progressBar.setAttribute("aria-valuemin", percentage);
         FFmpeg.percentage.innerHTML = percentage.toFixed(2) + " %";

@@ -370,16 +370,36 @@ function setupMenu() {
     Menu.setApplicationMenu(menu);
 }
 
+// Compares dotted versions component by component; positive when a is newer.
+// A leading "v" and any suffix are ignored, and a missing component is zero.
+function compareVersions(a, b) {
+    const components = (value) => {
+        let match = /(\d+(?:\.\d+)*)/.exec(String(value));
+        return match == null
+            ? [0]
+            : match[1].split(".").map((part) => parseInt(part, 10) || 0);
+    };
+
+    let left = components(a);
+    let right = components(b);
+
+    for (let i = 0; i < left.length || i < right.length; i++) {
+        let difference = (left[i] || 0) - (right[i] || 0);
+        if (difference != 0) {
+            return difference;
+        }
+    }
+
+    return 0;
+}
+
 function checkUpdates() {
     feed("https://github.com/padvincenzo/silence-speedup/releases.atom", (err, articles) => {
         if (err) {
             return;
         }
 
-        let currentVersion = parseInt(version.replace(/v|\./g, ""));
-        let latestVersion = parseInt(articles[0].title.replace(/v|\./g, ""));
-
-        if (latestVersion > currentVersion) {
+        if (compareVersions(articles[0].title, version) > 0) {
             update.send("data", articles[0].title, articles[0].content, articles[0].link);
             menu.getMenuItemById("update").visible = true;
         }

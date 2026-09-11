@@ -15,7 +15,6 @@ module.exports = class Config {
     static defaultExportPath = path.join(os.homedir(), "speededup");
     static defaultFFmpegPath = path.join(__dirname, "../../assets/ffmpeg", (os.type() == "Windows_NT" ? "ffmpeg.exe" : "ffmpeg"));
     static tmpPath = path.join(Config.defaultExportPath, "tmp");
-    static fragmentListPath = path.join(Config.tmpPath, "list.txt");
 
     static data = null;
 
