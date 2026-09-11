@@ -156,8 +156,6 @@ module.exports = class SpeedUp {
         SpeedUp.exportOptions.playback.options.splice(32);
         SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.playback.index = 32;
 
-        // The same streams detection read, so cuts and audio cannot come from
-        // different tracks. "?" tolerates a missing one.
         SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
             "-map", "0:v:0?", "-map", "0:a:0?"
         );
