@@ -49,8 +49,6 @@ module.exports = class SpeedUp {
         "-ss", "0.00",      // Start from 0                                   [ 3,  4]
         "-i", null,         // Input file                                     [ 5,  6]
         "-af", null,        // Silencedetect filter                           [ 7,  8]
-        // Pinned, not left to FFmpeg's default pick: on a multi-track
-        // recording the cuts must follow the voice.
         "-map", "0:a:0",    // Detect on the first audio track                [ 9, 10]
         "-f", "null",       // Output format: null (no output)                [11, 12]
         "-"                 // Dummy output filename                          [13]
