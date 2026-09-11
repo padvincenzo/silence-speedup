@@ -370,17 +370,8 @@ function setupMenu() {
     Menu.setApplicationMenu(menu);
 }
 
-/**
- * Compares two dotted version strings, component by component.
- *
- * Returns a positive number when a is newer than b. A leading "v" and any
- * pre-release suffix are ignored, and a missing component counts as zero, so
- * "1.2" and "1.2.0" are the same version.
- *
- * This used to strip the dots and parse the rest as a single integer, which
- * turned "2.1.0" into 210 and "2.0.10" into 2010 — and so announced an update
- * to a release that was actually older.
- */
+// Compares dotted versions component by component; positive when a is newer.
+// A leading "v" and any suffix are ignored, and a missing component is zero.
 function compareVersions(a, b) {
     const components = (value) => {
         let match = /(\d+(?:\.\d+)*)/.exec(String(value));

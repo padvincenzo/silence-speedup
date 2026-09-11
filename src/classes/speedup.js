@@ -35,13 +35,10 @@ module.exports = class SpeedUp {
     static playbackSpeed;
     static videoExtension;
 
-    // How much faster than real time each kind of fragment plays. Used to turn
-    // the position FFmpeg reports in its *output* back into a position in the
-    // source file, so the progress bar does not crawl through sped-up silences.
+    // Rate of each fragment, for the progress readout.
     static silenceFactor = 1;
     static playbackFactor = 1;
 
-    // Directory holding this entry's fragments, and the concat list inside it.
     static runPath = null;
     static runListPath = null;
     static runCounter = 0;
@@ -52,14 +49,8 @@ module.exports = class SpeedUp {
         "-ss", "0.00",      // Start from 0                                   [ 3,  4]
         "-i", null,         // Input file                                     [ 5,  6]
         "-af", null,        // Silencedetect filter                           [ 7,  8]
-        // Detect on the first audio track, explicitly.
-        //
-        // Without this the track is whatever FFmpeg's default stream
-        // selection lands on, and that is a heuristic that has weighed
-        // channel count in the past. On a multi-track recording the first
-        // track is the voice and the rest is game or system audio, and only
-        // the voice should decide where the cuts go — so say which one rather
-        // than depend on the build of FFmpeg that happens to be installed.
+        // Pinned, not left to FFmpeg's default pick: on a multi-track
+        // recording the cuts must follow the voice.
         "-map", "0:a:0",    // Detect on the first audio track                [ 9, 10]
         "-f", "null",       // Output format: null (no output)                [11, 12]
         "-"                 // Dummy output filename                          [13]
@@ -155,11 +146,7 @@ module.exports = class SpeedUp {
         // SpeedUp.concatOptions[8] = Interface.fps.value;
     }
 
-    /**
-     * The numeric rate behind a speed label such as "8x".
-     *
-     * "1x" and "remove" have no rate of their own and answer 1.
-     */
+    // The rate behind a label such as "8x"; 1 for "1x" and "remove".
     static speedFactor(text) {
         let value = parseFloat(text);
         return (Number.isFinite(value) && value > 0) ? value : 1;
@@ -171,10 +158,8 @@ module.exports = class SpeedUp {
         SpeedUp.exportOptions.playback.options.splice(32);
         SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.playback.index = 32;
 
-        // Take the same streams the detection pass looked at, explicitly, so
-        // the cuts and the audio they are cut from can never come from
-        // different tracks. The trailing "?" keeps a file with no video — or
-        // no audio — from failing outright.
+        // The same streams detection read, so cuts and audio cannot come from
+        // different tracks. "?" tolerates a missing one.
         SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
             "-map", "0:v:0?", "-map", "0:a:0?"
         );
@@ -196,13 +181,8 @@ module.exports = class SpeedUp {
                 );
             }
 
-            // Muting adds volume=0 to the tempo chain, it does not replace it.
-            //
-            // This used to pass "volume=enable=0" *instead of* atempo. That
-            // muted nothing — enable is a timeline option and enable=0 turns
-            // the filter off — and losing atempo left the audio at its full
-            // length while the video was compressed, so with fragments joined
-            // by stream copy everything after them drifted out of sync.
+            // volume=0 is appended to the tempo chain, never swapped for it:
+            // without atempo the audio outlives its video and the join drifts.
             if (SpeedUp.silenceSpeed == "1x") {
                 SpeedUp.exportOptions.silence.index = SpeedUp.exportOptions.silence.options.push(
                     "-vf", `fps=${Interface.fps.value}`
@@ -379,9 +359,6 @@ module.exports = class SpeedUp {
                 }
             },
             (data) => {
-                // A recording that fades out into silence ends without a
-                // closing boundary. Close it at the end of the media rather
-                // than failing the whole file over it.
                 data.entry.closeTrailingSilence(SpeedUp.silenceMargin);
 
                 if (data.entry.tsCheck()) {
@@ -414,9 +391,7 @@ module.exports = class SpeedUp {
             ? entry.extension
             : Interface.videoExtension.value;
 
-        // Each entry gets a directory of its own. The fragments used to share
-        // one folder under the export path and were never cleaned up, so two
-        // runs interrupted at the wrong moment could mix their pieces.
+        // A directory per entry, so two runs cannot mix their fragments.
         SpeedUp.runCounter += 1;
         SpeedUp.runPath = path.join(Config.tmpPath, `run_${Date.now()}_${SpeedUp.runCounter}`);
         fs.mkdirSync(SpeedUp.runPath, { recursive: true });
@@ -436,7 +411,6 @@ module.exports = class SpeedUp {
                 let number = this.count.toString().padStart(6, "0");
                 this.count += 1;
                 let name = `f_${number}.${extension}`;
-                // The directory is new, so nothing can be in the way.
                 let fragmentPath = path.join(SpeedUp.runPath, name);
                 SpeedUp.stream.write(`file '${fragmentPath}'\n`);
                 return fragmentPath;
@@ -542,13 +516,7 @@ module.exports = class SpeedUp {
         });
     }
 
-    /**
-     * Picks a file name nothing is using yet.
-     *
-     * This used to write straight over whatever was already there: with the
-     * format left on "keep" and an export directory that happened to be the
-     * folder the video came from, a run overwrote its own source.
-     */
+    // A free name in the export directory, and never the source file itself.
     static resolveOutputPath(directory, fileName, sourcePath) {
         let parsed = path.parse(fileName);
         let candidate = path.join(directory, fileName);
@@ -564,9 +532,6 @@ module.exports = class SpeedUp {
         return fs.existsSync(candidate) || SpeedUp.samePath(candidate, sourcePath);
     }
 
-    /**
-     * Compares two paths, case-insensitively where the platform is.
-     */
     static samePath(a, b) {
         let left = path.resolve(a);
         let right = path.resolve(b);
@@ -585,12 +550,8 @@ module.exports = class SpeedUp {
         }
     }
 
-    /**
-     * Removes this entry's fragments once they are safely concatenated.
-     *
-     * Kept when anything went wrong: they are usually the only evidence of
-     * which part of the file FFmpeg choked on, so the log says where they are.
-     */
+    // Drops the fragments once concatenated; on failure keeps them and logs
+    // where, since they are the evidence of what went wrong.
     static cleanupRun(succeeded) {
         SpeedUp.closeStream();
 

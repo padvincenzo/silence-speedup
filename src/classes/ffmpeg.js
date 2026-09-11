@@ -117,14 +117,8 @@ module.exports = class FFmpeg {
         return hours + ":" + minutes + ":" + seconds;
     }
 
-    /**
-     * Refreshes the progress readout from one line of FFmpeg's output.
-     *
-     * [factor] is how much faster than real time the fragment being encoded
-     * plays. FFmpeg reports the position it has reached in its *output*, so a
-     * ten-second silence at 8x only ever reports 1.25 seconds: without scaling
-     * it back up, the bar crawled through exactly the parts that were quickest.
-     */
+    // factor scales FFmpeg's output position back onto the source timeline:
+    // a silence at 8x reports an eighth of the ground it actually covered.
     static update(str, duration = null, offsetCurrentTime = "0", factor = 1) {
         if (str == null) {
             FFmpeg.time.innerHTML = "--:--:--.--";
@@ -147,7 +141,6 @@ module.exports = class FFmpeg {
             return;
         }
 
-        // Where this fragment has reached, in the source file's own timeline.
         let sourceSeconds = parseFloat(offsetCurrentTime)
             + FFmpeg.getSecondsFromTime(progress[1]) * factor;
 
