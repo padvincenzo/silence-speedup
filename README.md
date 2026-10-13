@@ -211,6 +211,14 @@ The app itself contains **no AI**, and sends nothing anywhere: the silences are
 found by measuring the audio level with FFmpeg's `silencedetect`, which is a
 threshold and a stopwatch, not a model.
 
+## Privacy
+
+Videos are processed on your computer and never leave it. There are no
+accounts, no analytics and no tracking. The only connection the app makes is
+the update check of the GitHub version, which reads the public list of
+releases; the Store version does not make it. The details are in the
+[privacy policy](https://www.vincenzopadula.it/silence-speedup-privacy-policy/).
+
 ## Licence
 
 GPLv3 or later. Copyright (C) 2026 Vincenzo Padula.

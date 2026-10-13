@@ -219,6 +219,19 @@ The credits also state that the code was written with AI assistance, and — the
 part a reader of that phrase actually wants — that the app contains no AI and
 sends nothing anywhere. Keep both halves if you touch that wording.
 
+### The privacy policy describes the code
+
+A published privacy policy, at
+<https://www.vincenzopadula.it/silence-speedup-privacy-policy/> and linked
+from the README and the Store listing, says exactly what the app does with
+data. Today that is three things: the GitHub build's one network request
+(the release feed, absent from a Store build), the preferences file, and
+temporary fragments that are deleted after a successful run. The log is
+kept in memory only. Anything that adds to that list makes the policy
+false: a new request, a new file kept on disk, a log written out. The
+policy lives on the author's site, not in this repository, so say so
+when proposing such a change, and the author will update it.
+
 ### A Store build is not allowed to update itself
 
 The app has two channels, from this same source. GitHub releases carry a

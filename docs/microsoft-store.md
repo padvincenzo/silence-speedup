@@ -27,7 +27,14 @@ package has to match them exactly, or the submission is rejected:
 | Store ID | `9NJ11SB1S9P5` |
 
 The first three are in `msix_config` in [pubspec.yaml](../pubspec.yaml). The
-Store ID is in `kStorePageUrl` in [lib/build_config.dart](../lib/build_config.dart).
+app does not use the Store ID: only the README links the Store page.
+
+## Listing
+
+The Store asks for a privacy policy URL. It is
+<https://www.vincenzopadula.it/silence-speedup-privacy-policy/>, in Italian
+and English. It describes what the code does, so it has to change whenever
+that does: a new network call, or anything new written to disk.
 
 ## Building a package
 
