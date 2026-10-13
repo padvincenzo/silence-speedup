@@ -9,15 +9,22 @@ what to ask it for.
 Made for lectures, interviews, podcasts and tutorials — anything where the
 speaker pauses a lot or talks slowly.
 
-**On Windows, get it from the
-[Microsoft Store](https://apps.microsoft.com/detail/9NJ11SB1S9P5).** The
-Store keeps it up to date, and the package is signed, so there are no
-warnings about an unknown publisher.
-
 Version 3 is a **rewrite in Flutter**. Versions 1.x and 2.x were an Electron
 app; their source is on the [`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron)
 branch and their builds stay on the
 [releases page](https://github.com/padvincenzo/silence-speedup/releases).
+
+## Download
+
+- **Windows and Linux, free:** from the
+  [releases page](https://github.com/padvincenzo/silence-speedup/releases).
+  The Windows installer is not signed, so Windows SmartScreen may warn about
+  an unknown publisher the first time; choose *More info → Run anyway*.
+- **Windows, from the [Microsoft Store](https://apps.microsoft.com/detail/9NJ11SB1S9P5):**
+  the same app, signed and kept up to date by the Store. It is paid, and
+  buying it is also a way to support the project.
+- **From source, on Windows or Linux:** see
+  [Building from source](#building-from-source).
 
 ---
 
@@ -105,19 +112,30 @@ Full walkthrough of every setting: [docs/usage.md](docs/usage.md).
 
 ## Requirements
 
-Nothing, for a packaged build: FFmpeg ships with the app. Windows 10 or newer,
-64-bit.
+Nothing to install alongside it: FFmpeg ships with the app.
+
+- **Windows:** 10 or newer, 64-bit.
+- **Linux:** x86_64, with GTK 3 and `xdg-desktop-portal`, which every full
+  desktop (GNOME, KDE, Xfce, ...) already has. Tested on Ubuntu 22.04 and
+  24.04, Debian 12 and Fedora 41.
 
 ### Building from source
 
-Flutter 3.47+ and, on Windows, Visual Studio 2022 with the C++ desktop
-workload — see [docs/development.md](docs/development.md).
+Every platform needs Flutter 3.47 or newer, on the stable channel.
+
+- **Windows:** Visual Studio 2022 with the *Desktop development with C++*
+  workload. The steps are in [docs/development.md](docs/development.md).
+- **Linux:** clang, CMake, Ninja, GTK 3 headers, `patchelf`, and the codec
+  libraries FFmpeg was linked against. The steps are in
+  [docs/linux.md](docs/linux.md), which also explains how to build the Linux
+  version from Windows with Docker.
+- **macOS:** not supported yet. The project has no macOS target.
 
 ```bash
 git clone https://github.com/padvincenzo/silence-speedup
 cd silence-speedup
 flutter pub get
-flutter run -d windows
+flutter run -d windows    # or: flutter run -d linux
 ```
 
 ### Packaging for the Microsoft Store

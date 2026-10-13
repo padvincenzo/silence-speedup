@@ -22,11 +22,3 @@ library;
 /// link, the licence notice GPLv3 requires, the issue tracker — stays, since
 /// those are pages, not payloads.
 const bool kStoreBuild = bool.fromEnvironment('STORE_BUILD');
-
-/// The app's page in the Microsoft Store.
-///
-/// From 3.0.1 on, Windows releases are published there and not attached to
-/// GitHub, so this is where a Windows build that came from GitHub sends
-/// someone when a newer version exists. It is a page, not a payload, and
-/// the Store does the installing.
-const String kStorePageUrl = 'https://apps.microsoft.com/detail/9NJ11SB1S9P5';
