@@ -52,6 +52,18 @@ class SilenceParseResult {
   final bool boundariesMismatched;
 }
 
+/// The boundaries `silencedetect` reported, in the order it printed them.
+class SilenceBoundaries {
+  const SilenceBoundaries(this.starts, this.ends);
+
+  final List<double> starts;
+  final List<double> ends;
+
+  /// How many boundaries were read. Of two records of the same output, the
+  /// one with more is the one that lost fewer lines.
+  int get count => starts.length + ends.length;
+}
+
 /// Pure translation of settings and detected silences into FFmpeg invocations.
 ///
 /// Kept free of I/O and of the engine's progress plumbing so the argument
@@ -112,6 +124,24 @@ class FragmentPlanner {
       '-f', 'null',
       '-',
     ];
+  }
+
+  /// Reads the silence boundaries out of what `silencedetect` printed.
+  static SilenceBoundaries parseSilences(Iterable<String> lines) {
+    final List<double> starts = <double>[];
+    final List<double> ends = <double>[];
+    for (final String line in lines) {
+      for (final RegExpMatch match in silencePattern.allMatches(line)) {
+        final double? value = double.tryParse(match.group(2)!);
+        if (value == null) continue;
+        if (match.group(1) == 'start') {
+          starts.add(value);
+        } else {
+          ends.add(value);
+        }
+      }
+    }
+    return SilenceBoundaries(starts, ends);
   }
 
   /// Reads the levels out of what `astats` printed.

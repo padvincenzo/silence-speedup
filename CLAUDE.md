@@ -166,10 +166,13 @@ It reads `FFmpegResult.output`, asked for with `collectOutput: true`, and
 **not** the lines that reached `onLine`. Log messages are delivered
 asynchronously and a session can complete with some still in flight, so a
 filter that prints its findings as it closes — `astats` prints all of them
-there — can have its entire output arrive after the run is over. Streaming
-works for `silencedetect` because that prints as it goes; it silently
-returned nothing here. Anything else that reads what FFmpeg *said* rather
-than what it wrote wants the same flag.
+there — can have its entire output arrive after the run is over. Silence
+detection reads its boundaries the same way, for the same reason. It used to
+stream them, on the theory that `silencedetect` prints as it goes. On a short
+file or a busy machine the session finished first anyway: a run kept one
+silence out of six and reported success. Both read the collected log and the
+streamed lines, and take whichever holds more. Anything else that reads what
+FFmpeg *said* rather than what it wrote wants the same treatment.
 
 It also says what it is doing: which file it is measuring, what it read, and
 when it read nothing — in the log and on the tile. A measurement that

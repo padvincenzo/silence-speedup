@@ -308,9 +308,6 @@ class SpeedupEngine {
     }
   }
 
-  /// Runs `silencedetect` over [window] and stores the ranges on the entry.
-  ///
-  /// Returns false when the entry could not be analysed.
   /// Measures how loud [entry] is, and remembers it on the entry.
   ///
   /// Not part of a run: nothing is produced, the queue is not touched, and
@@ -384,6 +381,9 @@ class SpeedupEngine {
     return kept.length <= 8 ? kept : kept.sublist(kept.length - 8);
   }
 
+  /// Runs `silencedetect` over [window] and stores the ranges on the entry.
+  ///
+  /// Returns false when the entry could not be analysed.
   Future<bool> _detectSilences({
     required MediaEntry entry,
     required ProcessingSettings settings,
@@ -394,26 +394,24 @@ class SpeedupEngine {
   }) async {
     entry.setStatus(EntryStatus.analyzing);
 
-    final List<double> starts = <double>[];
-    final List<double> ends = <double>[];
-
+    // The boundaries are read from the session's whole log, not from the
+    // lines streamed while it ran. Log messages arrive asynchronously, and
+    // a session can report itself finished with some still in flight. On a
+    // short file, or a busy machine, that was most of them: a run kept the
+    // first silence of six and sped up nothing else, without any error.
+    // The streamed lines are kept as well, as for the levels: the collected
+    // log has been known to come back empty, and of the two records the
+    // one with more boundaries is the one that lost fewer.
+    final List<String> streamed = <String>[];
     final FFmpegResult result = await _runner.run(
       FragmentPlanner.detectArguments(
         input: entry.path,
         settings: settings,
         window: isPartial ? window : null,
       ),
+      collectOutput: true,
       onLine: (String line) {
-        for (final RegExpMatch match
-            in FragmentPlanner.silencePattern.allMatches(line)) {
-          final double? value = double.tryParse(match.group(2)!);
-          if (value == null) continue;
-          if (match.group(1) == 'start') {
-            starts.add(value);
-          } else {
-            ends.add(value);
-          }
-        }
+        streamed.add(line);
         _reportFfmpegLine(line);
       },
       onProgress: (FFmpegProgress progress) => _emit(
@@ -436,9 +434,19 @@ class SpeedupEngine {
       return false;
     }
 
+    final SilenceBoundaries fromLog = FragmentPlanner.parseSilences(
+      result.output.split('\n'),
+    );
+    final SilenceBoundaries fromStream = FragmentPlanner.parseSilences(
+      streamed,
+    );
+    final SilenceBoundaries boundaries = fromLog.count >= fromStream.count
+        ? fromLog
+        : fromStream;
+
     final SilenceParseResult parsed = FragmentPlanner.buildRanges(
-      starts: starts,
-      ends: ends,
+      starts: boundaries.starts,
+      ends: boundaries.ends,
       margin: settings.silenceMargin,
       from: window.start,
       to: window.end,
