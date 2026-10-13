@@ -5,11 +5,15 @@
 - **Flutter** 3.47 or newer, on the stable channel (Dart 3.13+).
 - **Windows**: Visual Studio 2022 with the *Desktop development with C++*
   workload. `flutter doctor` will say if it is missing.
-- Network access for the **first** Windows build — the FFmpeg libraries are
+- **Linux**: a toolchain and a list of libraries of its own, described in
+  [linux.md](linux.md), together with how to build the Linux version from
+  Windows in Docker.
+- **macOS**: not supported yet. There is no `macos/` target in the project.
+- Network access for the **first** build. The FFmpeg libraries are
   downloaded then.
 
 ```bash
-flutter doctor -v      # confirm the Windows toolchain is green
+flutter doctor -v      # confirm the toolchain is green
 ```
 
 ## Running
@@ -240,11 +244,30 @@ than breaks — but the ARB test will flag it.
    A plain zip of `build/windows/x64/runner/Release/` also works as a
    portable release, as long as the whole folder is included — the FFmpeg
    DLLs beside the executable are required.
-4. Tag and publish a GitHub release. The in-app update check reads the
-   repository's `releases.atom`, so the tag must contain the version number.
-5. The Microsoft Store is a second channel for the same source, packaged as
-   MSIX and not wired up yet. [microsoft-store.md](microsoft-store.md) says
-   what is prepared and what is missing.
+4. Build the Linux bundle, and check it, with Docker Desktop:
+
+   ```powershell
+   .\installer\build-linux.ps1
+   .\installer\build-linux.ps1 e2e
+   ```
+
+   This writes `dist/silence-speedup-<version>-linux-x64.tar.gz`. See
+   [linux.md](linux.md).
+5. Publish a GitHub release with the Windows installer and the Linux bundle
+   attached. **The title must begin with the version**, `3.0.1` or `v3.0.1`.
+   Both the app and the installed 2.x Electron builds read the repository's
+   `releases.atom`, take the newest entry, and pull the version out of its
+   title. A pre-release appears in that feed too, so publishing one announces
+   it to everyone.
+6. Build the Store package and upload it in Partner Center:
+
+   ```powershell
+   .\installer\build-msix.ps1
+   ```
+
+   See [microsoft-store.md](microsoft-store.md). The Store refuses a version
+   it has already seen, which is one more reason the patch number rises for
+   every build.
 
 Because FFmpeg is bundled under the GPL, releases must keep carrying the GPLv3
 notice and offer the corresponding source.

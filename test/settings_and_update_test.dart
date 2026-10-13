@@ -6,7 +6,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:silence_speedup/build_config.dart';
 import 'package:silence_speedup/l10n/locale_controller.dart';
 import 'package:silence_speedup/models/media_entry.dart';
 import 'package:silence_speedup/models/options.dart';
@@ -258,24 +257,11 @@ void main() {
   <entry><title>v3.0.0</title></entry>
 </feed>''';
 
-    test('offers the release page, on a build with no Store to send to', () {
+    test('offers the page of the newest release', () {
       final AvailableUpdate? update = UpdateChecker.readFeed(feed, '3.0.0');
 
       expect(update?.version, '3.0.1');
       expect(update?.url, endsWith('/releases/tag/v3.0.1'));
-      expect(update?.inStore, isFalse);
-    });
-
-    test('offers the Store page instead, where Windows releases are', () {
-      // From 3.0.1 the release page has no Windows installer on it.
-      final AvailableUpdate? update = UpdateChecker.readFeed(
-        feed,
-        '3.0.0',
-        storePage: kStorePageUrl,
-      );
-
-      expect(update?.url, kStorePageUrl);
-      expect(update?.inStore, isTrue);
     });
 
     test('offers nothing when the newest release is the running one', () {

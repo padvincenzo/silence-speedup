@@ -62,9 +62,7 @@ class AboutPage extends StatelessWidget {
             _UpdateBanner(
               title: strings.menuUpdate,
               detail: strings.updateAvailable(update!.version),
-              action: update!.inStore
-                  ? strings.updateOpenStore
-                  : strings.updateDownload,
+              action: strings.updateDownload,
               onDownload: () => onOpenLink(update!.url),
             ),
 

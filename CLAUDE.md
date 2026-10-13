@@ -218,8 +218,10 @@ sends nothing anywhere. Keep both halves if you touch that wording.
 
 ### A Store build is not allowed to update itself
 
-The app is published in the Microsoft Store (Store ID 9NJ11SB1S9P5), from
-this same source, and from 3.0.1 on that is where Windows releases go.
+The app has two channels, from this same source. GitHub releases carry a
+free, unsigned Inno Setup installer for Windows and a bundle for Linux. The
+Microsoft Store (Store ID 9NJ11SB1S9P5) sells the Windows version, signed and
+kept up to date: a convenience, and a way to support the project.
 `kStoreBuild` in [lib/build_config.dart](lib/build_config.dart) —
 set with `--dart-define=STORE_BUILD=true` — switches the update check off,
 because a Store app must not look for its own updates or point anyone at an
@@ -229,12 +231,9 @@ respect the same flag. Links to pages are fine.
 Outside the Store the check **notifies and nothing more**: it says a newer
 version exists and links to its page. Do not make it download or install.
 Doing that on every operating system would be a project of its own, and
-the places the app is heading to, the Microsoft Store and a Linux store,
-already update what they install. Installers are not going to be attached to
-GitHub releases, so the notice must never assume there is a file there to
-fetch. That is why a Windows build from GitHub sends people to
-`kStorePageUrl` rather than to the release page, and its button says so
-(`AvailableUpdate.inStore`). Linux keeps the release page.
+the Store already updates what it installs. The notice links to the
+**release page on every platform**. Someone who chose the free installer is
+not sent to the paid one. That was tried for one release and taken out.
 
 The package is built by `installer/build-msix.ps1` from `msix_config` in
 pubspec.yaml. Its identity fields are the ones Partner Center issued, and

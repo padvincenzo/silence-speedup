@@ -4,7 +4,6 @@
 // Author: Vincenzo Padula <padvincenzo@gmail.com>
 // License: GNU GPL v3 or later <http://www.gnu.org/copyleft/gpl.html>
 
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:desktop_drop/desktop_drop.dart';
@@ -16,7 +15,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../build_config.dart';
 import '../l10n/gen/app_localizations.dart';
 import '../models/media_entry.dart';
 import '../models/options.dart';
@@ -76,9 +74,9 @@ class _AppShellState extends State<AppShell> {
     if (!mounted) return;
     setState(() => _version = info.version);
 
-    final AvailableUpdate? update = await UpdateChecker(
-      storePage: Platform.isWindows ? kStorePageUrl : null,
-    ).check(info.version);
+    final AvailableUpdate? update = await const UpdateChecker().check(
+      info.version,
+    );
     if (!mounted || update == null) return;
     setState(() => _update = update);
   }

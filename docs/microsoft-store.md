@@ -1,11 +1,17 @@
 # Publishing to the Microsoft Store
 
-The Microsoft Store is where the Windows version is published:
+The Windows version is sold in the Microsoft Store:
 [Silence SpeedUp](https://apps.microsoft.com/detail/9NJ11SB1S9P5), Store ID
-`9NJ11SB1S9P5`. From 3.0.1 on, Windows installers are not attached to GitHub
-releases. The Inno Setup installer
-([installer/build-installer.ps1](../installer/build-installer.ps1)) still
-builds, for anyone who wants it from source.
+`9NJ11SB1S9P5`. It is a convenience, signed and updated by the Store, and a
+way to support the project. It is not the only way to get the app. GitHub
+releases keep the free, unsigned Inno Setup installer
+([installer/build-installer.ps1](../installer/build-installer.ps1)), and the
+source builds on its own.
+
+The two channels are the same app, and they have to stay that way. A Store
+build differs only by `STORE_BUILD=true`, which switches the update check off.
+The update notice in the GitHub build points to the GitHub release, never to
+the Store.
 
 ## Identity
 

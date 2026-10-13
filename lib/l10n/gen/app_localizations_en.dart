@@ -766,7 +766,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get updateDownload => 'Download';
-
-  @override
-  String get updateOpenStore => 'Get it from the Microsoft Store';
 }

@@ -469,6 +469,5 @@
     }
   },
   "updateDetails": "Details",
-  "updateDownload": "Download",
-  "updateOpenStore": "Get it from the Microsoft Store"
+  "updateDownload": "Download"
 }
