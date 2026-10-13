@@ -32,6 +32,7 @@ flutter build windows --release     # release build
 
 ```powershell
 .\installer\build-installer.ps1     # release build + Inno Setup package into dist\
+.\installer\build-msix.ps1          # Store build (STORE_BUILD=true) + MSIX into dist\
 .\installer\build-linux.ps1         # Linux: analyse, test, build, pack (Docker)
 .\installer\build-linux.ps1 smoke   # Linux: start it on Xvfb, screenshot into dist\
 .\installer\build-linux.ps1 e2e     # Linux: process a sample through the GUI, measure it
@@ -217,8 +218,9 @@ sends nothing anywhere. Keep both halves if you touch that wording.
 
 ### A Store build is not allowed to update itself
 
-The app is heading for the Microsoft Store as well as GitHub, from this same
-source. `kStoreBuild` in [lib/build_config.dart](lib/build_config.dart) —
+The app is published in the Microsoft Store (Store ID 9NJ11SB1S9P5), from
+this same source, and from 3.0.1 on that is where Windows releases go.
+`kStoreBuild` in [lib/build_config.dart](lib/build_config.dart) —
 set with `--dart-define=STORE_BUILD=true` — switches the update check off,
 because a Store app must not look for its own updates or point anyone at an
 executable to download. Anything new that fetches or launches code has to
@@ -230,10 +232,14 @@ Doing that on every operating system would be a project of its own, and
 the places the app is heading to, the Microsoft Store and a Linux store,
 already update what they install. Installers are not going to be attached to
 GitHub releases, so the notice must never assume there is a file there to
-fetch.
+fetch. That is why a Windows build from GitHub sends people to
+`kStorePageUrl` rather than to the release page, and its button says so
+(`AvailableUpdate.inStore`). Linux keeps the release page.
 
-The packaging itself is not wired up yet; what exists and what is still
-missing is in [docs/microsoft-store.md](docs/microsoft-store.md).
+The package is built by `installer/build-msix.ps1` from `msix_config` in
+pubspec.yaml. Its identity fields are the ones Partner Center issued, and
+the Store rejects a package whose identity differs from them by a single
+character. The rest is in [docs/microsoft-store.md](docs/microsoft-store.md).
 
 ### Pages of text and settings are held to a readable width
 

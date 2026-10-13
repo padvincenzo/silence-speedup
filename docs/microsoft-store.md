@@ -1,54 +1,59 @@
 # Publishing to the Microsoft Store
 
-The GitHub release stays the primary one, built by
-[installer/build-installer.ps1](../installer/build-installer.ps1). The Store is
-a second channel for the same source, packaged as MSIX.
+The Microsoft Store is where the Windows version is published:
+[Silence SpeedUp](https://apps.microsoft.com/detail/9NJ11SB1S9P5), Store ID
+`9NJ11SB1S9P5`. From 3.0.1 on, Windows installers are not attached to GitHub
+releases. The Inno Setup installer
+([installer/build-installer.ps1](../installer/build-installer.ps1)) still
+builds, for anyone who wants it from source.
 
-**Nothing here is built yet.** This file records what is already in place and
-what is still missing, so the first packaging run is a matter of filling in
-three identity fields rather than working out what the Store wants.
+## Identity
 
-## What is already prepared
+These are the values Partner Center issued when the name was reserved. The
+package has to match them exactly, or the submission is rejected:
+
+| Field | Value |
+| --- | --- |
+| `Package/Identity/Name` | `VincenzoPadula.SilenceSpeedUp` |
+| `Package/Identity/Publisher` | `CN=3C55752B-AFD7-44A0-AAF6-D30799DC1103` |
+| `PublisherDisplayName` | `Vincenzo Padula` |
+| Package Family Name | `VincenzoPadula.SilenceSpeedUp_w2h1dsagyjgq8` |
+| Store ID | `9NJ11SB1S9P5` |
+
+The first three are in `msix_config` in [pubspec.yaml](../pubspec.yaml). The
+Store ID is in `kStorePageUrl` in [lib/build_config.dart](../lib/build_config.dart).
+
+## Building a package
+
+```powershell
+.\installer\build-msix.ps1
+```
+
+This makes a release build with `--dart-define=STORE_BUILD=true` and packs
+the whole `build\windows\x64\runner\Release` folder with the `msix` tool,
+which is a dev dependency. The result is
+`dist\SilenceSpeedUp-<version>-store.msix`, for uploading in Partner Center.
+The script packs its own build rather than letting the tool build again,
+because that would drop the Store flag.
+
+The package is not signed, because the Store signs what it publishes. It
+cannot be installed by double-clicking, and it is not meant to be.
+
+The first package, 3.0.0, has been checked: its manifest carries the
+identity above, version `3.0.0.0`, x64, English and Italian, and
+`runFullTrust` as its only capability. All the FFmpeg DLLs are inside,
+`libx264` included, and so is the licence text.
+
+## What is in place
+
 
 | Piece | Where | Note |
 | --- | --- | --- |
-| Package configuration | `msix_config` in [pubspec.yaml](../pubspec.yaml) | Inert until the `msix` tool is added; identity fields commented out |
+| Package configuration | `msix_config` in [pubspec.yaml](../pubspec.yaml) | Identity filled in, `store: true` |
 | Store logo source | [installer/msix/logo.png](../installer/msix/logo.png) | 1024x1024, rendered from `assets/icons/icon.svg`; the tool derives every tile size from it |
 | Version scheme | `version:` in pubspec | Plain `x.y.z`, patch raised every build, so the MSIX version is `x.y.z.0` — see below |
 | Store build flag | [lib/build_config.dart](../lib/build_config.dart) | `--dart-define=STORE_BUILD=true` compiles out the update check |
 | Executable metadata | [windows/runner/Runner.rc](../windows/runner/Runner.rc) | Real product name, company and copyright, which certification looks at |
-
-## What is still needed
-
-1. **A Partner Center account** and a reserved app name. Reserving the name
-   produces the three values the package is identified by, and a package whose
-   values do not match the reservation is rejected at submission:
-   - `identity_name` — e.g. `12345VincenzoPadula.SilenceSpeedUp`
-   - `publisher` — the full `CN=...` subject of the certificate the Store
-     issues to the account
-   - `publisher_display_name` — already set to `Vincenzo Padula`
-
-   Fill them into `msix_config` and uncomment `store: true`.
-
-2. **The packaging tool**:
-
-   ```powershell
-   dart pub add --dev msix
-   ```
-
-3. **A packaging run**, from a release build made with the Store flag:
-
-   ```powershell
-   flutter build windows --release --dart-define=STORE_BUILD=true
-   dart run msix:create --store
-   ```
-
-   The tool packages the whole `build\windows\x64\runner\Release` folder, which
-   is what carries the FFmpeg DLLs — the app does not start without them.
-
-   Check on the first run that `capabilities: ''` is accepted. The app needs
-   none: FFmpeg is bundled, files come from folders the user picks, and a Store
-   build never opens a socket.
 
 ## Things that decide the shape of the package
 

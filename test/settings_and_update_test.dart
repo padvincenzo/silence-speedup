@@ -6,6 +6,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:silence_speedup/build_config.dart';
 import 'package:silence_speedup/l10n/locale_controller.dart';
 import 'package:silence_speedup/models/media_entry.dart';
 import 'package:silence_speedup/models/options.dart';
@@ -246,6 +247,39 @@ void main() {
       );
 
       expect(await checker.check('0.0.1'), isNull);
+    });
+
+    const String feed = '''
+<feed>
+  <entry>
+    <title>v3.0.1</title>
+    <link rel="alternate" href="https://github.com/padvincenzo/silence-speedup/releases/tag/v3.0.1"/>
+  </entry>
+  <entry><title>v3.0.0</title></entry>
+</feed>''';
+
+    test('offers the release page, on a build with no Store to send to', () {
+      final AvailableUpdate? update = UpdateChecker.readFeed(feed, '3.0.0');
+
+      expect(update?.version, '3.0.1');
+      expect(update?.url, endsWith('/releases/tag/v3.0.1'));
+      expect(update?.inStore, isFalse);
+    });
+
+    test('offers the Store page instead, where Windows releases are', () {
+      // From 3.0.1 the release page has no Windows installer on it.
+      final AvailableUpdate? update = UpdateChecker.readFeed(
+        feed,
+        '3.0.0',
+        storePage: kStorePageUrl,
+      );
+
+      expect(update?.url, kStorePageUrl);
+      expect(update?.inStore, isTrue);
+    });
+
+    test('offers nothing when the newest release is the running one', () {
+      expect(UpdateChecker.readFeed(feed, '3.0.1'), isNull);
     });
   });
 

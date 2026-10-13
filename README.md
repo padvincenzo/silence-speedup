@@ -9,6 +9,11 @@ what to ask it for.
 Made for lectures, interviews, podcasts and tutorials — anything where the
 speaker pauses a lot or talks slowly.
 
+**On Windows, get it from the
+[Microsoft Store](https://apps.microsoft.com/detail/9NJ11SB1S9P5).** The
+Store keeps it up to date, and the package is signed, so there are no
+warnings about an unknown publisher.
+
 Version 3 is a **rewrite in Flutter**. Versions 1.x and 2.x were an Electron
 app; their source is on the [`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron)
 branch and their builds stay on the
@@ -114,6 +119,16 @@ cd silence-speedup
 flutter pub get
 flutter run -d windows
 ```
+
+### Packaging for the Microsoft Store
+
+```powershell
+.\installer\build-msix.ps1
+```
+
+The result is `dist\SilenceSpeedUp-<version>-store.msix`, for uploading in
+Partner Center. It is unsigned on purpose, because the Store signs it; see
+[docs/microsoft-store.md](docs/microsoft-store.md).
 
 ### Packaging the installer
 

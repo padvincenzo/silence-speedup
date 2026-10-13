@@ -194,5 +194,6 @@
   "uiTheme": "Tema",
   "updateAvailable": "È disponibile la versione {version}.",
   "updateDetails": "Dettagli",
-  "updateDownload": "Scarica"
+  "updateDownload": "Scarica",
+  "updateOpenStore": "Scaricala dal Microsoft Store"
 }

@@ -770,4 +770,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get updateDownload => 'Scarica';
+
+  @override
+  String get updateOpenStore => 'Scaricala dal Microsoft Store';
 }
