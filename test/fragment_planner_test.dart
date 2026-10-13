@@ -486,6 +486,32 @@ void main() {
     });
   });
 
+  group('parseSilences', () {
+    test('reads every boundary, in order, from a whole log', () {
+      final SilenceBoundaries boundaries = FragmentPlanner.parseSilences(
+        <String>[
+          'Input #0, mov,mp4,m4a,3gp,3g2,mj2, from talk.mp4:',
+          '[silencedetect @ 0x1] silence_start: 2',
+          '[silencedetect @ 0x1] silence_end: 5 | silence_duration: 3',
+          'size=N/A time=00:00:05.00 bitrate=N/A speed=180x',
+          '[silencedetect @ 0x1] silence_start: 7',
+          '[silencedetect @ 0x1] silence_end: 10 | silence_duration: 3',
+        ],
+      );
+
+      expect(boundaries.starts, <double>[2, 7]);
+      expect(boundaries.ends, <double>[5, 10]);
+      expect(boundaries.count, 4);
+    });
+
+    test('reads nothing from a log with no silence in it', () {
+      expect(
+        FragmentPlanner.parseSilences(<String>['frame=1 fps=0.0']).count,
+        0,
+      );
+    });
+  });
+
   group('silencePattern', () {
     test('reads both boundaries out of real silencedetect output', () {
       const String output =

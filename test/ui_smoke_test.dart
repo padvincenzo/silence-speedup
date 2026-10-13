@@ -4,6 +4,8 @@
 // Author: Vincenzo Padula <padvincenzo@gmail.com>
 // License: GNU GPL v3 or later <http://www.gnu.org/copyleft/gpl.html>
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -570,6 +572,42 @@ void main() {
         ),
         findsNothing,
       );
+    });
+  });
+
+  group('silence detection', () {
+    testWidgets('reads the silences from the whole log, not the stream', (
+      WidgetTester tester,
+    ) async {
+      final TestHarness harness = await TestHarness.create(
+        preferred: const Locale('en'),
+      );
+      // A file that exists, because a run skips one that has gone missing.
+      final Directory folder = Directory.systemTemp.createTempSync('ssu_');
+      addTearDown(() => folder.deleteSync(recursive: true));
+      final File video = File('${folder.path}${Platform.pathSeparator}talk.mp4')
+        ..writeAsBytesSync(<int>[0]);
+      await harness.queue.addFiles(<String>[video.path]);
+      final MediaEntry entry = harness.queue.entries.single;
+
+      // The fake streams nothing, which is what a session that finished
+      // with its log still in flight looks like from the callback: once,
+      // that kept one silence of six. Every boundary is in the log the
+      // session hands back.
+      harness.runner.output = '''
+[silencedetect @ 0x1] silence_start: 2
+[silencedetect @ 0x1] silence_end: 5 | silence_duration: 3
+[silencedetect @ 0x1] silence_start: 7
+[silencedetect @ 0x1] silence_end: 10 | silence_duration: 3
+[silencedetect @ 0x1] silence_start: 12
+[silencedetect @ 0x1] silence_end: 15 | silence_duration: 3
+''';
+
+      // Real time rather than the test clock: the run waits on futures that
+      // a frame pump would never complete.
+      await tester.runAsync(() => harness.process.analyze(entry));
+
+      expect(entry.silences, hasLength(3));
     });
   });
 
