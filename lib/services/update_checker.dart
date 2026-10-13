@@ -16,6 +16,7 @@ class AvailableUpdate {
     required this.version,
     required this.title,
     required this.url,
+    this.inStore = false,
   });
 
   /// Version as published, without a leading `v`.
@@ -26,6 +27,10 @@ class AvailableUpdate {
 
   /// Page to send the user to.
   final String url;
+
+  /// Whether [url] is the Microsoft Store rather than a release page, which
+  /// changes what the button offering it should say.
+  final bool inStore;
 }
 
 /// Checks GitHub's releases feed for a newer version.
@@ -39,6 +44,7 @@ class UpdateChecker {
         'https://github.com/padvincenzo/silence-speedup/releases.atom',
     this.timeout = const Duration(seconds: 8),
     this.enabled = !kStoreBuild,
+    this.storePage,
   });
 
   final String feedUrl;
@@ -48,6 +54,11 @@ class UpdateChecker {
   /// updates the app; the parameter exists so a test can say so too, without
   /// rebuilding with a different `--dart-define`.
   final bool enabled;
+
+  /// Where to send someone instead of the release page, when set. A Windows
+  /// build passes the Store page: Windows installers are published there,
+  /// not on GitHub, so the release page would have nothing to download.
+  final String? storePage;
 
   static final RegExp _entryPattern = RegExp(
     r'<entry>(.*?)</entry>',
@@ -68,30 +79,43 @@ class UpdateChecker {
           .get(Uri.parse(feedUrl))
           .timeout(timeout);
       if (response.statusCode != 200) return null;
-
-      final RegExpMatch? entry = _entryPattern.firstMatch(response.body);
-      if (entry == null) return null;
-
-      final String block = entry.group(1)!;
-      final String? title = _titlePattern.firstMatch(block)?.group(1)?.trim();
-      if (title == null) return null;
-
-      final String? latest = _versionPattern.firstMatch(title)?.group(1);
-      if (latest == null) return null;
-
-      if (compareVersions(latest, currentVersion) <= 0) return null;
-
-      return AvailableUpdate(
-        version: latest,
-        title: title,
-        url:
-            _linkPattern.firstMatch(block)?.group(1) ??
-            'https://github.com/padvincenzo/silence-speedup/releases',
-      );
+      return readFeed(response.body, currentVersion, storePage: storePage);
     } catch (error) {
       debugPrint('Update check failed: $error');
       return null;
     }
+  }
+
+  /// The newest release in an Atom [feed] when it is ahead of
+  /// [currentVersion], else null. Pure, so what the notice offers can be
+  /// tested without a network.
+  @visibleForTesting
+  static AvailableUpdate? readFeed(
+    String feed,
+    String currentVersion, {
+    String? storePage,
+  }) {
+    final RegExpMatch? entry = _entryPattern.firstMatch(feed);
+    if (entry == null) return null;
+
+    final String block = entry.group(1)!;
+    final String? title = _titlePattern.firstMatch(block)?.group(1)?.trim();
+    if (title == null) return null;
+
+    final String? latest = _versionPattern.firstMatch(title)?.group(1);
+    if (latest == null) return null;
+
+    if (compareVersions(latest, currentVersion) <= 0) return null;
+
+    return AvailableUpdate(
+      version: latest,
+      title: title,
+      url:
+          storePage ??
+          _linkPattern.firstMatch(block)?.group(1) ??
+          'https://github.com/padvincenzo/silence-speedup/releases',
+      inStore: storePage != null,
+    );
   }
 
   /// Compares dotted numeric versions, ignoring any pre-release suffix.

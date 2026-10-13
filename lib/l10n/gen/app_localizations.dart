@@ -1267,6 +1267,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download'**
   String get updateDownload;
+
+  /// No description provided for @updateOpenStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Get it from the Microsoft Store'**
+  String get updateOpenStore;
 }
 
 class _AppLocalizationsDelegate

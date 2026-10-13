@@ -41,6 +41,8 @@ dev_dependencies:
   # A file picker with no dialog behind it, for the test that the app says so.
   file_picker_platform_interface: ^3.3.0
   plugin_platform_interface: ^2.1.8
+  # Packs the Store build into an MSIX; run by installer/build-msix.ps1.
+  msix: ^3.18.0
 
 flutter:
   uses-material-design: true
@@ -55,21 +57,18 @@ flutter:
     # and the file the app shows cannot drift apart.
     - LICENSE
 
-# Microsoft Store packaging. Inert until the tool is installed:
+# Microsoft Store packaging, run by installer/build-msix.ps1.
 #
-#   dart pub add --dev msix
-#   dart run msix:create --store
-#
-# The three identity fields below are issued by Partner Center when the app
-# name is reserved, and the package will be rejected until they match the
-# reservation exactly. Everything else is already right.
+# The identity fields below are the ones Partner Center issued when the
+# name was reserved (Store ID 9NJ11SB1S9P5), and a package whose identity
+# does not match them exactly is rejected at submission.
 # See docs/microsoft-store.md.
 msix_config:
   display_name: Silence SpeedUp
   publisher_display_name: Vincenzo Padula
-  # identity_name: TODO from Partner Center, e.g. 12345VincenzoPadula.SilenceSpeedUp
-  # publisher: TODO from Partner Center, the full CN=... subject of the Store certificate
-  # store: true
+  identity_name: VincenzoPadula.SilenceSpeedUp
+  publisher: CN=3C55752B-AFD7-44A0-AAF6-D30799DC1103
+  store: true
   logo_path: installer/msix/logo.png
   # No msix_version here on purpose: the tool derives it from `version:`
   # above, which is the one place the version is stated. The Store wants
@@ -83,7 +82,8 @@ msix_config:
   languages: en-us, it-it
   # Nothing to declare: FFmpeg is bundled, the files come from folders the
   # user picks, and a Store build does not check for updates, so the app
-  # never opens a socket. Verify this survives the first `msix:create`.
+  # never opens a socket. The 3.0.0 package came out with runFullTrust as
+  # its only capability, which the tool adds on its own.
   capabilities: ''
   # A packaged Win32 app, not a sandboxed UWP one: full trust is what lets
   # it run FFmpeg and write next to the source video. The tool declares
