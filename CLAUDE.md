@@ -15,8 +15,9 @@ was developed in padvincenzo/silence-speedup-flutter, archived once it
 moved, and its
 history was joined to this one.
 
-Primary target is **Windows**. Android is a deliberate future target and the
-architecture is arranged for it — see [docs/architecture.md](docs/architecture.md).
+Primary target is **Windows**; **Linux** is built and tried from Windows in
+Docker — see [docs/linux.md](docs/linux.md). Android is a deliberate future
+target and the architecture is arranged for it — see [docs/architecture.md](docs/architecture.md).
 
 ## Commands
 
@@ -31,6 +32,10 @@ flutter build windows --release     # release build
 
 ```powershell
 .\installer\build-installer.ps1     # release build + Inno Setup package into dist\
+.\installer\build-linux.ps1         # Linux: analyse, test, build, pack (Docker)
+.\installer\build-linux.ps1 smoke   # Linux: start it on Xvfb, screenshot into dist\
+.\installer\build-linux.ps1 e2e     # Linux: process a sample through the GUI, measure it
+.\installer\build-linux.ps1 run     # Linux: show it on the desktop through WSLg
 ```
 
 The first Windows build downloads prebuilt FFmpeg libraries; it is slow and
@@ -218,6 +223,14 @@ set with `--dart-define=STORE_BUILD=true` — switches the update check off,
 because a Store app must not look for its own updates or point anyone at an
 executable to download. Anything new that fetches or launches code has to
 respect the same flag. Links to pages are fine.
+
+Outside the Store the check **notifies and nothing more**: it says a newer
+version exists and links to its page. Do not make it download or install.
+Doing that on every operating system would be a project of its own, and
+the places the app is heading to, the Microsoft Store and a Linux store,
+already update what they install. Installers are not going to be attached to
+GitHub releases, so the notice must never assume there is a file there to
+fetch.
 
 The packaging itself is not wired up yet; what exists and what is still
 missing is in [docs/microsoft-store.md](docs/microsoft-store.md).
@@ -440,6 +453,34 @@ the executable behind it: every Flutter app answers to
 This is native on purpose. It has to run before a window could appear, and
 bringing another process forward is a Win32 errand either way. Android needs
 none of it; its launcher already reuses the task.
+
+On Linux the same rule rests on the session bus. The GTK application is
+registered as unique, without the template's `G_APPLICATION_NON_UNIQUE`, so a
+second launch hands its activation to the first copy and exits, and
+`my_application_activate` presents the window that already exists instead
+of opening another. `build-linux.ps1 smoke` checks it.
+
+### On Linux, FFmpeg's libraries travel with it
+
+The plugin's Linux FFmpeg is linked against the codec libraries of the
+distribution it was built on (libvpx, x265, xvid, libass…), under that
+distribution's sonames, and nothing points the loader at the bundle.
+[linux/bundle-ffmpeg-libraries.sh](linux/bundle-ffmpeg-libraries.sh), run by
+the install step in `linux/CMakeLists.txt`, copies those libraries into the
+bundle and gives every one of them, and the plugin, `RUNPATH=$ORIGIN`.
+Without it the window opens and FFmpeg silently fails to load, which is the
+"locate FFmpeg yourself" this app removed, reached by another route. The
+script's `baseline` is the list of what a desktop is trusted to have. Keep it
+short: a library goes there only when its soname has held for years on every
+distribution. `libgomp` was on it once and a clean Ubuntu 24.04 lacked it.
+
+### File dialogs can be missing
+
+Open them through [lib/ui/file_dialogs.dart](lib/ui/file_dialogs.dart), never
+`FilePicker` directly. On Linux the dialog comes from the XDG desktop
+portal, and a desktop without one makes `file_picker` throw. Thrown from a
+button press, that exception reached nobody, and the press looked ignored.
+The helpers answer null and show a message instead.
 
 ### Output and scratch space are separate
 

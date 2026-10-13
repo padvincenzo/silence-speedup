@@ -45,11 +45,13 @@ works. The demo player from the Electron version is not ported yet — see
 
 Coming from 2.x: this is a new installation, not an update in place. Settings
 are not carried over, and the FFmpeg path is gone because FFmpeg is now
-bundled. If you are on macOS or Linux and need a build today, the 2.x releases
-still work.
+bundled. If you are on macOS and need a build today, the 2.x releases still
+work.
 
-Primary target is **Windows**. macOS and Linux should build from source; they are
-not yet tested. Android is scaffolded but has no UI.
+Primary target is **Windows**. **Linux** builds and is tested, see
+[docs/linux.md](docs/linux.md), and how it will be distributed is not decided
+yet. macOS should build from source but is not tested. Android is scaffolded
+but has no UI.
 
 ---
 
@@ -135,6 +137,7 @@ The result is `dist\SilenceSpeedUp-<version>-windows-x64-setup.exe`.
 | [docs/ffmpeg-details.md](docs/ffmpeg-details.md) | The exact FFmpeg commands, flag by flag |
 | [docs/porting-notes.md](docs/porting-notes.md) | What changed from the Electron app, and why |
 | [docs/development.md](docs/development.md) | Building, testing, releasing, extending |
+| [docs/linux.md](docs/linux.md) | Building and trying the Linux version, from Windows too |
 | [ROADMAP.md](ROADMAP.md) | What is not built yet |
 | [CLAUDE.md](CLAUDE.md) | Working rules for AI assistants in this repo |
 
