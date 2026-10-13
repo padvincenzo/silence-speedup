@@ -1,0 +1,472 @@
+{
+  "@@locale": "en",
+  "aboutAiAssisted": "Written with AI assistance",
+  "aboutAiNotice": "Parts of the code were written with an AI assistant, then reviewed and maintained by the author, who is responsible for it. The app itself contains no AI and sends nothing anywhere: silences are found by measuring the audio level with FFmpeg.",
+  "aboutBuiltWith": "Built with Flutter, powered by FFmpeg",
+  "aboutCopyright": "Copyright (C) 2026 Vincenzo Padula",
+  "aboutLicenseSection": "Licence",
+  "aboutOpenInBrowser": "Opens in your browser",
+  "appIntro": "Import some videos, choose the configuration and then press Start to speed up (or remove) their silences.",
+  "ffmpegAlreadyRunning": "FFmpeg is still running; cannot start another process.",
+  "ffmpegDurationError": "Could not read the duration of {name}.",
+  "@ffmpegDurationError": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ffmpegSpeed": "Speed",
+  "ffmpegTime": "Time",
+  "fileAnalyze": "Measure the silences without exporting",
+  "fileSilences": "Show the detected silences",
+  "fileOpenDir": "Select a folder",
+  "fileOpenFile": "Select one or more videos",
+  "filePreview": "Generate a short preview sample",
+  "filePreviewSuffix": " (preview)",
+  "fileRemove": "Remove this video from the list",
+  "fileReveal": "Show the exported file",
+  "helpAudioRate": "Resample the audio. Keep leaves it exactly as it is, which is almost always right.",
+  "helpAudioTracks": "Carry every audio track of the source into the output. Silences are still detected on the first track only, which is the voice track in a multi-track recording.",
+  "helpBackgroundNoise": "How loud the room is. Raise it when a quiet hiss is being mistaken for speech.",
+  "helpCredits": "Credits",
+  "helpCrf": "Constant Rate Factor: lower means better quality and a bigger file. 23 is a good default.",
+  "helpFfmpegNotice": "FFmpeg is bundled with this app under the GPLv3 licence. There is nothing to install or configure.",
+  "helpFormat": "Container for the exported file. Keep reuses the source container.",
+  "helpFps": "Frame rate every fragment is normalised to, so the pieces can be joined without re-encoding.",
+  "helpGplNotice": "This program comes with absolutely no warranty. It is free software, and you are welcome to redistribute it under the conditions of the GNU General Public License version 3 or later.",
+  "helpIcons": "Icons",
+  "helpIconsCredit": "Icons from creazilla.com under the CC BY 4.0 licence.",
+  "helpIntro": "Speed up your videos by speeding up (or removing) silences, using FFmpeg. Built with Flutter.",
+  "helpLanguage": "Follows the system language, falling back to English. Pin one to override it.",
+  "helpLicense": "This program comes with absolutely no warranty. It is free software, and you are welcome to redistribute it under certain conditions; see the licence for details.",
+  "helpMuteSilences": "Silence the audio of the quiet parts instead of letting the sped-up hiss through.",
+  "helpOutputFolder": "Where a finished video is written. Beside its source keeps each one in its own folder; otherwise they all go to the folder you choose.",
+  "helpPlaybackSpeed": "Rate for the parts where someone is speaking. Leave at 1x to keep speech natural.",
+  "helpPreset": "How hard x264 works. Slower presets give smaller files for the same quality.",
+  "helpPreviewDuration": "How much of the video a preview samples. It is taken from a third of the way in, where the recording is most representative.",
+  "helpReadLicense": "Read the licence",
+  "helpSilenceMargin": "Time kept on each side of every silence, so words are not clipped.",
+  "helpSilenceMinDuration": "How long a pause must last before it counts as silence.",
+  "helpSilenceSpeed": "Rate for the quiet parts. Pick Remove to cut them out entirely.",
+  "helpTheme": "Follow the system, or pin light or dark.",
+  "helpTune": "A hint to x264 about the kind of content: Still image for slides, Film for camera footage.",
+  "licensesCount": "{count, plural, =1{1 licence} other{{count} licences}}",
+  "@licensesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "licensesEmpty": "No licence information was found in this build.",
+  "licensesPackages": "{count, plural, =1{1 package} other{{count} packages}}",
+  "@licensesPackages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logAllDone": "All done.",
+  "logAlreadyExists": "Cannot load {name}: that file name is already queued.",
+  "@logAlreadyExists": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logCompleted": "{name} completed.",
+  "@logCompleted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logConcatenationError": "Error while joining the fragments.",
+  "logDataError": "Data error: silence boundaries do not pair up.",
+  "logFileMissing": "{name} is no longer where it was; skipping it.",
+  "@logFileMissing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logFilesAdded": "{count, plural, =0{No files added.} =1{1 file added.} other{{count} files added.}}",
+  "@logFilesAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "logFragmentError": "Fragment [{start} - {end}] failed to encode.",
+  "@logFragmentError": {
+    "placeholders": {
+      "start": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      },
+      "end": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  },
+  "logFragmentsKept": "Fragments left in {path} for inspection.",
+  "@logFragmentsKept": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "logLinkError": "Could not open {url}",
+  "@logLinkError": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "logMeasureDetail": "FFmpeg exited {code}; it printed {collected} lines, {streamed} of them live, and no levels among them.",
+  "@logMeasureDetail": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      },
+      "collected": {
+        "type": "int"
+      },
+      "streamed": {
+        "type": "int"
+      }
+    }
+  },
+  "logMeasureFailed": "Could not read the levels of {name}.",
+  "@logMeasureFailed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logMeasuring": "Measuring the levels of {name}...",
+  "@logMeasuring": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logNoSilenceDetected": "No silences detected, moving on to the next.",
+  "logOutputDirError": "Cannot write to {path}. {error}",
+  "@logOutputDirError": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "logPreviewReady": "Preview ready: {name}",
+  "@logPreviewReady": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logPreviewTooShort": "{name} is shorter than the preview length; sampling all of it.",
+  "@logPreviewTooShort": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logQueueEmpty": "No video queued.",
+  "logSilencePercentage": "{percentage} % of the video detected as silence.",
+  "@logSilencePercentage": {
+    "placeholders": {
+      "percentage": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  },
+  "logSkipNoSilences": "Analysis failed, moving on to the next.",
+  "logStarted": "Started working on {name}.",
+  "@logStarted": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "logStopping": "Stopping...",
+  "menuAbout": "About",
+  "menuCleanShell": "Clear log",
+  "menuAdd": "Add",
+  "menuClearQueue": "Clear queue",
+  "menuDonate": "Buy me a coffee",
+  "menuHideShell": "Hide log",
+  "menuIssue": "Report an issue",
+  "menuLicense": "View licence",
+  "menuOpenFile": "Add video(s)",
+  "menuOpenFolder": "Add folder",
+  "menuProgress": "Compact progress",
+  "menuQuit": "Quit",
+  "menuReferences": "References",
+  "menuShowShell": "Show log",
+  "menuSourceCode": "Source code",
+  "menuThirdPartyLicenses": "Third-party licences",
+  "menuUpdate": "An update is available",
+  "menuVersion": "Version {version}",
+  "@menuVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "menuWindowMode": "Back to window",
+  "navAbout": "About",
+  "navQueue": "Queue",
+  "navSection": "More",
+  "navSettings": "App settings",
+  "noiseHigh": "High",
+  "noiseLow": "Low",
+  "noiseMid": "Mid",
+  "optionKeep": "Keep",
+  "optionNone": "None",
+  "outputAlongsideSource": "Beside the source",
+  "outputFixedDirectory": "A folder I pick",
+  "outputChooseFolder": "Choose the export folder",
+  "outputFolder": "Export to",
+  "preferenceBundledFfmpeg": "FFmpeg is bundled with the app: there is no path to configure.",
+  "preferenceChooseExportDir": "Select where to export videos",
+  "preferenceChangeWorkingDir": "Change folder",
+  "preferenceChooseWorkingDir": "Select where to keep the intermediate fragments",
+  "preferenceClearTemporary": "Clear",
+  "preferenceExportDir": "Export directory",
+  "preferenceReset": "Reset",
+  "preferenceSave": "Save",
+  "preferenceTemporaryFiles": "Temporary files: {size}",
+  "@preferenceTemporaryFiles": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "preferenceWorkingDir": "Working directory",
+  "preferenceWorkingDirHint": "Intermediate fragments are written here while a run is in progress, then removed. Put it on a fast drive with room to spare.",
+  "previewSeconds": "{seconds} s",
+  "@previewSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "processStart": "Start",
+  "processStop": "Stop",
+  "queueCount": "{count, plural, =0{No videos} =1{1 video} other{{count} videos}}",
+  "@queueCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAdvanced": "Advanced settings",
+  "settingsAudioRate": "Audio rate",
+  "settingsAudioTracks": "Keep all audio tracks",
+  "settingsBackgroundNoise": "Background noise",
+  "settingsBasic": "Basic settings",
+  "settingsCrf": "CRF",
+  "settingsDefault": "Default",
+  "settingsFilterPreview": "Detection filter",
+  "settingsFormat": "Video format",
+  "settingsFps": "FPS",
+  "settingsEncodingHide": "Hide the encoding settings",
+  "settingsEncodingShow": "Show the encoding settings",
+  "settingsEncodingTitle": "Encoding settings",
+  "settingsGroupApp": "Application",
+  "settingsGroupAudio": "Audio",
+  "settingsGroupDetection": "Silence detection",
+  "settingsGroupExport": "Export",
+  "settingsGroupPreview": "Preview",
+  "settingsGroupSpeed": "Speed",
+  "settingsMuteSilences": "Mute silences",
+  "settingsNoiseFailed": "Could not read the levels of this video. The log says what FFmpeg answered.",
+  "settingsNoiseMeasure": "Measure {name}",
+  "@settingsNoiseMeasure": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "settingsNoiseMeasured": "{name}: hiss at {floor} dB, voice at {voice} dB",
+  "@settingsNoiseMeasured": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "floor": {
+        "type": "int"
+      },
+      "voice": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoiseMeasuring": "Measuring {name}...",
+  "@settingsNoiseMeasuring": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "settingsNoiseTooClose": "The hiss is nearly as loud as the voice here, so no threshold separates them cleanly.",
+  "settingsNoiseUse": "Suggested: {db} dB",
+  "@settingsNoiseUse": {
+    "placeholders": {
+      "db": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsNoiseValue": "{db} dB",
+  "@settingsNoiseValue": {
+    "placeholders": {
+      "db": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPlaybackSpeed": "Speech speed",
+  "settingsPreset": "Preset",
+  "settingsPreviewDuration": "Preview length",
+  "settingsReset": "Reset",
+  "settingsResetDone": "Encoding settings reset",
+  "settingsResetProcessing": "Reset the encoding settings",
+  "settingsResetProcessingHint": "Puts every speed, detection and export setting back to its default.",
+  "settingsSecondsValue": "{seconds} s",
+  "@settingsSecondsValue": {
+    "placeholders": {
+      "seconds": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  },
+  "settingsSilence": "Silence detection",
+  "settingsSilenceMargin": "Silence margin",
+  "settingsSilenceMinDuration": "Silence min duration",
+  "settingsSilenceSpeed": "Silence speed",
+  "settingsSpeedRemove": "Remove",
+  "settingsSpeedRemoveShort": "cut",
+  "settingsTune": "Tune",
+  "silencesFit": "The whole video",
+  "silencesEmpty": "No silence was found in this video.",
+  "silencesPercent": "{percentage} %",
+  "@silencesPercent": {
+    "placeholders": {
+      "percentage": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "silencesRanges": "{count, plural, =0{No silences} =1{1 silence} other{{count} silences}}",
+  "@silencesRanges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "silencesRedetect": "Detect again",
+  "silencesReveal": "Show it on the timeline",
+  "silencesSaved": "Time saved",
+  "silencesShare": "Of the source",
+  "silencesStale": "The detection settings have changed since these silences were found.",
+  "silencesTitle": "Detected silences",
+  "silencesTotal": "Silence",
+  "silencesOutput": "Estimated output",
+  "silencesZoomIn": "Zoom in",
+  "silencesZoomOut": "Zoom out",
+  "statusAnalyzing": "Detecting silences...",
+  "statusCompleted": "Completed",
+  "statusConcatenating": "Joining fragments...",
+  "statusExporting": "Exporting...",
+  "statusFailed": "Failed",
+  "statusInterrupted": "Interrupted",
+  "statusLoaded": "Loaded [{duration}]",
+  "@statusLoaded": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "statusLoading": "Loading...",
+  "statusQueued": "Queued",
+  "statusReady": "Ready",
+  "statusSilenceShare": "{percentage} % silence",
+  "@statusSilenceShare": {
+    "placeholders": {
+      "percentage": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "uiCancel": "Cancel",
+  "uiClose": "Close",
+  "uiDarkMode": "Dark",
+  "uiDropVideo": "Drop videos here",
+  "uiLanguage": "Language",
+  "uiLightMode": "Light",
+  "uiSystemMode": "System",
+  "uiTheme": "Theme",
+  "updateAvailable": "Version {version} is available.",
+  "@updateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateDetails": "Details",
+  "updateDownload": "Download"
+}

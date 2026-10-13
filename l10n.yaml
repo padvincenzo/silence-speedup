@@ -1,0 +1,11 @@
+# Localization is generated from the ARB catalogues by `flutter gen-l10n`,
+# which also runs as part of `flutter run` / `flutter build`.
+arb-dir: lib/l10n/arb
+template-arb-file: app_en.arb
+output-dir: lib/l10n/gen
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+# Getters return non-nullable strings; `AppLocalizations.of` stays nullable.
+nullable-getter: false
+# A key missing from a translation falls back to the template (English).
+untranslated-messages-file: lib/l10n/untranslated.json

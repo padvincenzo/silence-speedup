@@ -1,0 +1,87 @@
+name: silence_speedup
+description: "Speed up your videos by speeding up (or removing) silences, using FFmpeg."
+publish_to: 'none'
+
+# 3.0 is the Flutter rewrite; 2.x was the Electron app, kept on the electron
+# branch. The installed Electron builds read this repository's release feed
+# and compare the first number they find in the title, so a release here must
+# be titled with its version and be greater than 2.x to reach them.
+version: 3.0.0
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # FFmpeg is bundled by the plugin: no binary to ship, no path to configure.
+  # Full-GPL build (includes libx264) covering Windows, Android, macOS, iOS and Linux.
+  ffmpeg_kit_flutter_new: ^4.6.2
+
+  cupertino_icons: ^1.0.8
+  desktop_drop: ^0.8.4
+  file_picker: ^12.2.0
+  http: ^1.6.0
+  intl: ^0.20.3
+  package_info_plus: ^10.2.1
+  path: ^1.9.1
+  path_provider: ^2.1.6
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.5
+  url_launcher: ^6.3.2
+  window_manager: ^0.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Generates AppLocalizations from lib/l10n/arb/*.arb — see l10n.yaml.
+  generate: true
+
+  assets:
+    - assets/icons/
+    # The GPLv3 itself, shown in the app. The repository's own copy is used
+    # rather than a duplicate under assets/, so the file the installer shows
+    # and the file the app shows cannot drift apart.
+    - LICENSE
+
+# Microsoft Store packaging. Inert until the tool is installed:
+#
+#   dart pub add --dev msix
+#   dart run msix:create --store
+#
+# The three identity fields below are issued by Partner Center when the app
+# name is reserved, and the package will be rejected until they match the
+# reservation exactly. Everything else is already right.
+# See docs/microsoft-store.md.
+msix_config:
+  display_name: Silence SpeedUp
+  publisher_display_name: Vincenzo Padula
+  # identity_name: TODO from Partner Center, e.g. 12345VincenzoPadula.SilenceSpeedUp
+  # publisher: TODO from Partner Center, the full CN=... subject of the Store certificate
+  # store: true
+  logo_path: installer/msix/logo.png
+  # No msix_version here on purpose: the tool derives it from `version:`
+  # above, which is the one place the version is stated. The Store wants
+  # four components with the last one zero, and a plain x.y.z gives exactly
+  # x.y.z.0 — which is also why the version carries no `+build` suffix.
+  #
+  # The Inno Setup build asks for Windows 10 (MinVersion=10.0), because that
+  # is what the bundled FFmpeg needs. MSIX itself does not run below 1809,
+  # so that is the floor here.
+  os_min_version: 10.0.17763.0
+  languages: en-us, it-it
+  # Nothing to declare: FFmpeg is bundled, the files come from folders the
+  # user picks, and a Store build does not check for updates, so the app
+  # never opens a socket. Verify this survives the first `msix:create`.
+  capabilities: ''
+  # A packaged Win32 app, not a sandboxed UWP one: full trust is what lets
+  # it run FFmpeg and write next to the source video. The tool declares
+  # runFullTrust itself.

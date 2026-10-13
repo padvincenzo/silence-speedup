@@ -1,0 +1,43 @@
+name: Feature request
+description: Something the app should do, or do differently.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before asking, have a look at the [roadmap](https://github.com/padvincenzo/silence-speedup/blob/main/ROADMAP.md):
+        it may already be planned, or there may be a reason it is not.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: >-
+        The situation, not the solution yet: what kind of videos, what you do
+        with them, and where the app gets in the way.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help
+      description: How you imagine it working, if you have an idea.
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: What you do today instead
+      description: A workaround, another tool, or nothing at all.
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Where you use the app
+      multiple: true
+      options:
+        - Windows
+        - Linux

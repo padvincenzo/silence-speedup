@@ -1,0 +1,19 @@
+# Lint configuration for Silence SpeedUp.
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    # Dependencies are injected through named parameters into private fields.
+    # `required this._field` is not valid Dart for a named parameter, so this
+    # rule cannot be satisfied by those constructors.
+    prefer_initializing_formals: false
+
+analyzer:
+  errors:
+    # Anything that would break a release build must fail the analysis too.
+    invalid_assignment: error
+    undefined_class: error
+  exclude:
+    - build/**
+    - android/**
+    - windows/**
