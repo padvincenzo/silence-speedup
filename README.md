@@ -139,16 +139,6 @@ flutter pub get
 flutter run -d windows    # or: flutter run -d linux / -d macos
 ```
 
-### Packaging for the Microsoft Store
-
-```powershell
-.\installer\build-msix.ps1
-```
-
-The result is `dist\SilenceSpeedUp-<version>-store.msix`, for uploading in
-Partner Center. It is unsigned on purpose, because the Store signs it; see
-[docs/microsoft-store.md](docs/microsoft-store.md).
-
 ### Packaging the installer
 
 Additionally [Inno Setup 6](https://jrsoftware.org/isinfo.php):
@@ -172,6 +162,7 @@ The result is `dist\SilenceSpeedUp-<version>-windows-x64-setup.exe`.
 | [docs/porting-notes.md](docs/porting-notes.md) | What changed from the Electron app, and why |
 | [docs/development.md](docs/development.md) | Building, testing, releasing, extending |
 | [docs/linux.md](docs/linux.md) | Building and trying the Linux version, from Windows too |
+| [docs/microsoft-store.md](docs/microsoft-store.md) | For the maintainer: packaging and publishing the Store version |
 | [ROADMAP.md](ROADMAP.md) | What is not built yet |
 | [CLAUDE.md](CLAUDE.md) | Working rules for AI assistants in this repo |
 
