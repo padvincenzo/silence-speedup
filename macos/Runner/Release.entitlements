@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- No sandbox: the app reads videos from wherever they are dropped or
+	     picked and writes the result beside them, which a sandboxed app may
+	     not do. A Mac App Store build would need it back, with entitlements
+	     for user-selected files. -->
+	<key>com.apple.security.app-sandbox</key>
+	<false/>
+</dict>
+</plist>

@@ -16,7 +16,8 @@ moved, and its
 history was joined to this one.
 
 Primary target is **Windows**; **Linux** is built and tried from Windows in
-Docker — see [docs/linux.md](docs/linux.md). Android is a deliberate future
+Docker — see [docs/linux.md](docs/linux.md). **macOS** has a target, without
+the app sandbox, and is not currently tested. Android is a deliberate future
 target and the architecture is arranged for it — see [docs/architecture.md](docs/architecture.md).
 
 ## Commands

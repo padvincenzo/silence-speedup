@@ -8,7 +8,8 @@
 - **Linux**: a toolchain and a list of libraries of its own, described in
   [linux.md](linux.md), together with how to build the Linux version from
   Windows in Docker.
-- **macOS**: not supported yet. There is no `macos/` target in the project.
+- **macOS**: Xcode and CocoaPods, then `flutter run -d macos`. The macOS
+  build is **not currently tested**.
 - Network access for the **first** build. The FFmpeg libraries are
   downloaded then.
 

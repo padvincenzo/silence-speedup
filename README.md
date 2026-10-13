@@ -23,7 +23,7 @@ branch and their builds stay on the
 - **Windows, from the [Microsoft Store](https://apps.microsoft.com/detail/9NJ11SB1S9P5):**
   the same app, signed and kept up to date by the Store. It is paid, and
   buying it is also a way to support the project.
-- **From source, on Windows or Linux:** see
+- **From source, on Windows, Linux or macOS:** see
   [Building from source](#building-from-source).
 
 ---
@@ -129,13 +129,14 @@ Every platform needs Flutter 3.47 or newer, on the stable channel.
   libraries FFmpeg was linked against. The steps are in
   [docs/linux.md](docs/linux.md), which also explains how to build the Linux
   version from Windows with Docker.
-- **macOS:** not supported yet. The project has no macOS target.
+- **macOS:** Xcode and CocoaPods; then `flutter run -d macos`. The macOS
+  build is **not currently tested**.
 
 ```bash
 git clone https://github.com/padvincenzo/silence-speedup
 cd silence-speedup
 flutter pub get
-flutter run -d windows    # or: flutter run -d linux
+flutter run -d windows    # or: flutter run -d linux / -d macos
 ```
 
 ### Packaging for the Microsoft Store
