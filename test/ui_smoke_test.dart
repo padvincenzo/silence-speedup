@@ -1248,6 +1248,13 @@ void main() {
         find.text('github.com/padvincenzo/silence-speedup/issues'),
         findsOneWidget,
       );
+      // The privacy policy the Store listing points to is reachable from
+      // the app too.
+      expect(find.text('Privacy policy'), findsOneWidget);
+      expect(
+        find.text('www.vincenzopadula.it/silence-speedup-privacy-policy/'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('fits a narrow window without overflowing', (

@@ -578,6 +578,12 @@ abstract class AppLocalizations {
   /// **'Add folder'**
   String get menuOpenFolder;
 
+  /// No description provided for @menuPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get menuPrivacy;
+
   /// No description provided for @menuProgress.
   ///
   /// In en, this message translates to:

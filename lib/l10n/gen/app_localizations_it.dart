@@ -354,6 +354,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get menuOpenFolder => 'Importa cartella';
 
   @override
+  String get menuPrivacy => 'Informativa sulla privacy';
+
+  @override
   String get menuProgress => 'Avanzamento compatto';
 
   @override

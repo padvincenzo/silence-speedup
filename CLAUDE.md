@@ -223,7 +223,7 @@ sends nothing anywhere. Keep both halves if you touch that wording.
 
 A published privacy policy, at
 <https://www.vincenzopadula.it/silence-speedup-privacy-policy/> and linked
-from the README and the Store listing, says exactly what the app does with
+from the README, the Store listing and the About page, says exactly what the app does with
 data. Today that is three things: the GitHub build's one network request
 (the release feed, absent from a Store build), the preferences file, and
 temporary fragments that are deleted after a successful run. The log is

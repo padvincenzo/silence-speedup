@@ -351,6 +351,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get menuOpenFolder => 'Add folder';
 
   @override
+  String get menuPrivacy => 'Privacy policy';
+
+  @override
   String get menuProgress => 'Compact progress';
 
   @override
