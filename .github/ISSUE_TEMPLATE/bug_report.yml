@@ -1,0 +1,100 @@
+name: Bug report
+description: Something went wrong, or a video came out wrong.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. This form is for **version 3** and later.
+        Version 2.x was a different app, built with Electron; its code is on the
+        [`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron) branch.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown in the app under the menu → About.
+      placeholder: "3.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: Where the app came from
+      options:
+        - Microsoft Store
+        - Windows installer from GitHub
+        - Linux bundle
+        - Built from source
+        - Other (say below)
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: With its version. On Linux, the distribution and the desktop.
+      placeholder: "Windows 11 24H2 / Ubuntu 24.04, GNOME"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: >-
+        What you did, step by step, and what you saw. If the result is wrong
+        rather than missing (out of sync, cut in the wrong place, sped up
+        where someone was talking), say at roughly what time in the video.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+    validations:
+      required: true
+
+  - type: textarea
+    id: settings
+    attributes:
+      label: Settings you changed
+      description: >-
+        Open the encoding settings and close every group: each one then lists
+        only what differs from the default. Copy those lines, or write "none".
+      placeholder: |
+        Silence speed 4x
+        Background noise -40 dB
+        Keep all audio tracks
+    validations:
+      required: true
+
+  - type: textarea
+    id: video
+    attributes:
+      label: The video
+      description: >-
+        What kind of file it is (extension, rough length, how many audio
+        tracks if you know) and what made it: a screen recorder, a phone,
+        a camera, a download. Please do not attach a video with anyone's
+        private content; a short sample that shows the problem is best.
+      placeholder: ".mkv, about 50 minutes, recorded with OBS, two audio tracks"
+
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: >-
+        The log opens from the button at the left end of the bottom bar. Its
+        text can be selected: copy the lines from the run that went wrong.
+      render: text
+
+  - type: textarea
+    id: more
+    attributes:
+      label: Anything else
+      description: Screenshots, for instance of the silences page for that video.
