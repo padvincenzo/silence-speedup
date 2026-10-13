@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
   final AvailableUpdate? update;
 
   static const String _repository =
-      'https://github.com/padvincenzo/silence-speedup-flutter';
+      'https://github.com/padvincenzo/silence-speedup';
   static const String _issues = '$_repository/issues';
   static const String _donate = 'https://paypal.me/VincenzoPadula';
 

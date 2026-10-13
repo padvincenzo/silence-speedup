@@ -1207,7 +1207,7 @@ void main() {
       // the three came to be showing its scheme and the others not.
       expect(find.textContaining('https://'), findsNothing);
       expect(
-        find.text('github.com/padvincenzo/silence-speedup-flutter/issues'),
+        find.text('github.com/padvincenzo/silence-speedup/issues'),
         findsOneWidget,
       );
     });

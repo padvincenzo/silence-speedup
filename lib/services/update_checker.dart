@@ -36,7 +36,7 @@ class AvailableUpdate {
 class UpdateChecker {
   const UpdateChecker({
     this.feedUrl =
-        'https://github.com/padvincenzo/silence-speedup-flutter/releases.atom',
+        'https://github.com/padvincenzo/silence-speedup/releases.atom',
     this.timeout = const Duration(seconds: 8),
     this.enabled = !kStoreBuild,
   });
@@ -86,7 +86,7 @@ class UpdateChecker {
         title: title,
         url:
             _linkPattern.firstMatch(block)?.group(1) ??
-            'https://github.com/padvincenzo/silence-speedup-flutter/releases',
+            'https://github.com/padvincenzo/silence-speedup/releases',
       );
     } catch (error) {
       debugPrint('Update check failed: $error');

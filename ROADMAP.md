@@ -188,4 +188,4 @@ Things the Electron app never had, that a batch tool wants.
 ---
 
 Suggestions and pull requests welcome:
-<https://github.com/padvincenzo/silence-speedup-flutter/issues>
+<https://github.com/padvincenzo/silence-speedup/issues>

@@ -4,8 +4,9 @@ What changed moving from the Electron app to Flutter, and why. Read this before
 "restoring" something to match the original — several of the differences are
 deliberate bug fixes.
 
-The reference is [padvincenzo/silence-speedup](https://github.com/padvincenzo/silence-speedup)
-at v2.0.0.
+The reference is the Electron app at v2.0.0, kept on the
+[`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron)
+branch of this repository.
 
 ---
 

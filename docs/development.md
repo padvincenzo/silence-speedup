@@ -15,8 +15,8 @@ flutter doctor -v      # confirm the Windows toolchain is green
 ## Running
 
 ```bash
-git clone https://github.com/padvincenzo/silence-speedup-flutter
-cd silence-speedup-flutter
+git clone https://github.com/padvincenzo/silence-speedup
+cd silence-speedup
 flutter pub get
 flutter run -d windows
 ```
@@ -82,7 +82,7 @@ problem that is not there.
 ## Project layout
 
 ```
-silence-speedup-flutter/
+silence-speedup/
 ├── CLAUDE.md            # working rules for AI assistants
 ├── ROADMAP.md           # what is not built yet
 ├── analysis_options.yaml
@@ -251,7 +251,7 @@ notice and offer the corresponding source.
 
 ## Contributing
 
-Issues and pull requests: <https://github.com/padvincenzo/silence-speedup-flutter>
+Issues and pull requests: <https://github.com/padvincenzo/silence-speedup>
 
 Before opening a PR: `flutter analyze` clean, `flutter test` green, and new
 FFmpeg behaviour covered by a test. Read [porting-notes.md](porting-notes.md)

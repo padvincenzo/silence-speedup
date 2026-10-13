@@ -120,7 +120,7 @@ class AppDrawer extends StatelessWidget {
           label: strings.menuSourceCode,
           leaves: true,
           onTap: () => onOpenLink(
-            'https://github.com/padvincenzo/silence-speedup-flutter',
+            'https://github.com/padvincenzo/silence-speedup',
           ),
         ),
         _DrawerAction(
@@ -128,7 +128,7 @@ class AppDrawer extends StatelessWidget {
           label: strings.menuIssue,
           leaves: true,
           onTap: () => onOpenLink(
-            'https://github.com/padvincenzo/silence-speedup-flutter/issues',
+            'https://github.com/padvincenzo/silence-speedup/issues',
           ),
         ),
         _DrawerAction(

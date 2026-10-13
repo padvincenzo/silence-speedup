@@ -9,8 +9,10 @@ what to ask it for.
 Made for lectures, interviews, podcasts and tutorials — anything where the
 speaker pauses a lot or talks slowly.
 
-This is the **Flutter rewrite** of the Electron app at
-[padvincenzo/silence-speedup](https://github.com/padvincenzo/silence-speedup).
+Version 3 is a **rewrite in Flutter**. Versions 1.x and 2.x were an Electron
+app; their source is on the [`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron)
+branch and their builds stay on the
+[releases page](https://github.com/padvincenzo/silence-speedup/releases).
 
 ---
 
@@ -37,9 +39,14 @@ behaves differently from the Electron app, for anyone moving between the two.
 
 ## Status
 
-**Pre-release (0.9.x).** The processing pipeline and the desktop UI are complete
-and the Windows build works. Held below 1.0 until the demo player from the
-Electron version is ported — see [ROADMAP.md](ROADMAP.md).
+The processing pipeline and the desktop UI are complete and the Windows build
+works. The demo player from the Electron version is not ported yet — see
+[ROADMAP.md](ROADMAP.md).
+
+Coming from 2.x: this is a new installation, not an update in place. Settings
+are not carried over, and the FFmpeg path is gone because FFmpeg is now
+bundled. If you are on macOS or Linux and need a build today, the 2.x releases
+still work.
 
 Primary target is **Windows**. macOS and Linux should build from source; they are
 not yet tested. Android is scaffolded but has no UI.
@@ -100,8 +107,8 @@ Flutter 3.47+ and, on Windows, Visual Studio 2022 with the C++ desktop
 workload — see [docs/development.md](docs/development.md).
 
 ```bash
-git clone https://github.com/padvincenzo/silence-speedup-flutter
-cd silence-speedup-flutter
+git clone https://github.com/padvincenzo/silence-speedup
+cd silence-speedup
 flutter pub get
 flutter run -d windows
 ```

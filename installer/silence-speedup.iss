@@ -14,7 +14,7 @@
 
 #define AppName "Silence SpeedUp"
 #define AppPublisher "Vincenzo Padula"
-#define AppUrl "https://github.com/padvincenzo/silence-speedup-flutter"
+#define AppUrl "https://github.com/padvincenzo/silence-speedup"
 #define AppExeName "silence_speedup.exe"
 #define BuildDir "..\build\windows\x64\runner\Release"
 

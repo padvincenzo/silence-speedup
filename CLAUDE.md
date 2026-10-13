@@ -8,10 +8,12 @@ Guidance for Claude Code when working in this repository.
 stretches and either speeding them up or cutting them out. FFmpeg does the
 work; this app decides *what* to ask FFmpeg for.
 
-This repository is the **Flutter rewrite** of
-[padvincenzo/silence-speedup](https://github.com/padvincenzo/silence-speedup),
-an Electron app. The Electron version is still the released one; treat it as
-the reference for intended behaviour, not as code to imitate.
+From 3.0 on this repository is a **Flutter rewrite**. Versions 1.x and 2.x
+were an Electron app, whose source is on the `electron` branch; treat it as
+the reference for intended behaviour, not as code to imitate. The rewrite
+was developed in padvincenzo/silence-speedup-flutter, archived once it
+moved, and its
+history was joined to this one.
 
 Primary target is **Windows**. Android is a deliberate future target and the
 architecture is arranged for it — see [docs/architecture.md](docs/architecture.md).
@@ -185,6 +187,16 @@ Two builds must never carry the same version: the installer names its output
 after it, the in-app update check compares against it, and a bug report that
 says 0.9.4 has to mean one specific binary. A plain `x.y.z` also becomes the
 `x.y.z.0` an MSIX package needs, which is the other reason there is no `+`.
+
+### A release title starts with its version
+
+Installed 2.x builds still check for updates, and they read this
+repository's release feed: they take the **first** entry, pull the first
+run of digits out of its title, and offer it if it is greater than their own.
+So a release is titled `3.0.1` or `v3.0.1`, never a phrase with a year or
+another number ahead of the version. A pre-release appears in the same feed,
+so publishing one announces it to every 2.x user; its notes are what they
+see in the update dialog.
 
 ### The GPL travels with the app
 
