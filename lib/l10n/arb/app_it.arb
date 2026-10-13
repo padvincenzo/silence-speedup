@@ -13,6 +13,7 @@
   "ffmpegTime": "Tempo",
   "fileAnalyze": "Misura i silenzi senza esportare",
   "fileSilences": "Mostra i silenzi rilevati",
+  "fileDialogUnavailable": "Non è stato possibile aprire la finestra di selezione dei file. Su Linux la fornisce xdg-desktop-portal.",
   "fileOpenDir": "Seleziona una cartella",
   "fileOpenFile": "Seleziona uno o più video",
   "filePreview": "Genera un breve campione di anteprima",

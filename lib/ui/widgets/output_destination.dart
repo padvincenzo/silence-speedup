@@ -4,13 +4,13 @@
 // Author: Vincenzo Padula <padvincenzo@gmail.com>
 // License: GNU GPL v3 or later <http://www.gnu.org/copyleft/gpl.html>
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
 import '../../state/preferences_store.dart';
 import '../../state/process_store.dart';
+import '../file_dialogs.dart';
 
 /// Where the finished files go, as a tile in the encoding settings.
 ///
@@ -69,8 +69,9 @@ class _OutputDestinationState extends State<OutputDestination> {
 
   Future<void> _browse() async {
     final PreferencesStore preferences = context.read<PreferencesStore>();
-    final String? chosen = await FilePicker.getDirectoryPath(
-      dialogTitle: AppLocalizations.of(context).outputChooseFolder,
+    final String? chosen = await pickDirectory(
+      context,
+      title: AppLocalizations.of(context).outputChooseFolder,
       initialDirectory: _committed.isEmpty ? null : _committed,
     );
     if (chosen == null) return;

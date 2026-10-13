@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'Show the detected silences'**
   String get fileSilences;
 
+  /// No description provided for @fileDialogUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The system file dialog could not be opened. On Linux it is provided by xdg-desktop-portal.'**
+  String get fileDialogUnavailable;
+
   /// No description provided for @fileOpenDir.
   ///
   /// In en, this message translates to:

@@ -7,7 +7,6 @@
 import 'dart:math' as math;
 
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -27,6 +26,7 @@ import '../state/queue_store.dart';
 import 'pages/about_page.dart';
 import 'pages/app_settings_page.dart';
 import 'pages/queue_page.dart';
+import 'file_dialogs.dart';
 import 'messages.dart';
 import 'platform.dart';
 import 'shortcuts.dart';
@@ -145,23 +145,19 @@ class _AppShellState extends State<AppShell> {
   }
 
   Future<void> _openFiles() async {
-    final List<PlatformFile> picked = await FilePicker.pickFiles(
-      dialogTitle: AppLocalizations.of(context).fileOpenFile,
-      type: FileType.custom,
-      allowedExtensions: kImportableExtensions.toList(),
+    final List<String>? paths = await pickFiles(
+      context,
+      title: AppLocalizations.of(context).fileOpenFile,
+      extensions: kImportableExtensions.toList(),
     );
-    if (picked.isEmpty || !mounted) return;
-
-    final List<String> paths = picked
-        .map((PlatformFile file) => file.path)
-        .whereType<String>()
-        .toList();
+    if (paths == null || paths.isEmpty || !mounted) return;
     await context.read<QueueStore>().addFiles(paths);
   }
 
   Future<void> _openFolder() async {
-    final String? directory = await FilePicker.getDirectoryPath(
-      dialogTitle: AppLocalizations.of(context).fileOpenDir,
+    final String? directory = await pickDirectory(
+      context,
+      title: AppLocalizations.of(context).fileOpenDir,
     );
     if (directory == null || !mounted) return;
     await context.read<QueueStore>().addDirectory(directory);
