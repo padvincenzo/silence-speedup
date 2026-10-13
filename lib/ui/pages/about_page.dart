@@ -38,6 +38,12 @@ class AboutPage extends StatelessWidget {
   static const String _issues = '$_repository/issues';
   static const String _donate = 'https://paypal.me/VincenzoPadula';
 
+  /// Published on the author's site rather than kept in the repository, and
+  /// written against what the code does: see CLAUDE.md before adding a
+  /// network request or anything kept on disk.
+  static const String _privacy =
+      'https://www.vincenzopadula.it/silence-speedup-privacy-policy/';
+
   /// A link as it is shown: the address without the part every address has.
   ///
   /// Derived from the link itself rather than written out beside it, which
@@ -187,6 +193,14 @@ class AboutPage extends StatelessWidget {
                 title: strings.menuIssue,
                 detail: _shown(_issues),
                 link: _issues,
+                linkHint: strings.aboutOpenInBrowser,
+                onOpenLink: onOpenLink,
+              ),
+              _InfoRow(
+                icon: Icons.privacy_tip_outlined,
+                title: strings.menuPrivacy,
+                detail: _shown(_privacy),
+                link: _privacy,
                 linkHint: strings.aboutOpenInBrowser,
                 onOpenLink: onOpenLink,
               ),
