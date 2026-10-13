@@ -20,6 +20,7 @@
   "ffmpegTime": "Time",
   "fileAnalyze": "Measure the silences without exporting",
   "fileSilences": "Show the detected silences",
+  "fileDialogUnavailable": "The system file dialog could not be opened. On Linux it is provided by xdg-desktop-portal.",
   "fileOpenDir": "Select a folder",
   "fileOpenFile": "Select one or more videos",
   "filePreview": "Generate a short preview sample",

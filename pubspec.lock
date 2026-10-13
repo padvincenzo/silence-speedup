@@ -178,7 +178,7 @@ packages:
     source: hosted
     version: "1.1.0"
   file_picker_platform_interface:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: file_picker_platform_interface
       sha256: d35d8cb68446fae921335bb61501d66cb2469d74c8f3103b8c6ccdbe3fe5afd8
@@ -462,7 +462,7 @@ packages:
     source: hosted
     version: "3.2.0"
   plugin_platform_interface:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: plugin_platform_interface
       sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"

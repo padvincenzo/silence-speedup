@@ -4,7 +4,6 @@
 // Author: Vincenzo Padula <padvincenzo@gmail.com>
 // License: GNU GPL v3 or later <http://www.gnu.org/copyleft/gpl.html>
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +11,7 @@ import '../../l10n/gen/app_localizations.dart';
 import '../../services/app_paths.dart';
 import '../../state/preferences_store.dart';
 import '../../state/process_store.dart';
+import '../file_dialogs.dart';
 import '../widgets/readable_width.dart';
 import '../widgets/settings_tiles.dart';
 
@@ -127,8 +127,9 @@ class _WorkingDirectoryTileState extends State<_WorkingDirectoryTile> {
 
   Future<void> _browse() async {
     final PreferencesStore preferences = context.read<PreferencesStore>();
-    final String? chosen = await FilePicker.getDirectoryPath(
-      dialogTitle: AppLocalizations.of(context).preferenceChooseWorkingDir,
+    final String? chosen = await pickDirectory(
+      context,
+      title: AppLocalizations.of(context).preferenceChooseWorkingDir,
       initialDirectory: preferences.workingDirectory,
     );
     if (chosen == null) return;

@@ -231,7 +231,7 @@ void main() {
 
   group('preview output naming', () {
     test('a preview does not compete with the real output', () {
-      final MediaEntry entry = MediaEntry(r'C:\videos\lecture.mkv');
+      final MediaEntry entry = MediaEntry('/videos/lecture.mkv');
 
       expect(entry.outputNameFor(kKeepFormat), 'lecture.mkv');
       expect(

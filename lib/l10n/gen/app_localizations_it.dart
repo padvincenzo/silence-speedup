@@ -54,6 +54,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get fileSilences => 'Mostra i silenzi rilevati';
 
   @override
+  String get fileDialogUnavailable =>
+      'Non è stato possibile aprire la finestra di selezione dei file. Su Linux la fornisce xdg-desktop-portal.';
+
+  @override
   String get fileOpenDir => 'Seleziona una cartella';
 
   @override

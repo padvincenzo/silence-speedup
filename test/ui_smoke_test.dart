@@ -474,7 +474,7 @@ void main() {
       // to report: exports follow their source unless told otherwise.
       expect(find.byType(OutputDestination), findsNothing);
 
-      await harness.preferences.setFixedDirectory(r'D:\Renders');
+      await harness.preferences.setFixedDirectory('/media/Renders');
       await tester.pumpAndSettle();
 
       // A chosen folder is a change from the default, so the closed group
@@ -518,7 +518,7 @@ void main() {
         preferred: const Locale('en'),
       );
       await harness.queue.addFiles(<String>[
-        for (int i = 0; i < 12; i++) 'C:\\videos\\clip$i.mp4',
+        for (int i = 0; i < 12; i++) '/videos/clip$i.mp4',
       ]);
 
       await tester.pumpWidget(harness.app);
@@ -904,7 +904,7 @@ void main() {
         preferred: const Locale('en'),
       );
       await harness.preferences.setEncodingGroupOpen('detection', true);
-      await harness.queue.addFiles(<String>['C:\\videos\\talk.mp4']);
+      await harness.queue.addFiles(<String>['/videos/talk.mp4']);
 
       await tester.pumpWidget(harness.wrap(const EncodingSettingsView()));
       await tester.pumpAndSettle();
@@ -974,7 +974,7 @@ void main() {
         preferred: const Locale('en'),
       );
       await harness.preferences.setEncodingGroupOpen('detection', true);
-      await harness.queue.addFiles(<String>[r'C:\videos\silent.mp4']);
+      await harness.queue.addFiles(<String>['/videos/silent.mp4']);
 
       await tester.pumpWidget(harness.wrap(const EncodingSettingsView()));
       await tester.pumpAndSettle();
@@ -1232,7 +1232,7 @@ void main() {
   group('silences page', () {
     /// An entry with a known shape: a minute long, two ten-second pauses.
     MediaEntry entryWithSilences() {
-      final MediaEntry entry = MediaEntry(r'C:\videos\talk.mp4')
+      final MediaEntry entry = MediaEntry('/videos/talk.mp4')
         ..duration = const Duration(minutes: 1);
       entry.setSilences(const <SilenceRange>[
         SilenceRange(10, 20),
@@ -1299,7 +1299,7 @@ void main() {
         preferred: const Locale('en'),
       );
 
-      final MediaEntry busy = MediaEntry(r'C:\videos\chatty.mp4')
+      final MediaEntry busy = MediaEntry('/videos/chatty.mp4')
         ..duration = const Duration(minutes: 20);
       busy.setSilences(
         List<SilenceRange>.generate(
@@ -1331,7 +1331,7 @@ void main() {
         preferred: const Locale('en'),
       );
 
-      final MediaEntry busy = MediaEntry(r'C:\videos\chatty.mp4')
+      final MediaEntry busy = MediaEntry('/videos/chatty.mp4')
         ..duration = const Duration(minutes: 20);
       busy.setSilences(
         List<SilenceRange>.generate(
@@ -1418,7 +1418,7 @@ void main() {
       // Four tenths of a second in a minute of video: half a pixel at
       // whole-video scale, which is precisely what a row has to be able to
       // point at.
-      final MediaEntry entry = MediaEntry(r'C:ideosrief.mp4')
+      final MediaEntry entry = MediaEntry('/videos/brief.mp4')
         ..duration = const Duration(minutes: 1);
       entry.setSilences(const <SilenceRange>[
         SilenceRange(30, 30.4),
@@ -1478,7 +1478,7 @@ void main() {
         preferred: const Locale('en'),
       );
 
-      final MediaEntry quiet = MediaEntry(r'C:\videos\quiet.mp4')
+      final MediaEntry quiet = MediaEntry('/videos/quiet.mp4')
         ..duration = const Duration(minutes: 1);
 
       await tester.pumpWidget(harness.wrap(SilencesPage(entry: quiet)));
