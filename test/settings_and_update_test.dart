@@ -196,14 +196,14 @@ void main() {
 
   group('MediaEntry', () {
     test('accepts the formats the app can export and rejects the rest', () {
-      expect(MediaEntry.isSupported(r'C:\videos\lecture.mp4'), isTrue);
+      expect(MediaEntry.isSupported('/videos/lecture.mp4'), isTrue);
       expect(MediaEntry.isSupported('/home/vin/talk.MKV'), isTrue);
       expect(MediaEntry.isSupported('/home/vin/notes.txt'), isFalse);
       expect(MediaEntry.isSupported('/home/vin/noextension'), isFalse);
     });
 
     test('renames only the extension when the container changes', () {
-      final MediaEntry entry = MediaEntry(r'C:\videos\my.lecture.mov');
+      final MediaEntry entry = MediaEntry('/videos/my.lecture.mov');
 
       expect(entry.name, 'my.lecture.mov');
       expect(entry.outputNameFor(kKeepFormat), 'my.lecture.mov');
