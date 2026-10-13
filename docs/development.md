@@ -62,7 +62,7 @@ The first build is slow because of the download. Subsequent builds reuse it;
 
 ## The app icon
 
-Three files are generated from `assets/icons/icon.svg`, the 600px original,
+These files are generated from `assets/icons/icon.svg`, the 600px original,
 and they have to stay in step:
 
 | File | Used for | Sizes |
@@ -71,9 +71,15 @@ and they have to stay in step:
 | `assets/icons/icon.ico` | `SetupIconFile` in the Inno Setup script | 16-256 |
 | `assets/icons/icon.png` | drawn by the interface itself, in the drawer and the about page | 256 |
 | `installer/msix/logo.png` | source the MSIX tool derives Store tiles from | 1024 |
+| `macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_*.png` | the macOS app bundle | 16-1024 |
+
+Linux has no file of its own: the runner sets the window icon from the
+bundled `assets/icons/icon.png`.
 
 Resample each size from the vector separately rather than letting an icon
-writer downscale one bitmap: 16x16 is where the difference shows.
+writer downscale one bitmap: 16x16 is where the difference shows. For the
+PNGs, `rsvg-convert -w N -h N -a assets/icons/icon.svg -o out.png` does
+that. ImageMagick can only read the SVG through it anyway.
 
 **After changing the icon, Windows will keep showing the old one.** The
 executable is right — `[System.Drawing.Icon]::ExtractAssociatedIcon` reads the
