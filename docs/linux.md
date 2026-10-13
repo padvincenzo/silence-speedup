@@ -74,7 +74,8 @@ app: the FFmpeg libraries and everything they need sit in its `lib/`, with
 [linux/bundle-ffmpeg-libraries.sh](../linux/bundle-ffmpeg-libraries.sh). The
 packed bundle has been checked on clean Ubuntu 24.04, Debian 12 and
 Fedora 41 with nothing but GTK installed: no library missing, and FFmpeg
-loads.
+loads. That is a check of the libraries, not a run: the app has been used,
+through `e2e`, only on the Ubuntu 22.04 it is built on.
 
 ## What differs from Windows
 

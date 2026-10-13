@@ -116,8 +116,10 @@ Nothing to install alongside it: FFmpeg ships with the app.
 
 - **Windows:** 10 or newer, 64-bit.
 - **Linux:** x86_64, with GTK 3 and `xdg-desktop-portal`, which every full
-  desktop (GNOME, KDE, Xfce, ...) already has. Tested on Ubuntu 22.04 and
-  24.04, Debian 12 and Fedora 41.
+  desktop (GNOME, KDE, Xfce, ...) already has. Built and tested end to end
+  on Ubuntu 22.04. On Ubuntu 24.04, Debian 12 and Fedora 41 only its
+  libraries have been checked: they all load, but the app has not been run
+  there yet.
 
 ### Building from source
 
