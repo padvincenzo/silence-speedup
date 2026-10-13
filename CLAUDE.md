@@ -11,9 +11,8 @@ work; this app decides *what* to ask FFmpeg for.
 From 3.0 on this repository is a **Flutter rewrite**. Versions 1.x and 2.x
 were an Electron app, whose source is on the `electron` branch; treat it as
 the reference for intended behaviour, not as code to imitate. The rewrite
-was developed in padvincenzo/silence-speedup-flutter, archived once it
-moved, and its
-history was joined to this one.
+was developed in a separate repository, since deleted; its whole history was
+joined to this one, so nothing of it is lost.
 
 Primary target is **Windows**; **Linux** is built and tried from Windows in
 Docker — see [docs/linux.md](docs/linux.md). **macOS** has a target, without
