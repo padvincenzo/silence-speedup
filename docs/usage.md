@@ -201,8 +201,9 @@ From the drawer. These are about the application, not about a video.
 
 **Theme** — follow the system, or pin light or dark.
 
-**Language** — follows the system language and falls back to English; pin
-English or Italiano to override it.
+**Language** — follows the system language and falls back to English; pick
+Deutsch, English, Español, Français, Italiano, 日本語 or Português to override
+it.
 
 **Working directory** — where the intermediate fragments go while a run is in
 progress, by default inside the system temp folder. The page shows how much

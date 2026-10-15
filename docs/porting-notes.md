@@ -205,7 +205,7 @@ affordances, not features.
 - **Locale-aware number formatting.** Percentages go through ARB placeholders,
   so Italian reads `12,50` where English reads `12.50`. The original
   interpolated strings and always produced a decimal point.
-- **A Windows installer.** Inno Setup, in English and Italian, built by
+- **A Windows installer.** Inno Setup, in the languages the app speaks, built by
   `installer/build-installer.ps1`. The original shipped a zip.
 - **Tests.** The original had none ("no automated test suite is available").
   Argument construction and range geometry are now asserted.

@@ -26,6 +26,47 @@ Map<String, Object?> readArb(String languageCode) {
   return decoded;
 }
 
+/// Values that are the same in English and in every translation on purpose:
+/// technical tokens, and values that are only a number and a unit — what
+/// differs between languages there is the decimal separator, and that comes
+/// from the number format, not from the text.
+const Set<String> _sharedByDesign = <String>{
+  'settingsCrf',
+  'settingsFps',
+  'settingsPreset',
+  'previewSeconds',
+  'settingsSecondsValue',
+  'silencesPercent',
+  'settingsNoiseValue',
+  'aboutCopyright',
+};
+
+/// Words a particular language shares with English. `settingsTune` is x264's
+/// own name for the option, which German, Spanish and Japanese keep as it is.
+const Map<String, Set<String>> _sharedInLanguage = <String, Set<String>>{
+  'de': <String>{
+    'menuVersion',
+    'processStart',
+    'settingsGroupAudio',
+    'settingsGroupExport',
+    'settingsTune',
+    'uiSystemMode',
+    'updateDetails',
+  },
+  'es': <String>{'settingsGroupAudio', 'settingsTune'},
+  'fr': <String>{
+    'aboutLicenseSection',
+    'licensesCount',
+    'menuVersion',
+    'settingsGroupApp',
+    'settingsGroupAudio',
+    'settingsGroupExport',
+    'silencesTotal',
+  },
+  'it': <String>{'settingsGroupAudio'},
+  'ja': <String>{'settingsTune'},
+};
+
 void main() {
   group('locale resolution', () {
     test('follows the system when nothing is pinned', () {
@@ -42,7 +83,7 @@ void main() {
       expect(
         LocaleController.resolve(
           null,
-          systemLocales: <Locale>[const Locale('de'), const Locale('fr')],
+          systemLocales: <Locale>[const Locale('ko'), const Locale('zh')],
         ),
         const Locale('en'),
       );
@@ -54,7 +95,7 @@ void main() {
         LocaleController.resolve(
           null,
           systemLocales: <Locale>[
-            const Locale('de'),
+            const Locale('ko'),
             const Locale('it'),
             const Locale('en'),
           ],
@@ -83,7 +124,7 @@ void main() {
     test('an unsupported pin is ignored and the system decides again', () {
       expect(
         LocaleController.resolve(
-          const Locale('de'),
+          const Locale('ko'),
           systemLocales: <Locale>[const Locale('it')],
         ),
         const Locale('it'),
@@ -93,88 +134,122 @@ void main() {
     test('matches on language alone, ignoring the region', () {
       expect(LocaleController.isSupported(const Locale('it', 'CH')), isTrue);
       expect(LocaleController.isSupported(const Locale('en', 'AU')), isTrue);
-      expect(LocaleController.isSupported(const Locale('es')), isFalse);
+      expect(LocaleController.isSupported(const Locale('ko')), isFalse);
       expect(LocaleController.isSupported(null), isFalse);
     });
 
-    test('exactly English and Italian are supported', () {
+    test('the picker names exactly the languages the app has', () {
       expect(
-        AppLocalizations.supportedLocales.map((Locale l) => l.languageCode),
-        containsAll(<String>['en', 'it']),
+        AppLocalizations.supportedLocales
+            .map((Locale l) => l.languageCode)
+            .toSet(),
+        kLanguageNames.keys.toSet(),
       );
-      expect(AppLocalizations.supportedLocales, hasLength(2));
       expect(LocaleController.fallbackLocale, const Locale('en'));
     });
   });
 
   group('ARB catalogues', () {
-    test('Italian translates every English key, and adds none', () {
-      final Set<String> english = readArb('en').keys.toSet();
-      final Set<String> italian = readArb('it').keys.toSet();
+    final List<String> translations = kLanguageNames.keys
+        .where((String code) => code != 'en')
+        .toList();
 
-      expect(
-        italian.difference(english),
-        isEmpty,
-        reason: 'keys in Italian that the template does not define',
-      );
-      expect(
-        english.difference(italian),
-        isEmpty,
-        reason: 'untranslated keys — these would fall back to English',
-      );
-    });
+    for (final String code in translations) {
+      test('$code translates every English key, and adds none', () {
+        final Set<String> english = readArb('en').keys.toSet();
+        final Set<String> translated = readArb(code).keys.toSet();
 
-    test('no value was left as a copy of the English text', () {
-      final Map<String, Object?> english = readArb('en');
-      final Map<String, Object?> italian = readArb('it');
+        expect(
+          translated.difference(english),
+          isEmpty,
+          reason: 'keys in $code that the template does not define',
+        );
+        expect(
+          english.difference(translated),
+          isEmpty,
+          reason: 'untranslated keys — these would fall back to English',
+        );
+      });
 
-      // Deliberate exceptions: technical tokens, words that are the same in
-      // both languages, and a value that is only a number and a unit.
-      const Set<String> sharedByDesign = <String>{
-        'settingsCrf',
-        'settingsFps',
-        'settingsPreset',
-        'settingsGroupAudio',
-        'previewSeconds',
-        // Same string in both languages on purpose: what differs between them
-        // is the decimal separator, and that comes from the number format,
-        // not from the text.
-        'settingsSecondsValue',
-        'silencesPercent',
-        'settingsNoiseValue',
-        'aboutCopyright',
-      };
+      test('$code keeps every placeholder of the English text', () {
+        final Map<String, Object?> english = readArb('en');
+        final Map<String, Object?> translated = readArb(code);
 
-      final List<String> copied = <String>[];
-      for (final String key in english.keys) {
-        if (sharedByDesign.contains(key)) continue;
-        if (english[key] == italian[key]) copied.add(key);
-      }
+        // A placeholder renamed or dropped in a translation is not a build
+        // error: gen-l10n prints the literal braces instead.
+        final RegExp placeholder = RegExp(r'\{(\w+)[,}]');
+        Set<String> names(Object? value) => placeholder
+            .allMatches('$value')
+            .map((RegExpMatch m) => m.group(1)!)
+            .toSet();
 
-      expect(copied, isEmpty, reason: 'still in English: $copied');
-    });
+        final List<String> broken = <String>[];
+        for (final String key in english.keys) {
+          if (names(english[key])
+              .difference(names(translated[key]))
+              .isNotEmpty) {
+            broken.add(key);
+          }
+        }
+
+        expect(broken, isEmpty, reason: 'placeholders lost in $code: $broken');
+      });
+
+      test('$code left no value as a copy of the English text', () {
+        final Map<String, Object?> english = readArb('en');
+        final Map<String, Object?> translated = readArb(code);
+
+        final Set<String> shared = <String>{
+          ..._sharedByDesign,
+          ...?_sharedInLanguage[code],
+        };
+
+        final List<String> copied = <String>[];
+        for (final String key in english.keys) {
+          if (shared.contains(key)) continue;
+          if (english[key] == translated[key]) copied.add(key);
+        }
+
+        expect(copied, isEmpty, reason: 'still in English in $code: $copied');
+      });
+    }
   });
 
   group('label resolution', () {
     late AppLocalizations english;
     late AppLocalizations italian;
+    late List<AppLocalizations> all;
 
     setUp(() async {
       english = await AppLocalizations.delegate.load(const Locale('en'));
       italian = await AppLocalizations.delegate.load(const Locale('it'));
+      all = <AppLocalizations>[
+        for (final Locale locale in AppLocalizations.supportedLocales)
+          await AppLocalizations.delegate.load(locale),
+      ];
     });
 
-    test('every translated option label resolves in both languages', () {
-      for (final OptionLabel label in OptionLabel.values) {
-        expect(localizedLabel(label, english), isNotEmpty, reason: '$label');
-        expect(localizedLabel(label, italian), isNotEmpty, reason: '$label');
+    test('every translated option label resolves in every language', () {
+      for (final AppLocalizations strings in all) {
+        for (final OptionLabel label in OptionLabel.values) {
+          expect(
+            localizedLabel(label, strings),
+            isNotEmpty,
+            reason: '${strings.localeName} $label',
+          );
+        }
       }
     });
 
-    test('every status resolves in both languages', () {
-      for (final EntryStatus status in EntryStatus.values) {
-        expect(statusText(status, english), isNotEmpty, reason: '$status');
-        expect(statusText(status, italian), isNotEmpty, reason: '$status');
+    test('every status resolves in every language', () {
+      for (final AppLocalizations strings in all) {
+        for (final EntryStatus status in EntryStatus.values) {
+          expect(
+            statusText(status, strings),
+            isNotEmpty,
+            reason: '${strings.localeName} $status',
+          );
+        }
       }
     });
 
@@ -217,9 +292,7 @@ void main() {
     });
 
     test('a duration in a summary uses the separator of the language', () {
-      const ProcessingSettings margin = ProcessingSettings(
-        silenceMargin: 0.25,
-      );
+      const ProcessingSettings margin = ProcessingSettings(silenceMargin: 0.25);
 
       expect(detectionChanges(margin, english).single, contains('0.25'));
       expect(detectionChanges(margin, italian).single, contains('0,25'));
@@ -248,19 +321,22 @@ void main() {
   });
 
   group('formatted messages', () {
-    test('numbers follow the locale, so Italian uses a decimal comma', () async {
-      final AppLocalizations english = await AppLocalizations.delegate.load(
-        const Locale('en'),
-      );
-      final AppLocalizations italian = await AppLocalizations.delegate.load(
-        const Locale('it'),
-      );
+    test(
+      'numbers follow the locale, so Italian uses a decimal comma',
+      () async {
+        final AppLocalizations english = await AppLocalizations.delegate.load(
+          const Locale('en'),
+        );
+        final AppLocalizations italian = await AppLocalizations.delegate.load(
+          const Locale('it'),
+        );
 
-      expect(english.logSilencePercentage(12.5), contains('12.50'));
-      expect(italian.logSilencePercentage(12.5), contains('12,50'));
-      expect(english.statusSilenceShare(7.25), contains('7.3'));
-      expect(italian.statusSilenceShare(7.25), contains('7,3'));
-    });
+        expect(english.logSilencePercentage(12.5), contains('12.50'));
+        expect(italian.logSilencePercentage(12.5), contains('12,50'));
+        expect(english.statusSilenceShare(7.25), contains('7.3'));
+        expect(italian.statusSilenceShare(7.25), contains('7,3'));
+      },
+    );
 
     test('the file count is pluralised, not glued to a number', () async {
       final AppLocalizations english = await AppLocalizations.delegate.load(

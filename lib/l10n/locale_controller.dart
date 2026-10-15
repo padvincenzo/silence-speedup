@@ -10,6 +10,21 @@ import 'package:flutter/widgets.dart';
 
 import 'gen/app_localizations.dart';
 
+/// Each supported language by its own name, in the order the picker lists
+/// them.
+///
+/// Written in the language itself and never translated: someone looking for
+/// their language in an interface they cannot read has to recognise it.
+const Map<String, String> kLanguageNames = <String, String>{
+  'de': 'Deutsch',
+  'en': 'English',
+  'es': 'Español',
+  'fr': 'Français',
+  'it': 'Italiano',
+  'ja': '日本語',
+  'pt': 'Português',
+};
+
 /// Decides which language the app speaks.
 ///
 /// By default it follows the operating system and falls back to English when

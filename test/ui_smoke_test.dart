@@ -274,13 +274,12 @@ void main() {
             ),
       );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('window_manager'),
-            (MethodCall call) async {
-              calls.add(call.method);
-              return null;
-            },
-          );
+          .setMockMethodCallHandler(const MethodChannel('window_manager'), (
+            MethodCall call,
+          ) async {
+            calls.add(call.method);
+            return null;
+          });
 
       await tester.pumpWidget(harness.app);
       await tester.pumpAndSettle();
@@ -1034,7 +1033,10 @@ void main() {
       expect(logged, contains('Could not read the levels of silent.mp4.'));
       // With what FFmpeg actually answered, because a failure that explains
       // nothing has to be reproduced to be understood.
-      expect(logged.any((String line) => line.contains('FFmpeg exited')), isTrue);
+      expect(
+        logged.any((String line) => line.contains('FFmpeg exited')),
+        isTrue,
+      );
     });
 
     testWidgets('the reset asks first, and only then puts everything back', (
@@ -1176,6 +1178,81 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });
+  });
+
+  // English is what the other tests read; this is where the longer languages
+  // get their turn at the narrowest places a label has to fit.
+  group('every language', () {
+    for (final String code in kLanguageNames.keys) {
+      testWidgets('$code: the queue fits the smallest window', (
+        WidgetTester tester,
+      ) async {
+        await useDesktopSurface(tester, size: const Size(640, 480));
+        final TestHarness harness = await TestHarness.create(
+          preferred: Locale(code),
+        );
+
+        await tester.pumpWidget(harness.app);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('$code: every encoding group fits the panel', (
+        WidgetTester tester,
+      ) async {
+        await useDesktopSurface(tester, size: const Size(640, 480));
+        final TestHarness harness = await TestHarness.create(
+          preferred: Locale(code),
+        );
+        for (final String group in <String>[
+          EncodingSettingsView.groupSpeed,
+          EncodingSettingsView.groupAudio,
+          EncodingSettingsView.groupDetection,
+          EncodingSettingsView.groupExport,
+          EncodingSettingsView.groupPreview,
+        ]) {
+          await harness.preferences.setEncodingGroupOpen(group, true);
+        }
+
+        await tester.pumpWidget(
+          harness.wrap(
+            Align(
+              alignment: Alignment.centerRight,
+              child: SizedBox(
+                width: kEncodingPanelWidth,
+                child: EncodingSettingsPanel(onClose: () {}),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+
+        // Down to the reset at the bottom, so every tile has been laid out.
+        await tester.scrollUntilVisible(
+          find.byIcon(Icons.restart_alt),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
+
+      testWidgets('$code: the app settings fit the smallest window', (
+        WidgetTester tester,
+      ) async {
+        await useDesktopSurface(tester, size: const Size(640, 480));
+        final TestHarness harness = await TestHarness.create(
+          preferred: Locale(code),
+        );
+
+        await tester.pumpWidget(harness.wrap(const AppSettingsPage()));
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+      });
+    }
   });
 
   group('app settings page', () {
