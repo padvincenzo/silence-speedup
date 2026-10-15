@@ -10,6 +10,32 @@ branch of this repository.
 
 ---
 
+## Coming from 2.x
+
+3.0 is a new installation, not an update in place. Settings are not carried
+over, and the FFmpeg path is gone because FFmpeg is now bundled. Version 3 is
+built for Windows and Linux; on macOS the 2.x releases, still on the
+[releases page](https://github.com/padvincenzo/silence-speedup/releases), are
+the ones that work. The 2.x demo player is not ported yet — see
+[ROADMAP.md](../ROADMAP.md).
+
+## Why Flutter
+
+**FFmpeg is bundled.** There is no path to configure, no binary to download and
+no preference to get wrong; installing the app is the whole setup. The plugin
+that provides it
+([`ffmpeg_kit_flutter_new`](https://pub.dev/packages/ffmpeg_kit_flutter_new),
+full-GPL, includes `libx264`) covers Android, iOS, macOS and Linux behind the
+same API, so the same processing pipeline can follow the app to a phone later.
+
+The rest follows from that choice. The app is native rather than a browser in a
+window, the interface is Material and built for the job, and the part that
+decides what to ask FFmpeg for is pure: every argument list the app runs is
+built in one place and asserted in a test, because a wrong flag there produces a
+file that is subtly out of sync rather than an error.
+
+---
+
 ## Behaviour changes (fixes)
 
 ### The silence margin now applies to every range
