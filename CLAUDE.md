@@ -268,16 +268,23 @@ list and a timeline both earn their width.
 ### Strings come from ARB, always
 
 UI and log text is generated from `lib/l10n/arb/app_en.arb` (the template) and
-`app_it.arb` by `flutter gen-l10n`, configured in [l10n.yaml](l10n.yaml).
+one catalogue per translation — Italian, German, Spanish, French, European
+Portuguese and Japanese — by `flutter gen-l10n`, configured in [l10n.yaml](l10n.yaml).
 
 - In widgets: `AppLocalizations.of(context).someKey`.
 - In services and stores: they hold a `LocaleController` and read
   `_locales.strings.someKey`, which needs no `BuildContext`.
 - Model enums are turned into text only in [lib/l10n/labels.dart](lib/l10n/labels.dart),
   so `models/` never imports the generated class.
-- **Add every new message to both catalogues, then run `flutter gen-l10n`.** A
-  test asserts the two key sets match, so a missing translation fails the suite
-  rather than silently falling back to English.
+- **Add every new message to every catalogue, then run `flutter gen-l10n`.** A
+  test asserts each translation has the template's keys and placeholders, so a
+  missing translation fails the suite rather than silently falling back to
+  English.
+- The language picker lists `kLanguageNames` in
+  [lib/l10n/locale_controller.dart](lib/l10n/locale_controller.dart), each
+  language by its own name; a test asserts it names exactly the catalogues
+  there are. A new language also goes into the installer's `[Languages]` and
+  `msix_config.languages`.
 - Use ARB placeholders and plurals rather than string concatenation. Numbers
   declared as `double` with `decimalPatternDigits` get a locale-correct decimal
   separator, which matters: Italian writes `12,50`, not `12.50`.
@@ -533,7 +540,7 @@ lib/
 ├── main.dart               # bootstrap: prefs → locale → window → stores
 ├── app.dart                # MaterialApp, theme, locale
 ├── l10n/
-│   ├── arb/                # app_en.arb (template), app_it.arb
+│   ├── arb/                # app_en.arb (template), one per translation
 │   ├── gen/                # generated, committed, never hand-edited
 │   ├── locale_controller.dart
 │   └── labels.dart         # enum → text, the only bridge from models/

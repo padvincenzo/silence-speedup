@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../l10n/gen/app_localizations.dart';
+import '../../l10n/locale_controller.dart';
 import '../../services/app_paths.dart';
 import '../../state/preferences_store.dart';
 import '../../state/process_store.dart';
@@ -61,29 +62,29 @@ class AppSettingsPage extends StatelessWidget {
                 onChanged: (ThemeMode mode) =>
                     context.read<PreferencesStore>().setThemeMode(mode),
               ),
-              SegmentedSettingTile<String>(
+              // A list rather than segments: one segment per language stopped
+              // fitting the narrowest window once there were more than two.
+              DropdownSettingTile<String>(
                 title: strings.uiLanguage,
                 description: strings.helpLanguage,
                 // The empty string stands for "no pinned language".
-                selected: preferences.preferredLocale?.languageCode ?? '',
-                segments: <ButtonSegment<String>>[
-                  ButtonSegment<String>(
+                value: preferences.preferredLocale?.languageCode ?? '',
+                items: <DropdownMenuItem<String>>[
+                  DropdownMenuItem<String>(
                     value: '',
-                    label: Text(strings.uiSystemMode),
-                    icon: const Icon(Icons.language),
+                    child: Text(strings.uiSystemMode),
                   ),
-                  const ButtonSegment<String>(
-                    value: 'en',
-                    label: Text('English'),
-                  ),
-                  const ButtonSegment<String>(
-                    value: 'it',
-                    label: Text('Italiano'),
-                  ),
+                  for (final MapEntry<String, String> language
+                      in kLanguageNames.entries)
+                    DropdownMenuItem<String>(
+                      value: language.key,
+                      child: Text(language.value),
+                    ),
                 ],
-                onChanged: (String code) => context
-                    .read<PreferencesStore>()
-                    .setPreferredLocale(code.isEmpty ? null : Locale(code)),
+                onChanged: (String? code) =>
+                    context.read<PreferencesStore>().setPreferredLocale(
+                      code == null || code.isEmpty ? null : Locale(code),
+                    ),
               ),
             ],
           ),

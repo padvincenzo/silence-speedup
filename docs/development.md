@@ -133,8 +133,8 @@ file rather than an error:
   settings serialisation and clamping, the speed catalogue's internal
   consistency, entry naming, version comparison.
 - [test/localization_test.dart](../test/localization_test.dart) — language
-  resolution, that the two ARB catalogues cover the same keys and that no
-  Italian value was left in English, and that placeholders and locale-aware
+  resolution, that every translation covers the template's keys and keeps its
+  placeholders, that no value was left in English, and that placeholders and locale-aware
   number formatting work.
 
 When adding a feature that changes what FFmpeg is asked to do, add the assertion
@@ -172,8 +172,8 @@ The pipeline touches real files, so a few things only a real run will show:
    tracks survive and stay in sync, and that only track 1 drove the cuts).
 10. A **preview** on a long file (checks the sample is taken from the middle,
     not the start) and on a file shorter than the preview length.
-11. The app with the system language set to Italian, and with it set to
-    something the app does not have (should fall back to English).
+11. The app with the system language set to one of its translations, and with
+    it set to something the app does not have (should fall back to English).
 
 ## Adding to the app
 
@@ -204,7 +204,8 @@ indexes, so shrinking a list is safe.
 
 1. Add it to `lib/l10n/arb/app_en.arb` — the template — with an `@`-entry
    declaring any placeholders.
-2. Add the translation to `app_it.arb`. A test fails if you forget.
+2. Add the translation to every other `app_<code>.arb`. A test fails if you
+   forget one.
 3. `flutter gen-l10n`, and commit the regenerated files alongside the ARB
    change.
 
@@ -218,7 +219,11 @@ separator per language, which string interpolation cannot do.
    translate the values.
 2. `flutter gen-l10n` — the locale is picked up automatically and appears in
    `AppLocalizations.supportedLocales`.
-3. Add a segment to the Language control in `AppSettingsPage`.
+3. Add the language, by its own name, to `kLanguageNames` in
+   `lib/l10n/locale_controller.dart`; a test fails until the picker and the
+   catalogues agree.
+4. Add it to `[Languages]` in `installer/silence-speedup.iss` and to
+   `msix_config.languages` in `pubspec.yaml`.
 
 Missing keys fall back to the template, so a partial translation degrades rather
 than breaks — but the ARB test will flag it.
