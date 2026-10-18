@@ -312,7 +312,9 @@ class FragmentPlanner {
       '-crf', '${settings.crf}',
       // Every fragment is normalised to one constant frame rate, which is what
       // lets the concat step copy streams instead of re-encoding them.
-      '-vsync', 'cfr',
+      // `-fps_mode` is the name `-vsync` has had since FFmpeg 5.1; FFmpeg 9
+      // no longer accepts the old one.
+      '-fps_mode', 'cfr',
       '-fflags', '+genpts',
     ];
 
@@ -359,10 +361,12 @@ class FragmentPlanner {
       '-loglevel', 'warning',
       '-stats',
       '-segment_time_metadata', '0',
-      '-vsync', 'cfr',
       '-f', 'concat',
       '-safe', '0',
       '-i', listPath,
+      // After the input: unlike `-vsync`, which it replaced, `-fps_mode` is an
+      // output option, and FFmpeg rejects it as an option of the list.
+      '-fps_mode', 'cfr',
       // Every stream of the fragments, not just the first of each kind, so a
       // second audio track survives the join.
       '-map', '0',

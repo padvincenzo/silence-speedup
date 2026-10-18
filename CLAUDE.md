@@ -85,7 +85,7 @@ Four invariants that are easy to break:
 
 - **Fragments must stay concat-compatible.** They are joined with `-c copy`, so
   every fragment needs the same codecs, container and frame rate. That is why
-  `-vsync cfr` and the `fps` filter are on every fragment.
+  `-fps_mode cfr` and the `fps` filter are on every fragment.
 - **Muting keeps `atempo`.** When silences are muted, `volume=0` is *appended*
   to the tempo chain, not substituted for it. Dropping `atempo` leaves the audio
   longer than the sped-up video and desyncs everything downstream.
