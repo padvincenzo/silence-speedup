@@ -6,7 +6,7 @@ publish_to: 'none'
 # branch. The installed Electron builds read this repository's release feed
 # and compare the first number they find in the title, so a release here must
 # be titled with its version and be greater than 2.x to reach them.
-version: 3.0.0
+version: 3.1.0
 
 environment:
   sdk: ^3.13.2
