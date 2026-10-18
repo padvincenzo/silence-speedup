@@ -78,7 +78,38 @@ which already covers much of the need at a fraction of the complexity.
 
 ---
 
-## 2. Android
+## 2. Working with the cuts
+
+The detection gets most pauses right and some wrong — a breath taken for
+speech, a short word lost in a pause — and the only remedy today is to change
+a setting and run again. These three make the cuts something to work with.
+
+- **Export the cuts instead of a video.** Write the plan as an edit list —
+  FCPXML for Final Cut and DaVinci Resolve, Premiere XML, EDL, and an MLT
+  project for Kdenlive and Shotcut — so an editor gets a rough cut to refine
+  rather than a finished file. It is the feature most often asked of tools
+  like this one: among the most upvoted requests in auto-editor's issue
+  tracker, on the Shotcut forum, and in discussions of Recut. It needs no
+  encoding at all: the fragments are already in `FragmentPlanner.plan`, so
+  this is serialisation, and each format wants a test against a file the
+  editor itself accepts.
+- **Edit the detected silences.** On the silences page, per range: drop it,
+  so it plays as speech, or move its boundaries. `_RangeTile` is where the
+  controls go, and `MediaEntry.setSilences` already takes a replacement list,
+  so that much needs no change to the model. Choosing per range between
+  speeding up and cutting does: `SilenceRange` holds only a start and an end,
+  and the plan takes the rate from the settings. What also needs deciding is
+  what a re-detection does to hand edits — discard them, after asking.
+- **Separate margins before and after a pause.** One margin is kept on both
+  sides of every silence today, but the two edges are not alike: a sentence
+  can fade out below the threshold, or begin on a consonant that cuts in
+  sharply. A margin for each edge lets one stay tight where the other needs
+  room. `buildRanges` applies the margin, and `detectsLike` has to compare
+  both.
+
+---
+
+## 3. Android
 
 The FFmpeg layer already runs there: `ffmpeg_kit_flutter_new` supports Android,
 and the whole pipeline — engine, planner, models — is platform-agnostic behind
@@ -106,7 +137,7 @@ pipeline.
 
 ---
 
-## 3. Desktop polish carried over from Electron
+## 4. Desktop polish carried over from Electron
 
 Small, self-contained, each independently useful.
 
@@ -121,7 +152,7 @@ Small, self-contained, each independently useful.
 
 ---
 
-## 4. Queue and workflow
+## 5. Queue and workflow
 
 Things the Electron app never had, that a batch tool wants.
 
@@ -147,13 +178,23 @@ Things the Electron app never had, that a batch tool wants.
 
 ---
 
-## 5. Pipeline
+## 6. Pipeline
 
-- **Hardware encoding.** `h264_nvenc`, `h264_qsv`, `h264_amf` would cut encode
-  time dramatically. Requires probing which encoders the bundled build actually
-  supports at runtime, and a fallback when the chosen one fails — the codec is
-  currently fixed at `libx264` precisely because the concat step needs every
-  fragment to match.
+- **Hardware encoding.** Measured on an AMD Radeon RX 9070, October 2026.
+  The bundled FFmpeg (8, from `ffmpeg_kit_flutter_new`) has none of
+  `h264_amf`, `h264_nvenc` or `h264_qsv`. It has `h264_mf`, Media Foundation,
+  which reaches the GPU's encoder whatever its vendor: with `-hw_encoding 1`
+  and `nv12` frames it encoded a minute of 1080p in 5.2 s against 14.0 s for
+  `libx264 medium`, at the same bitrate and a slightly lower SSIM (0.964
+  against 0.972). `h264_d3d12va` is in the build too, but failed in FFmpeg 8
+  where FFmpeg 9 runs it. The catch is the fragments: forty sessions of 1.5 s
+  took 20.2 s on `h264_mf`, 29.7 s on `libx264 medium` and 16.8 s on
+  `libx264 veryfast`, because each session pays for opening the encoder. So
+  the GPU pays only once there are fewer, longer sessions (next item), and it
+  would still need every fragment to match for the concat, and a fallback
+  where no hardware encoder exists. Meanwhile `veryfast` halved the time at
+  an SSIM 0.001 lower, on synthetic footage — worth checking on real
+  recordings as a cheaper default than `medium`.
 - **Fewer fragments.** Each fragment is a separate FFmpeg process. A long file
   with many pauses spends real time on process startup alone. A single
   `filter_complex` with `trim`/`atrim` and `concat` could do it in one pass —
@@ -167,7 +208,7 @@ Things the Electron app never had, that a batch tool wants.
 
 ---
 
-## 6. Testing and CI
+## 7. Testing and CI
 
 - **Widget tests** for the settings sheet and the queue.
 - **Engine tests with a fake `FFmpegRunner`.** The interface exists for this;
