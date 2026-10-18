@@ -358,7 +358,9 @@ void main() {
 
       expect(argumentAfter(arguments, '-c:v'), kVideoCodec);
       expect(argumentAfter(arguments, '-c:a'), kAudioCodec);
-      expect(argumentAfter(arguments, '-vsync'), 'cfr');
+      expect(argumentAfter(arguments, '-fps_mode'), 'cfr');
+      // The old name of the same option, which FFmpeg 9 refuses outright.
+      expect(arguments, isNot(contains('-vsync')));
     });
   });
 
@@ -387,6 +389,8 @@ void main() {
       expect(argumentAfter(arguments, '-c:a'), 'copy');
       expect(argumentAfter(arguments, '-safe'), '0');
       expect(argumentAfter(arguments, '-f'), 'concat');
+      expect(argumentAfter(arguments, '-fps_mode'), 'cfr');
+      expect(arguments, isNot(contains('-vsync')));
     });
   });
 

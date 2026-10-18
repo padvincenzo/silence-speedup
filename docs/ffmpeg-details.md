@@ -108,7 +108,7 @@ ffmpeg -hide_banner -y -loglevel warning -stats -dn \
        -map_metadata -1 -map_chapters -1 \
        -segment_time_metadata 0 -max_muxing_queue_size 99999 \
        -c:a aac -c:v libx264 -preset medium -crf 23 \
-       -vsync cfr -fflags +genpts \
+       -fps_mode cfr -fflags +genpts \
        -vf "setpts=0.125*PTS,fps=fps=30:round=near" \
        -af "atempo=2,atempo=2,atempo=2" \
        <tmp>/f_000001.mp4
@@ -120,7 +120,7 @@ ffmpeg -hide_banner -y -loglevel warning -stats -dn \
 | `-map 0:v:0? -map 0:a:0?` | Explicit stream selection. Without it FFmpeg's default selection keeps one audio track and silently drops the others. With **Keep all audio tracks** on, the audio map becomes `0:a?`. The trailing `?` makes a missing stream non-fatal, so a file with no video still encodes. |
 | `-map_metadata -1`, `-map_chapters -1` | Fragments carry no metadata or chapters; keeping them would confuse the join. |
 | `-fflags +genpts` | Generate fresh timestamps, so each fragment starts at zero. |
-| `-vsync cfr` + `fps` filter | Normalise every fragment to one constant frame rate. This is what allows step 3 to copy streams instead of re-encoding. |
+| `-fps_mode cfr` + `fps` filter | Normalise every fragment to one constant frame rate. This is what allows step 3 to copy streams instead of re-encoding. `-fps_mode` is what `-vsync` has been called since FFmpeg 5.1; FFmpeg 9 removed the old name. |
 | `-max_muxing_queue_size 99999` | Avoids a muxer failure on sources with widely separated audio and video packets. |
 
 ### `setpts` and `atempo`
@@ -169,8 +169,8 @@ without re-encoding, that mismatch would desync everything after it.
 
 ```
 ffmpeg -hide_banner -y -loglevel warning -stats \
-       -segment_time_metadata 0 -vsync cfr \
-       -f concat -safe 0 -i <tmp>/list.txt \
+       -segment_time_metadata 0 \
+       -f concat -safe 0 -i <tmp>/list.txt -fps_mode cfr \
        -map 0 \
        -c:a copy -c:v copy \
        <export>/<name>.mp4

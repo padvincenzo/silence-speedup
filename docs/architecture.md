@@ -127,7 +127,7 @@ interchangeable**: same codecs, same container, same frame rate. That is why:
 
 - `-c:v libx264 -c:a aac` are fixed rather than user-selectable;
 - the `fps` filter is applied to *every* fragment, sped-up or not;
-- `-vsync cfr` is on every fragment;
+- `-fps_mode cfr` is on every fragment;
 - fragments use the *output* container's extension, not the input's.
 
 Break any of those and the concat step either fails or produces a file whose
