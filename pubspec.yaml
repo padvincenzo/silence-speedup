@@ -6,7 +6,7 @@ publish_to: 'none'
 # branch. The installed Electron builds read this repository's release feed
 # and compare the first number they find in the title, so a release here must
 # be titled with its version and be greater than 2.x to reach them.
-version: 3.0.0
+version: 3.1.0
 
 environment:
   sdk: ^3.13.2
@@ -79,7 +79,7 @@ msix_config:
   # is what the bundled FFmpeg needs. MSIX itself does not run below 1809,
   # so that is the floor here.
   os_min_version: 10.0.17763.0
-  languages: en-us, it-it
+  languages: en-us, it-it, de-de, es-es, fr-fr, pt-pt, ja-jp
   # Nothing to declare: FFmpeg is bundled, the files come from folders the
   # user picks, and a Store build does not check for updates, so the app
   # never opens a socket. The 3.0.0 package came out with runFullTrust as

@@ -56,7 +56,8 @@ Full walkthrough of every setting: [docs/usage.md](docs/usage.md).
 - 🎛️ **Encoder controls** — CRF, frame rate, x264 preset and tune, audio rate,
   output container
 - 🪟 **Compact progress mode** — a slim always-on-top strip for long batches
-- 🌗 **Light, dark or system theme**, in **English and Italian**
+- 🌗 **Light, dark or system theme**, in **English, Italian, German, Spanish,
+  French, Portuguese and Japanese**
 - 📦 **FFmpeg included** — nothing to install
 
 ## Requirements
