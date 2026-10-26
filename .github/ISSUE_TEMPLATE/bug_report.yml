@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for taking the time. This form is for **version 3** and later.
         Version 2.x was a different app, built with Electron; its code is on the
-        [`electron`](https://github.com/padvincenzo/silence-speedup/tree/electron) branch.
+        [`archive/electron`](https://github.com/padvincenzo/silence-speedup/tree/archive/electron) branch.
 
   - type: input
     id: version
